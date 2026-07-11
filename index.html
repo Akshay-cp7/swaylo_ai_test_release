@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Swaylo AI — Websites from a conversation</title>
+<meta name="description" content="Swaylo AI builds complete, publish-ready websites from a chat. Describe what you want, answer a few questions, and get a live site in minutes." />
+<style>
+  :root {
+    --bg: #07080d;
+    --bg-soft: #0d0f17;
+    --card: #12141f;
+    --line: rgba(255, 255, 255, 0.08);
+    --text: #eef0f6;
+    --muted: #9aa1b5;
+    --brand-1: #7c6cff;
+    --brand-2: #38c7ff;
+    --brand-3: #ff7ac3;
+    --radius: 18px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: rgba(124, 108, 255, 0.4); }
+
+  .glow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(600px 400px at 15% -5%, rgba(124, 108, 255, 0.22), transparent 60%),
+      radial-gradient(700px 500px at 90% 10%, rgba(56, 199, 255, 0.14), transparent 60%),
+      radial-gradient(800px 600px at 50% 110%, rgba(255, 122, 195, 0.10), transparent 60%);
+  }
+
+  .wrap { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- Nav ---------- */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 0;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem; letter-spacing: -0.02em; }
+  .logo-mark {
+    width: 34px; height: 34px; border-radius: 10px; flex: none;
+    background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
+    display: grid; place-items: center;
+    font-size: 1.05rem; color: #fff;
+    box-shadow: 0 4px 18px rgba(124, 108, 255, 0.45);
+  }
+  .nav-cta {
+    font-size: 0.9rem; font-weight: 600; text-decoration: none; color: var(--text);
+    border: 1px solid var(--line); border-radius: 999px; padding: 8px 18px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .nav-cta:hover { border-color: rgba(124, 108, 255, 0.6); background: rgba(124, 108, 255, 0.1); }
+
+  /* ---------- Hero ---------- */
+  header.hero {
+    display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px;
+    align-items: center; padding: 64px 0 88px;
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--brand-2);
+    border: 1px solid rgba(56, 199, 255, 0.25);
+    background: rgba(56, 199, 255, 0.07);
+    padding: 6px 14px; border-radius: 999px; margin-bottom: 22px;
+  }
+  .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand-2); box-shadow: 0 0 10px var(--brand-2); }
+
+  h1 {
+    font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+    line-height: 1.08; letter-spacing: -0.035em; font-weight: 800;
+    margin-bottom: 20px;
+  }
+  h1 .grad {
+    background: linear-gradient(100deg, var(--brand-1), var(--brand-2) 55%, var(--brand-3));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub { font-size: 1.13rem; color: var(--muted); max-width: 46ch; margin-bottom: 34px; }
+
+  .cta-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .btn-download {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: linear-gradient(135deg, var(--brand-1), #5a8bff);
+    color: #fff; text-decoration: none; font-weight: 700; font-size: 1.02rem;
+    padding: 15px 30px; border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(124, 108, 255, 0.45);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-download:hover { transform: translateY(-2px); box-shadow: 0 12px 38px rgba(124, 108, 255, 0.6); }
+  .btn-download svg { flex: none; }
+  .dl-meta { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+  .dl-meta strong { color: var(--text); }
+
+  /* ---------- Phone mockup ---------- */
+  .phone-scene { display: flex; justify-content: center; }
+  .phone {
+    width: 290px; max-width: 100%;
+    border-radius: 40px;
+    background: linear-gradient(160deg, #1a1d2b, #0e1018);
+    border: 1px solid var(--line);
+    padding: 14px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.03) inset;
+    transform: rotate(2.5deg);
+  }
+  .screen {
+    border-radius: 28px; overflow: hidden;
+    background: var(--bg-soft);
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .screen-top {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px; border-bottom: 1px solid var(--line);
+    font-size: 0.72rem; font-weight: 700; color: var(--muted);
+  }
+  .screen-top .mini-mark {
+    width: 18px; height: 18px; border-radius: 6px;
+    background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
+  }
+  .chat { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .bubble {
+    max-width: 85%; padding: 9px 13px; border-radius: 14px;
+    font-size: 0.74rem; line-height: 1.45;
+  }
+  .bubble.user {
+    align-self: flex-end;
+    background: linear-gradient(135deg, var(--brand-1), #5a8bff);
+    color: #fff; border-bottom-right-radius: 4px;
+  }
+  .bubble.ai {
+    align-self: flex-start;
+    background: #1b1e2d; color: var(--muted);
+    border: 1px solid var(--line); border-bottom-left-radius: 4px;
+  }
+  .site-preview {
+    margin: 4px 14px 14px; border-radius: 12px; overflow: hidden;
+    border: 1px solid rgba(124, 108, 255, 0.35);
+    box-shadow: 0 0 24px rgba(124, 108, 255, 0.25);
+  }
+  .sp-hero {
+    height: 58px;
+    background: linear-gradient(120deg, rgba(124,108,255,0.55), rgba(56,199,255,0.45));
+    display: grid; place-items: center;
+  }
+  .sp-hero span { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.12em; color: #fff; }
+  .sp-body { background: #171a27; padding: 10px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+  .sp-card { height: 26px; border-radius: 6px; background: rgba(255,255,255,0.07); }
+  .sp-line { grid-column: 1 / -1; height: 7px; border-radius: 4px; background: rgba(255,255,255,0.09); }
+  .sp-line.short { width: 60%; }
+  .live-tag {
+    display: flex; align-items: center; gap: 6px; justify-content: center;
+    padding: 8px; font-size: 0.66rem; font-weight: 700; color: #55e6a5;
+    background: rgba(85, 230, 165, 0.07); border-top: 1px solid rgba(85,230,165,0.2);
+  }
+  .live-tag .pulse {
+    width: 7px; height: 7px; border-radius: 50%; background: #55e6a5;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(85,230,165,0.5);} 50% { box-shadow: 0 0 0 6px rgba(85,230,165,0);} }
+
+  /* ---------- Sections ---------- */
+  section { padding: 72px 0; }
+  .section-head { text-align: center; max-width: 620px; margin: 0 auto 52px; }
+  .section-head h2 { font-size: clamp(1.7rem, 3.5vw, 2.4rem); letter-spacing: -0.03em; font-weight: 800; margin-bottom: 14px; }
+  .section-head p { color: var(--muted); font-size: 1.02rem; }
+
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .feature {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 26px 24px;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .feature:hover { transform: translateY(-4px); border-color: rgba(124, 108, 255, 0.4); }
+  .feature .icon {
+    width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center;
+    background: rgba(124, 108, 255, 0.12); border: 1px solid rgba(124, 108, 255, 0.25);
+    margin-bottom: 16px; font-size: 1.2rem;
+  }
+  .feature h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.01em; }
+  .feature p { font-size: 0.9rem; color: var(--muted); }
+
+  /* ---------- Steps ---------- */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; counter-reset: step; }
+  .step {
+    position: relative;
+    background: linear-gradient(180deg, rgba(124,108,255,0.06), transparent 70%);
+    border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 30px 24px 26px;
+  }
+  .step-num {
+    display: inline-grid; place-items: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    font-weight: 800; font-size: 0.95rem; color: #fff;
+    background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
+    margin-bottom: 16px;
+  }
+  .step h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+  .step p { font-size: 0.9rem; color: var(--muted); }
+
+  /* ---------- Download band ---------- */
+  .band {
+    text-align: center;
+    background:
+      radial-gradient(500px 250px at 50% 0%, rgba(124, 108, 255, 0.18), transparent 70%),
+      var(--card);
+    border: 1px solid var(--line); border-radius: 24px;
+    padding: 64px 32px;
+  }
+  .band h2 { font-size: clamp(1.6rem, 3.2vw, 2.2rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; }
+  .band p { color: var(--muted); margin-bottom: 30px; }
+  .band .cta-row { justify-content: center; }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 32px 0 40px; margin-top: 72px;
+    display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;
+    color: var(--muted); font-size: 0.85rem;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 880px) {
+    header.hero { grid-template-columns: 1fr; text-align: center; padding: 40px 0 64px; }
+    .sub { margin-left: auto; margin-right: auto; }
+    .cta-row { justify-content: center; }
+    .phone { transform: rotate(0deg); }
+    .features, .steps { grid-template-columns: 1fr; }
+    section { padding: 52px 0; }
+  }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="wrap">
+
+  <nav>
+    <div class="logo"><span class="logo-mark">✦</span> Swaylo AI</div>
+    <a class="nav-cta" href="#download">Get the app</a>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <span class="eyebrow"><span class="dot"></span> Now available for Android</span>
+      <h1>Your website,<br /><span class="grad">built from a chat.</span></h1>
+      <p class="sub">
+        Describe what you want. Swaylo AI asks the right questions, designs a
+        complete website, and publishes it to a live link — all from your phone,
+        in minutes.
+      </p>
+      <div class="cta-row">
+        <a class="btn-download" href="Swaylo_ai.apk" download>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v12" /><path d="m7 10 5 5 5-5" /><path d="M5 21h14" />
+          </svg>
+          Download for Android
+        </a>
+        <div class="dl-meta"><strong>Swaylo_ai.apk</strong> · v1.0.5 · free to try</div>
+      </div>
+    </div>
+
+    <div class="phone-scene" aria-hidden="true">
+      <div class="phone">
+        <div class="screen">
+          <div class="screen-top"><span class="mini-mark"></span> Swaylo AI</div>
+          <div class="chat">
+            <div class="bubble user">I need a site for my bakery, warm &amp; modern 🍞</div>
+            <div class="bubble ai">Love it. What's the bakery called, and do you want an order form?</div>
+            <div class="bubble user">"Crumb &amp; Co" — yes please!</div>
+            <div class="bubble ai">Done — here's your site ✨</div>
+          </div>
+          <div class="site-preview">
+            <div class="sp-hero"><span>CRUMB &amp; CO</span></div>
+            <div class="sp-body">
+              <div class="sp-line"></div>
+              <div class="sp-line short"></div>
+              <div class="sp-card"></div><div class="sp-card"></div><div class="sp-card"></div>
+            </div>
+            <div class="live-tag"><span class="pulse"></span> Live on the web</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="features">
+    <div class="section-head">
+      <h2>Everything you need, nothing to learn</h2>
+      <p>No templates to fight, no drag-and-drop grind. Just tell Swaylo what you want and refine it by talking.</p>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <div class="icon">💬</div>
+        <h3>Chat-first building</h3>
+        <p>A smart intake asks exactly the right questions about your business, style, and content — then builds the whole site.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🚀</div>
+        <h3>Publish in one tap</h3>
+        <p>Your site goes live on a public URL instantly, hosted for you. Share the link the moment it's ready.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">✏️</div>
+        <h3>Edit by talking</h3>
+        <p>"Make the header darker." "Add a gallery." Swaylo revises the live design from plain-language requests.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">📬</div>
+        <h3>Working contact forms</h3>
+        <p>Contact and RSVP forms that actually deliver — read every submission right inside the app.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🌐</div>
+        <h3>Your own domain</h3>
+        <p>Connect a custom domain so your site lives at your address, not somebody else's.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">🖼️</div>
+        <h3>Curated asset library</h3>
+        <p>Drop in polished images and GIFs from a hand-picked library to make every page feel designed.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="section-head">
+      <h2>Live in three steps</h2>
+      <p>From idea to a real, shareable website — faster than making a coffee.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <h3>Describe it</h3>
+        <p>Tell Swaylo about your business, event, or portfolio in a quick chat. It fills in the gaps with smart questions.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <h3>Watch it build</h3>
+        <p>Swaylo generates a complete, polished website — layout, copy, colors, forms — tailored to what you said.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <h3>Go live</h3>
+        <p>Hit publish and get a live link instantly. Keep refining anytime by chatting with Swaylo.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="download">
+    <div class="band">
+      <h2>Get Swaylo AI on your phone</h2>
+      <p>Free to try — build your first website today.</p>
+      <div class="cta-row">
+        <a class="btn-download" href="Swaylo_ai.apk" download>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v12" /><path d="m7 10 5 5 5-5" /><path d="M5 21h14" />
+          </svg>
+          Download Swaylo_ai.apk
+        </a>
+        <div class="dl-meta">Android · v1.0.5<br />You may need to allow installs from your browser.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="logo" style="font-size:1rem;"><span class="logo-mark" style="width:26px;height:26px;border-radius:8px;font-size:0.85rem;">✦</span> Swaylo AI</div>
+    <div>© 2026 Swaylo AI · Built with a conversation.</div>
+  </footer>
+
+</div>
+</body>
+</html>

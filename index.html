@@ -94,6 +94,19 @@
   }
   .btn-download:hover { transform: translateY(-2px); box-shadow: 0 12px 38px rgba(124, 108, 255, 0.6); }
   .btn-download svg { flex: none; }
+  .btn-download.is-loading {
+    pointer-events: none;
+    opacity: 0.85;
+    transform: none;
+  }
+  .spinner {
+    width: 18px; height: 18px; flex: none;
+    border-radius: 50%;
+    border: 2.5px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #fff;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
   .dl-meta { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
   .dl-meta strong { color: var(--text); }
 
@@ -287,13 +300,13 @@
         in minutes.
       </p>
       <div class="cta-row">
-        <a class="btn-download" href="Swaylo_ai.apk" download>
+        <a class="btn-download" href="swaylo.ai.apk" download>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 3v12" /><path d="m7 10 5 5 5-5" /><path d="M5 21h14" />
           </svg>
           Download for Android
         </a>
-        <div class="dl-meta"><strong>Swaylo_ai.apk</strong> · v1.0.5 · free to try</div>
+        <div class="dl-meta"><strong>swaylo.ai.apk</strong> · v1.0.5 · free to try</div>
       </div>
     </div>
 
@@ -390,11 +403,11 @@
       <h2>Get Swaylo AI on your phone</h2>
       <p>Free to try — build your first website today.</p>
       <div class="cta-row">
-        <a class="btn-download" href="Swaylo_ai.apk" download>
+        <a class="btn-download" href="swaylo.ai.apk" download>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 3v12" /><path d="m7 10 5 5 5-5" /><path d="M5 21h14" />
           </svg>
-          Download Swaylo_ai.apk
+          Download swaylo.ai.apk
         </a>
         <div class="dl-meta">Android · v1.0.5<br />You may need to allow installs from your browser.</div>
       </div>
@@ -451,6 +464,29 @@
   }
 
   playLoop();
+})();
+
+/* Download buttons: show a loading state while the browser starts the download */
+(function () {
+  var buttons = document.querySelectorAll(".btn-download");
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      if (btn.classList.contains("is-loading")) return;
+
+      var original = btn.innerHTML;
+      btn.classList.add("is-loading");
+      btn.setAttribute("aria-busy", "true");
+      btn.innerHTML = '<span class="spinner"></span> Starting download…';
+
+      /* the browser gives no "download started" event, so restore after a bit */
+      setTimeout(function () {
+        btn.innerHTML = original;
+        btn.classList.remove("is-loading");
+        btn.removeAttribute("aria-busy");
+      }, 6000);
+    });
+  });
 })();
 </script>
 </body>

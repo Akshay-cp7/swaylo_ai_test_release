@@ -72,16 +72,6 @@
     display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px;
     align-items: center; padding: 64px 0 88px;
   }
-  .eyebrow {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
-    color: var(--brand-2);
-    border: 1px solid rgba(56, 199, 255, 0.25);
-    background: rgba(56, 199, 255, 0.07);
-    padding: 6px 14px; border-radius: 999px; margin-bottom: 22px;
-  }
-  .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand-2); box-shadow: 0 0 10px var(--brand-2); }
-
   h1 {
     font-size: clamp(2.4rem, 5.5vw, 3.8rem);
     line-height: 1.08; letter-spacing: -0.035em; font-weight: 800;
@@ -132,7 +122,7 @@
     width: 18px; height: 18px; border-radius: 6px;
     object-fit: cover;
   }
-  .chat { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .chat { position: relative; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
   .bubble {
     max-width: 85%; padding: 9px 13px; border-radius: 14px;
     font-size: 0.74rem; line-height: 1.45;
@@ -187,14 +177,16 @@
     transform: translateY(0) translateX(0) scale(1);
   }
   .typing {
-    align-self: flex-start;
-    display: none;
+    /* absolutely positioned over the (invisible) upcoming bubble so it never adds height */
+    position: absolute; left: 14px; top: 14px;
+    display: inline-flex; opacity: 0; pointer-events: none;
     gap: 4px; align-items: center;
     background: #1b1e2d; border: 1px solid var(--line);
     border-radius: 14px; border-bottom-left-radius: 4px;
     padding: 11px 14px;
+    transition: opacity 0.25s ease;
   }
-  .typing.shown { display: inline-flex; }
+  .typing.shown { opacity: 1; }
   .typing .t-dot {
     width: 6px; height: 6px; border-radius: 50%;
     background: var(--muted);
@@ -288,7 +280,6 @@
 
   <header class="hero">
     <div>
-      <span class="eyebrow"><span class="dot"></span> Now available for Android</span>
       <h1>Your website,<br /><span class="grad">built from a chat.</span></h1>
       <p class="sub">
         Describe what you want. Swaylo AI asks the right questions, designs a
@@ -437,8 +428,8 @@
     bubbles.forEach(function (b) {
       if (b.classList.contains("ai")) {
         at(500, function () {
+          typing.style.top = b.offsetTop + "px"; /* dots sit exactly where the reply will land */
           typing.classList.add("shown");
-          chat.insertBefore(typing, b); /* dots sit exactly where the reply will land */
         });
         at(1300, function () {
           typing.classList.remove("shown");

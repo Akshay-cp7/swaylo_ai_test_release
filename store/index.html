@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Swaylo — Shirts</title>
 <meta name="description" content="Original printed tees, made when you order them. Designed and printed in India.">
-<meta name="theme-color" content="#F9F4EF">
+<meta name="theme-color" content="#ffffff">
 <link rel="icon" type="image/png" href="../launch_icon.png">
 <meta property="og:title" content="Swaylo — Shirts">
 <meta property="og:description" content="Original printed tees, made when you order them.">
@@ -17,240 +17,214 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600..900;1,9..144,600..800&family=Schibsted+Grotesk:wght@400..700&display=swap" rel="stylesheet">
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <style>
-  /* Same paper and ink as swayloweb.com — this is the same company, and a
-     store that looked like a different one would be the first thing to make
-     somebody hesitate before typing a card number. */
+  /* Deliberately ordinary. The cream-and-serif look belongs to swayloweb.com,
+     and it is the right dress for a landing page — but a shop nobody has heard
+     of is not trying to look distinctive, it is trying to look SAFE. White
+     ground, system type, familiar amber-and-orange buttons: the shapes every
+     Indian shopper already trusts because Flipkart, Amazon and Myntra taught
+     them. Recognition is the cheapest trust there is. */
   :root {
-    --paper:      #F9F4EF;
-    --paper-deep: #F2EBE0;
-    --ink:        #0A2850;
-    --ink-70:     rgba(10, 40, 80, 0.70);
-    --ink-55:     rgba(10, 40, 80, 0.55);
-    --rule:       rgba(10, 40, 80, 0.16);
-    --rule-soft:  rgba(10, 40, 80, 0.09);
-    --wa-deep:    #0F7C42;
-    --clay:       #AC4F1D;
-    --display: "Fraunces", Georgia, "Times New Roman", serif;
-    --sans: "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --r-paper: 4px;
+    --bg:        #ffffff;
+    --sunk:      #f1f3f6;   /* page ground behind cards */
+    --card:      #ffffff;
+    --line:      #e0e0e0;
+    --line-soft: #f0f0f0;
+    --ink:       #212121;
+    --ink-60:    #565656;
+    --ink-40:    #878787;
+    --buy:       #fb641b;   /* the "buy now" orange */
+    --bag:       #ff9f00;   /* the "add to cart" amber */
+    --ok:        #388e3c;   /* discounts, reassurance ticks */
+    --bad:       #d32f2f;
+    --r:         4px;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body {
-    font-family: var(--sans); font-size: 17px; line-height: 1.55;
-    background: var(--paper); color: var(--ink);
+    font-family: var(--sans); font-size: 14px; line-height: 1.5;
+    background: var(--sunk); color: var(--ink);
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 22px; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
   a { color: inherit; }
 
   /* ── masthead ─────────────────────────────────────────────────────────── */
   header.top {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--rule-soft);
-    position: sticky; top: 0; background: var(--paper); z-index: 40;
+    background: var(--bg); border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; z-index: 40;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
   }
-  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-  .brand img { width: 30px; height: 30px; object-fit: contain; }
-  .brand b { font-family: var(--display); font-size: 21px; font-weight: 800; letter-spacing: -0.01em; }
+  header.top > .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 16px; }
+  .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+  .brand img { width: 26px; height: 26px; object-fit: contain; }
+  .brand b { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
   .cartbtn {
-    font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
-    background: none; border: 1px solid var(--rule); border-radius: 999px;
-    padding: 8px 16px; color: var(--ink); display: inline-flex; align-items: center; gap: 8px;
+    font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+    background: none; border: 1px solid var(--line); border-radius: var(--r);
+    padding: 7px 14px; color: var(--ink); display: inline-flex; align-items: center; gap: 7px;
   }
   .cartbtn .count {
-    background: var(--ink); color: var(--paper); border-radius: 999px;
-    min-width: 20px; height: 20px; font-size: 12px; font-weight: 700;
+    background: var(--buy); color: #fff; border-radius: 999px;
+    min-width: 19px; height: 19px; font-size: 11px; font-weight: 700;
     display: grid; place-items: center; padding: 0 5px;
   }
   .cartbtn[hidden] { display: none; }
 
   /* ── hero ─────────────────────────────────────────────────────────────── */
-  .hero { padding: 54px 0 34px; max-width: 34ch; }
-  .hero h1 {
-    font-family: var(--display); font-size: clamp(34px, 6vw, 52px);
-    font-weight: 800; line-height: 1.05; letter-spacing: -0.02em;
-  }
-  .hero p { margin-top: 14px; color: var(--ink-70); font-size: 18px; }
+  .hero { background: var(--bg); padding: 22px 18px; margin: 12px 0; border: 1px solid var(--line-soft); border-radius: var(--r); }
+  .hero h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .hero p { margin-top: 5px; color: var(--ink-60); font-size: 14px; }
 
   /* ── the grid ─────────────────────────────────────────────────────────── */
-  .grid { display: grid; gap: 30px 24px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); padding-bottom: 70px; }
-  .tile { cursor: pointer; border: 0; background: none; padding: 0; text-align: left; font: inherit; color: inherit; }
-  /* `contain`, not `cover`. A 4:5 box is right for a photo of a shirt on a
-     body, but print-on-demand mockups come square as often as not, and cover
-     would silently crop a fifth of the width off one — taking the edge of the
-     garment with it. Contain shows whatever was uploaded, whole, whatever
-     shape it is. The white ground is what makes the letterboxing invisible:
-     mockups are shot on white, so the padding and the photo become one card. */
-  .tile .shot {
-    aspect-ratio: 4 / 5; background: #fff center/contain no-repeat;
-    border-radius: var(--r-paper); border: 1px solid var(--rule-soft);
-    transition: transform 0.4s var(--ease);
+  /* Separate cards rather than one bordered slab with hairline gaps. The slab
+     version drew its dividers with the container's own background, so a row
+     that was not full — which with one shirt is every row — showed the empty
+     tracks as grey blocks sitting next to the product. */
+  .grid {
+    display: grid; gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    margin-bottom: 24px;
   }
-  .tile:hover .shot { transform: translateY(-4px); }
-  .tile h3 { font-family: var(--display); font-size: 19px; font-weight: 700; margin-top: 12px; }
-  .tile .price { color: var(--ink-70); font-size: 15px; margin-top: 2px; }
-  .tile .price s { color: var(--ink-55); margin-left: 6px; }
+  .tile {
+    cursor: pointer; padding: 12px; text-align: left; font: inherit;
+    color: inherit; background: var(--card);
+    border: 1px solid var(--line-soft); border-radius: var(--r);
+    transition: box-shadow 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+  .tile:hover { box-shadow: 0 3px 16px rgba(0,0,0,0.13); transform: translateY(-2px); }
+  .tile .shot {
+    aspect-ratio: 4 / 5; background: #fff center/contain no-repeat; margin-bottom: 10px;
+  }
+  .tile h3 { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .tile .price { font-size: 15px; font-weight: 700; margin-top: 5px; }
+  .tile .price s { color: var(--ink-40); font-weight: 400; font-size: 13px; margin-left: 6px; }
+  .off { color: var(--ok); font-weight: 700; font-size: 13px; margin-left: 6px; }
 
   /* ── product ──────────────────────────────────────────────────────────── */
-  /* Thumbnail rail beside one large image, with the details column pinned —
-     the shape every shopper already knows from Amazon and Flipkart. The old
-     layout stacked every photo full-width down the left, so a second photo
-     pushed the buy button off the screen and left the right half empty. */
   .product {
-    display: grid; gap: 36px; padding: 28px 0 80px;
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-    align-items: start;
+    display: grid; gap: 24px; padding: 18px; background: var(--bg);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start; border: 1px solid var(--line-soft); border-radius: var(--r);
+    margin-bottom: 24px;
   }
-  .gallery { display: grid; grid-template-columns: 66px minmax(0, 1fr); gap: 12px; align-items: start; }
+  .gallery { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 10px; align-items: start; }
   .gallery:has(.rail[hidden]) { grid-template-columns: minmax(0, 1fr); }
-  .rail { display: flex; flex-direction: column; gap: 8px; }
+  .rail { display: flex; flex-direction: column; gap: 7px; }
   .rail button {
-    padding: 0; border: 1px solid var(--rule); background: #fff center/contain no-repeat;
-    border-radius: var(--r-paper); aspect-ratio: 4 / 5; cursor: pointer;
-    transition: border-color 0.15s var(--ease);
+    padding: 0; border: 1px solid var(--line); background: #fff center/contain no-repeat;
+    border-radius: var(--r); aspect-ratio: 4 / 5; cursor: pointer;
   }
-  .rail button:hover { border-color: var(--ink-70); }
-  .rail button.on { border-color: var(--ink); border-width: 2px; }
-  .stage {
-    aspect-ratio: 4 / 5; background: #fff center/contain no-repeat;
-    border-radius: var(--r-paper); border: 1px solid var(--rule-soft);
-  }
-  /* Pinned so the price, the sizes and the button stay put while the eye
-     moves over the photos. On a short page it simply never engages. */
-  .details { position: sticky; top: 92px; }
-  @media (max-width: 760px) {
-    .product { grid-template-columns: 1fr; gap: 22px; }
-    /* Rail moves under the image and lies flat: a vertical strip beside a
-       full-width photo would leave both too narrow to read. */
-    .gallery { grid-template-columns: 1fr; }
-    .rail { flex-direction: row; order: 2; overflow-x: auto; padding-bottom: 4px; }
-    .rail button { flex: none; width: 58px; }
-    .stage { order: 1; }
-    .details { position: static; }
-  }
-  .product h2 { font-family: var(--display); font-size: clamp(28px, 4.4vw, 38px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
-  .product .cost { font-size: 23px; font-weight: 700; margin-top: 10px; }
-  .product .cost s { font-weight: 400; color: var(--ink-55); font-size: 18px; margin-left: 8px; }
-  .product .blurb { margin-top: 16px; color: var(--ink-70); white-space: pre-line; }
+  .rail button:hover { border-color: var(--ink-40); }
+  .rail button.on { border-color: var(--buy); border-width: 2px; }
+  .stage { aspect-ratio: 4 / 5; background: #fff center/contain no-repeat; border: 1px solid var(--line-soft); border-radius: var(--r); }
+  .details { position: sticky; top: 74px; }
+  .product h2 { font-size: 19px; font-weight: 500; line-height: 1.3; color: var(--ink); }
+  .product .cost { font-size: 26px; font-weight: 700; margin-top: 10px; }
+  .product .cost s { font-weight: 400; color: var(--ink-40); font-size: 16px; margin-left: 8px; }
+  .product .blurb { margin-top: 12px; color: var(--ink-60); white-space: pre-line; font-size: 14px; }
 
-  .sizes { margin-top: 26px; }
-  .sizes h4, .field-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-55); font-weight: 700; }
-  .chips { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 10px; }
+  .sizes { margin-top: 20px; }
+  .sizes h4, .field-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-40); font-weight: 700; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 9px; }
   .chip {
-    font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
-    background: none; border: 1px solid var(--rule); color: var(--ink);
-    border-radius: 999px; padding: 9px 18px; transition: 0.16s var(--ease);
+    font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; min-width: 44px;
+    background: #fff; border: 1px solid var(--line); color: var(--ink);
+    border-radius: var(--r); padding: 9px 14px; transition: 0.14s var(--ease);
   }
-  .chip:hover { border-color: var(--ink-70); }
-  .chip.on { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .chip:hover { border-color: var(--ink-40); }
+  .chip.on { border-color: var(--buy); color: var(--buy); box-shadow: inset 0 0 0 1px var(--buy); }
 
+  /* The two-button row every Indian shopper has pressed a hundred times. */
   .btn {
-    font: inherit; font-size: 17px; font-weight: 700; cursor: pointer;
-    background: var(--wa-deep); color: #fff; border: 0;
-    border-radius: 999px; padding: 15px 30px; margin-top: 26px; width: 100%;
-    transition: 0.16s var(--ease);
+    font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.02em;
+    background: var(--buy); color: #fff; border: 0; text-transform: uppercase;
+    border-radius: var(--r); padding: 15px 20px; width: 100%;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.14); transition: filter 0.14s var(--ease);
   }
-  .btn:hover { filter: brightness(1.07); }
-  .btn[disabled] { opacity: 0.45; cursor: default; filter: none; }
-  .btn.ghost { background: none; color: var(--ink); border: 1px solid var(--rule); }
-  /* Buy now leads, because someone who has picked a size has decided. Add to
-     bag is the quieter one — it is for a second shirt, not for this one. */
-  .buyrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .buyrow .btn { margin-top: 26px; }
-  /* On a phone the buttons leave the flow and pin to the bottom of the screen.
-     The photo alone is most of a phone viewport, so anything after it — price,
-     sizes, buy — was below the fold on arrival, and a shop whose buy button
-     has to be hunted for is a shop that gets browsed rather than bought from.
-     Same two buttons, not a duplicate set: one id, one handler, one truth. */
-  @media (max-width: 760px) {
-    .buybar {
-      position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
-      background: var(--paper); border-top: 1px solid var(--rule);
-      padding: 10px 22px calc(10px + env(safe-area-inset-bottom, 0px));
-      box-shadow: 0 -6px 20px rgba(10, 40, 80, 0.07);
-    }
-    .buyrow { grid-template-columns: 1fr 1fr; gap: 10px; }
-    .buyrow .btn { margin-top: 0; padding: 14px 18px; font-size: 16px; }
-    .pickfirst { margin: 8px 0 0; text-align: center; font-size: 14px; }
-    /* Room for the bar, so the last thing on the page is still reachable. */
-    #viewProduct { padding-bottom: 108px; }
-    /* And give the page a chance to show something other than the photo. */
-    .stage { max-height: 52vh; }
-  }
-  .pickfirst { font-size: 15px; color: var(--clay); font-weight: 600; margin-top: 12px; }
-
-  /* Pressing a buy button without a size does not fail — it points. The chips
-     take the accent colour and the block shifts once, which says "here, this
-     bit" faster than any sentence does. */
-  .sizes.needs h4 { color: var(--clay); }
-  .sizes.needs .chip:not(.on) { border-color: var(--clay); }
-  .sizes.needs { animation: nudge 0.45s var(--ease); }
-  @keyframes nudge {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    60% { transform: translateX(4px); }
-  }
-  @media (prefers-reduced-motion: reduce) { .sizes.needs { animation: none; } }
+  .btn:hover { filter: brightness(1.06); }
+  .btn.ghost { background: var(--bag); color: #fff; border: 0; }
+  .buyrow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
+  .pickfirst { font-size: 13px; color: var(--bad); font-weight: 600; margin-top: 10px; }
   .pickfirst[hidden] { display: none; }
-  .added { font-size: 15px; color: var(--wa-deep); font-weight: 600; margin-top: 12px; }
-  .added a { color: var(--wa-deep); }
+  .added { font-size: 14px; color: var(--ok); font-weight: 600; margin-top: 10px; }
+  .added a { color: var(--ok); }
 
-  /* The three things a first-time buyer on an unknown store actually wants to
-     know before typing a card number. */
-  .assure { margin-top: 20px; border-top: 1px solid var(--rule-soft); padding-top: 16px; }
-  .assure div { display: flex; gap: 10px; align-items: baseline; padding: 5px 0; font-size: 15px; color: var(--ink-70); }
+  .sizes.needs h4 { color: var(--bad); }
+  .sizes.needs .chip:not(.on) { border-color: var(--bad); }
+  .sizes.needs { animation: nudge 0.45s var(--ease); }
+  @keyframes nudge { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 60% { transform: translateX(4px); } }
+  @media (prefers-reduced-motion: reduce) { .sizes.needs { animation: none; } }
+
+  .assure { margin-top: 18px; border-top: 1px solid var(--line-soft); padding-top: 14px; }
+  .assure div { display: flex; gap: 9px; align-items: baseline; padding: 4px 0; font-size: 13px; color: var(--ink-60); }
   .assure b { color: var(--ink); font-weight: 600; }
-  .assure .mark { color: var(--wa-deep); font-weight: 700; flex: none; }
+  .assure .mark { color: var(--ok); font-weight: 700; flex: none; }
 
-  .back {
-    background: none; border: 0; font: inherit; font-size: 15px; color: var(--ink-70);
-    cursor: pointer; padding: 22px 0 0;
-  }
+  .back { background: none; border: 0; font: inherit; font-size: 13px; color: var(--ink-60); cursor: pointer; padding: 14px 0 0; }
 
-  /* ── cart & checkout ──────────────────────────────────────────────────── */
-  .sheet { padding: 34px 0 80px; max-width: 620px; }
-  .sheet h2 { font-family: var(--display); font-size: 32px; font-weight: 800; letter-spacing: -0.02em; }
-  .line { display: flex; gap: 14px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--rule-soft); }
-  .line img { width: 62px; height: 78px; object-fit: contain; border-radius: var(--r-paper); background: #fff; flex: none; }
+  /* ── bag & checkout ───────────────────────────────────────────────────── */
+  .sheet { background: var(--bg); border: 1px solid var(--line-soft); border-radius: var(--r); padding: 18px; max-width: 680px; margin-bottom: 24px; }
+  .sheet h2 { font-size: 19px; font-weight: 600; }
+  .line { display: flex; gap: 12px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line-soft); }
+  .line img { width: 58px; height: 74px; object-fit: contain; background: #fff; border: 1px solid var(--line-soft); border-radius: var(--r); flex: none; }
   .line .who { flex: 1; min-width: 0; }
-  .line .who b { display: block; font-weight: 700; }
-  .line .who span { color: var(--ink-55); font-size: 14px; }
+  .line .who b { display: block; font-weight: 500; font-size: 14px; }
+  .line .who span { color: var(--ink-40); font-size: 13px; }
   .qty { display: flex; align-items: center; gap: 4px; }
-  .qty button {
-    width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--rule);
-    background: none; font: inherit; font-size: 17px; cursor: pointer; color: var(--ink); line-height: 1;
-  }
-  .qty span { min-width: 26px; text-align: center; font-weight: 700; }
-  .totals { padding: 18px 0; font-size: 16px; }
-  .totals div { display: flex; justify-content: space-between; padding: 4px 0; color: var(--ink-70); }
-  .totals .grand { font-size: 21px; font-weight: 800; color: var(--ink); border-top: 1px solid var(--rule); margin-top: 8px; padding-top: 12px; }
+  .qty button { width: 28px; height: 28px; border-radius: var(--r); border: 1px solid var(--line); background: #fff; font: inherit; font-size: 16px; cursor: pointer; color: var(--ink); line-height: 1; }
+  .qty span { min-width: 26px; text-align: center; font-weight: 700; font-size: 14px; }
+  .totals { padding: 14px 0; font-size: 14px; }
+  .totals div { display: flex; justify-content: space-between; padding: 4px 0; color: var(--ink-60); }
+  .totals .grand { font-size: 17px; font-weight: 700; color: var(--ink); border-top: 1px dashed var(--line); margin-top: 8px; padding-top: 11px; }
 
-  form { margin-top: 26px; display: grid; gap: 14px; }
-  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  form { margin-top: 20px; display: grid; gap: 12px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   @media (max-width: 560px) { .pair { grid-template-columns: 1fr; } }
   label { display: block; }
-  label > span { display: block; font-size: 13px; font-weight: 600; color: var(--ink-55); margin-bottom: 5px; }
+  label > span { display: block; font-size: 12px; font-weight: 600; color: var(--ink-40); margin-bottom: 4px; }
   input, select {
-    width: 100%; font: inherit; font-size: 16px; color: var(--ink);
-    background: #fff; border: 1px solid var(--rule); border-radius: var(--r-paper);
-    padding: 12px 13px;
+    width: 100%; font: inherit; font-size: 15px; color: var(--ink);
+    background: #fff; border: 1px solid var(--line); border-radius: var(--r); padding: 11px 12px;
   }
-  input:focus, select:focus { outline: 2px solid var(--wa-deep); outline-offset: -1px; border-color: transparent; }
+  input:focus, select:focus { outline: none; border-color: var(--buy); box-shadow: 0 0 0 1px var(--buy); }
 
-  .note { font-size: 14px; color: var(--ink-55); margin-top: 12px; }
-  .err { color: var(--clay); font-weight: 600; margin-top: 12px; min-height: 1.4em; }
+  .note { font-size: 12px; color: var(--ink-40); margin-top: 10px; }
+  .err { color: var(--bad); font-weight: 600; margin-top: 10px; font-size: 13px; min-height: 1.3em; }
 
-  .done { padding: 80px 0; max-width: 34ch; }
-  .done h2 { font-family: var(--display); font-size: 38px; font-weight: 800; letter-spacing: -0.02em; }
-  .done p { margin-top: 14px; color: var(--ink-70); }
-  .done .num { font-family: var(--display); font-size: 22px; font-weight: 700; margin-top: 18px; }
+  .done { background: var(--bg); border: 1px solid var(--line-soft); border-radius: var(--r); padding: 40px 22px; max-width: 480px; margin-bottom: 24px; }
+  .done h2 { font-size: 22px; font-weight: 600; color: var(--ok); }
+  .done p { margin-top: 10px; color: var(--ink-60); font-size: 14px; }
+  .done .num { font-size: 16px; font-weight: 700; color: var(--ink); margin-top: 14px; }
+  .done .btn { margin-top: 22px; }
 
-  .empty { padding: 70px 0; color: var(--ink-55); }
-  footer { border-top: 1px solid var(--rule-soft); padding: 26px 0 50px; color: var(--ink-55); font-size: 14px; }
-  footer a { color: var(--wa-deep); font-weight: 600; }
+  .empty { padding: 50px 16px; color: var(--ink-40); text-align: center; background: var(--bg); border-radius: var(--r); }
+  footer { background: var(--bg); border-top: 1px solid var(--line); padding: 20px 0 34px; color: var(--ink-40); font-size: 13px; }
+  footer a { color: var(--ok); font-weight: 600; }
   [hidden] { display: none !important; }
+
+  /* ── phones ───────────────────────────────────────────────────────────── */
+  @media (max-width: 760px) {
+    .product { grid-template-columns: 1fr; gap: 16px; padding: 14px; }
+    .gallery { grid-template-columns: 1fr; }
+    .rail { flex-direction: row; order: 2; overflow-x: auto; padding-bottom: 4px; }
+    .rail button { flex: none; width: 54px; }
+    .stage { order: 1; max-height: 52vh; }
+    .details { position: static; }
+    .buybar {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+      background: var(--bg); border-top: 1px solid var(--line);
+      padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+    .buyrow { margin-top: 0; gap: 8px; }
+    .btn { padding: 14px 12px; font-size: 14px; }
+    .pickfirst { margin: 6px 0 0; text-align: center; }
+    #viewProduct { padding-bottom: 100px; }
+    .hero { margin: 8px 0; padding: 16px; }
+    .hero h1 { font-size: 18px; }
+  }
 </style>
 </head>
 <body>
@@ -371,6 +345,13 @@ const API = 'https://whatsapp-bot-production-725a.up.railway.app';
 const $ = (s, r = document) => r.querySelector(s);
 const rupees = (n) => '₹' + Number(n || 0).toLocaleString('en-IN');
 
+/** Price, was-price, and the percentage off — read in that order everywhere. */
+function priceHtml(price, mrp) {
+  if (!mrp || mrp <= price) return rupees(price);
+  const off = Math.round((1 - price / mrp) * 100);
+  return `${rupees(price)}<s>${rupees(mrp)}</s><span class="off">${off}% off</span>`;
+}
+
 const STATES = ['Andaman and Nicobar Islands','Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chandigarh','Chhattisgarh','Dadra and Nagar Haveli and Daman and Diu','Delhi','Goa','Gujarat','Haryana','Himachal Pradesh','Jammu and Kashmir','Jharkhand','Karnataka','Kerala','Ladakh','Lakshadweep','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Puducherry','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal'];
 
 let catalogue = null;
@@ -477,7 +458,7 @@ async function boot() {
     tile.innerHTML = `
       <div class="shot" style="background-image:url('${shirt.images[0] || ''}')"></div>
       <h3></h3>
-      <p class="price">${rupees(shirt.price)}${shirt.mrp ? `<s>${rupees(shirt.mrp)}</s>` : ''}</p>`;
+      <p class="price">${priceHtml(shirt.price, shirt.mrp)}</p>`;
     tile.querySelector('h3').textContent = shirt.name;
     tile.onclick = () => openShirt(shirt);
     grid.append(tile);
@@ -501,7 +482,7 @@ function openShirt(shirt, { push = true } = {}) {
   // Named so a bookmark, a shared link and a browser tab all say what it is.
   document.title = `${shirt.name} — Swaylo`;
   $('#pName').textContent = shirt.name;
-  $('#pPrice').innerHTML = rupees(shirt.price) + (shirt.mrp ? `<s>${rupees(shirt.mrp)}</s>` : '');
+  $('#pPrice').innerHTML = priceHtml(shirt.price, shirt.mrp);
   $('#pBlurb').textContent = shirt.blurb || '';
   $('#pNote').textContent = '';
 

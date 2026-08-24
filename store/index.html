@@ -390,6 +390,37 @@ let bag = loadBag();
 let directBuy = null;
 const activeItems = () => (directBuy ? [directBuy] : bag);
 
+/* ── addresses ─────────────────────────────────────────────────────────── */
+
+/* A shirt needs its own URL or it cannot be sent to anybody, which for a shop
+   sold over WhatsApp is most of the point. A query string rather than a path,
+   because this is a static site: /store/yolo-adventure/ would need a file at
+   that address and GitHub Pages would 404 it. ?p=slug is one file, any slug.
+   It also gives the browser's back button something to do — before this it
+   left the site from a product page, which reads as "this shop broke". */
+const slugInUrl = () => new URLSearchParams(location.search).get('p');
+
+const setUrl = (slug) => {
+  const url = slug ? `${location.pathname}?p=${encodeURIComponent(slug)}` : location.pathname;
+  if (url !== location.pathname + location.search) history.pushState({ slug: slug || null }, '', url);
+};
+
+/** Show whatever the current address asks for. Also the popstate handler. */
+function route() {
+  const slug = slugInUrl();
+  const shirt = slug && catalogue?.shirts.find((s) => s.slug === slug);
+  if (shirt) openShirt(shirt, { push: false });
+  else {
+    // A link to a shirt that has since been retired lands on the shop rather
+    // than on an error. They came to buy something; show them what there is.
+    directBuy = null;
+    document.title = 'Swaylo — Shirts';
+    show('viewList');
+  }
+}
+
+addEventListener('popstate', route);
+
 /* ── views ─────────────────────────────────────────────────────────────── */
 
 function show(view) {
@@ -452,6 +483,9 @@ async function boot() {
     grid.append(tile);
   }
   $('#listEmpty').hidden = catalogue.shirts.length > 0;
+
+  // Somebody may have arrived on a link to one shirt rather than the shop.
+  route();
   if (!catalogue.checkout_open) {
     $('#listEmpty').hidden = false;
     $('#listEmpty').textContent = 'The shop opens shortly. Follow along on WhatsApp.';
@@ -460,9 +494,12 @@ async function boot() {
 
 /* ── one shirt ─────────────────────────────────────────────────────────── */
 
-function openShirt(shirt) {
+function openShirt(shirt, { push = true } = {}) {
   current = shirt;
   chosen = null;
+  if (push) setUrl(shirt.slug);
+  // Named so a bookmark, a shared link and a browser tab all say what it is.
+  document.title = `${shirt.name} — Swaylo`;
   $('#pName').textContent = shirt.name;
   $('#pPrice').innerHTML = rupees(shirt.price) + (shirt.mrp ? `<s>${rupees(shirt.mrp)}</s>` : '');
   $('#pBlurb').textContent = shirt.blurb || '';
@@ -694,10 +731,17 @@ $('#checkout').onsubmit = async (e) => {
 /* ── chrome ────────────────────────────────────────────────────────────── */
 
 $('#cartBtn').onclick = () => { directBuy = null; openCart(); };
-$('#backList').onclick = () => show('viewList');
-$('#backList2').onclick = () => { directBuy = null; show('viewList'); };
-$('#doneBack').onclick = () => { directBuy = null; show('viewList'); };
-$('#home').onclick = (e) => { e.preventDefault(); directBuy = null; show('viewList'); };
+const toList = () => {
+  directBuy = null;
+  setUrl(null);
+  document.title = 'Swaylo — Shirts';
+  show('viewList');
+};
+
+$('#backList').onclick = toList;
+$('#backList2').onclick = toList;
+$('#doneBack').onclick = toList;
+$('#home').onclick = (e) => { e.preventDefault(); toList(); };
 
 boot();
 </script>

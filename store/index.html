@@ -159,8 +159,26 @@
      bag is the quieter one — it is for a second shirt, not for this one. */
   .buyrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .buyrow .btn { margin-top: 26px; }
-  @media (max-width: 420px) { .buyrow { grid-template-columns: 1fr; gap: 0; }
-    .buyrow .btn:last-child { margin-top: 10px; } }
+  /* On a phone the buttons leave the flow and pin to the bottom of the screen.
+     The photo alone is most of a phone viewport, so anything after it — price,
+     sizes, buy — was below the fold on arrival, and a shop whose buy button
+     has to be hunted for is a shop that gets browsed rather than bought from.
+     Same two buttons, not a duplicate set: one id, one handler, one truth. */
+  @media (max-width: 760px) {
+    .buybar {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+      background: var(--paper); border-top: 1px solid var(--rule);
+      padding: 10px 22px calc(10px + env(safe-area-inset-bottom, 0px));
+      box-shadow: 0 -6px 20px rgba(10, 40, 80, 0.07);
+    }
+    .buyrow { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .buyrow .btn { margin-top: 0; padding: 14px 18px; font-size: 16px; }
+    .pickfirst { margin: 8px 0 0; text-align: center; font-size: 14px; }
+    /* Room for the bar, so the last thing on the page is still reachable. */
+    #viewProduct { padding-bottom: 108px; }
+    /* And give the page a chance to show something other than the photo. */
+    .stage { max-height: 52vh; }
+  }
   .pickfirst { font-size: 15px; color: var(--clay); font-weight: 600; margin-top: 12px; }
 
   /* Pressing a buy button without a size does not fail — it points. The chips
@@ -275,11 +293,13 @@
           <h4>Size</h4>
           <div class="chips" id="pSizes"></div>
         </div>
-        <div class="buyrow">
-          <button class="btn" id="buyNow">Buy now</button>
-          <button class="btn ghost" id="addToBag">Add to bag</button>
+        <div class="buybar">
+          <div class="buyrow">
+            <button class="btn" id="buyNow">Buy now</button>
+            <button class="btn ghost" id="addToBag">Add to bag</button>
+          </div>
+          <p class="pickfirst" id="pickFirst" hidden>Choose a size first.</p>
         </div>
-        <p class="pickfirst" id="pickFirst" hidden>Choose a size first.</p>
         <div class="assure">
           <div><span class="mark">✓</span><span><b>Printed when you order</b> — dispatched in 3–5 days</span></div>
           <div><span class="mark">✓</span><span><b>Free delivery</b> anywhere in India</span></div>

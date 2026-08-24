@@ -199,6 +199,7 @@
   }
   .gallery { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 12px; align-items: start; min-width: 0; }
   .gallery:has(.rail[hidden]) { grid-template-columns: minmax(0, 1fr); }
+  .gallery > .shotwrap { min-width: 0; }
   .rail { display: flex; flex-direction: column; gap: 9px; }
   .rail button {
     padding: 0; border: 1px solid var(--rule-soft); background: var(--plate) center/contain no-repeat;
@@ -206,10 +207,31 @@
   }
   .rail button:hover { border-color: var(--rule); }
   .rail button.on { border-color: var(--clay); box-shadow: inset 0 0 0 1px var(--clay); }
+  /* The stage is a scroll-snap track rather than one element whose background
+     gets swapped. Same thing to a mouse — the thumbnails scroll it — but on a
+     phone it is what everybody's thumb already expects, and it costs no
+     library and no touch handlers to get right. */
+  .shotwrap { position: relative; }
   .stage {
-    aspect-ratio: 1 / 1; background: var(--plate) center/contain no-repeat;
+    aspect-ratio: 1 / 1; background: var(--plate);
     border: 1px solid var(--rule-soft); border-radius: var(--r-lg);
+    display: flex; overflow-x: auto; overflow-y: hidden;
+    scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+    scrollbar-width: none; -webkit-overflow-scrolling: touch;
   }
+  .stage::-webkit-scrollbar { display: none; }
+  .stage .slide {
+    flex: 0 0 100%; min-width: 0; scroll-snap-align: center;
+    background: var(--plate) center/contain no-repeat;
+  }
+  /* Says how many photos there are, which is also what tells a thumb to try. */
+  .counter {
+    position: absolute; right: 12px; bottom: 12px; pointer-events: none;
+    background: rgba(10, 40, 80, 0.72); color: var(--paper);
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em;
+    padding: 4px 9px; border-radius: 999px;
+  }
+  .counter[hidden] { display: none; }
   .details { position: sticky; top: 86px; min-width: 0; }
   .product h2 { font-family: var(--display); font-size: clamp(1.7rem, 3.6vw, 2.4rem); font-weight: 800; line-height: 1.06; letter-spacing: -0.03em; margin-top: 10px; }
   .product .cost { font-size: 1.6rem; font-weight: 700; margin-top: 14px; }
@@ -329,7 +351,8 @@
     .gallery { grid-template-columns: 1fr; }
     .rail { flex-direction: row; order: 2; overflow-x: auto; padding-bottom: 4px; min-width: 0; }
     .rail button { flex: none; width: 58px; }
-    .stage { order: 1; max-height: 54vh; }
+    .shotwrap { order: 1; }
+    .stage { max-height: 54vh; }
     .details { position: static; }
     .buybar {
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
@@ -407,7 +430,10 @@
     <div class="product">
       <div class="gallery">
         <div class="rail" id="rail"></div>
-        <div class="stage" id="stage"></div>
+        <div class="shotwrap">
+          <div class="stage" id="stage"></div>
+          <p class="counter" id="shotCount" hidden></p>
+        </div>
       </div>
       <div class="details">
         <p class="eyebrow">Swaylo original</p>
@@ -533,6 +559,19 @@
 
 const API = 'https://whatsapp-bot-production-725a.up.railway.app';
 
+/**
+ * Akshay's own number, for anybody with a question about a shirt.
+ *
+ * Deliberately not `catalogue.wa_number` — that is the bot's line, and the bot
+ * sells websites now. A shirt question answered by a website salesman is worse
+ * than no answer. The permanent home for this is SHOP_CONTACT_WA on Railway
+ * (see config.js `shop.contactWa`), which also puts it on the order
+ * confirmation; until that is set, the page carries it.
+ */
+const SHOP_WA = '918943418093';
+const waHref = 'https://wa.me/' + SHOP_WA
+  + '?text=' + encodeURIComponent('Hi, I have a question about the Swaylo shirts.');
+
 const $ = (s, r = document) => r.querySelector(s);
 const rupees = (n) => '₹' + Number(n || 0).toLocaleString('en-IN');
 
@@ -642,6 +681,7 @@ function drawCartCount() {
 
 async function boot() {
   $('#yr').textContent = new Date().getFullYear();
+  for (const el of document.querySelectorAll('#waTop, #waProduct, #waFoot')) el.href = waHref;
   STATES.forEach((s) => {
     const o = document.createElement('option');
     o.value = s; o.textContent = s;
@@ -656,12 +696,6 @@ async function boot() {
     $('#listEmpty').textContent = 'The shop is not reachable right now. Please try again in a minute.';
     return;
   }
-
-  // Three places offer to put the customer in touch with a human, and every
-  // one of them is a link that has to be filled in from the catalogue.
-  const waHref = 'https://wa.me/' + catalogue.wa_number
-    + '?text=' + encodeURIComponent('Hi, I have a question about the Swaylo shirts.');
-  for (const el of document.querySelectorAll('#waTop, #waProduct, #waFoot')) el.href = waHref;
 
   // Anything still in the bag from a previous visit may have been retired
   // since. Drop it quietly rather than failing at checkout.
@@ -719,28 +753,60 @@ function openShirt(shirt, { push = true } = {}) {
 
   // One large image with a rail of thumbnails beside it. The rail hides itself
   // for a single-photo shirt rather than showing a column of one.
+  // Every photo is laid out side by side in the stage and the stage is
+  // scrolled — by a thumb on a phone, by the thumbnails everywhere else. One
+  // mechanism, so the two can never disagree about which photo is showing.
   const shots = shirt.images.length ? shirt.images : [''];
   const stage = $('#stage');
   const rail = $('#rail');
-  // NOT called show(). There is already a show() that switches which view the
-  // page is on, and a local one by the same name shadows it — openShirt ends
-  // by calling show('viewProduct'), which then quietly set the photo to
-  // url('viewProduct') and left the product page hidden.
-  const showShot = (url, btn) => {
-    stage.style.backgroundImage = url ? `url('${url}')` : 'none';
-    [...rail.children].forEach((c) => c.classList.toggle('on', c === btn));
+  const counter = $('#shotCount');
+
+  stage.innerHTML = '';
+  for (const url of shots) {
+    const slide = document.createElement('div');
+    slide.className = 'slide';
+    if (url) slide.style.backgroundImage = `url('${url}')`;
+    stage.append(slide);
+  }
+
+  // The scroll position is the single source of truth for which photo is up.
+  //
+  // Cheap enough to run on every scroll event — and a momentum swipe fires a
+  // lot of them — because the only work that costs anything is skipped unless
+  // the photo has actually changed. Which is also why this is a plain handler
+  // rather than one deferred to requestAnimationFrame.
+  let showing = -1;
+  const syncToScroll = () => {
+    if (!stage.clientWidth) return;
+    const i = Math.max(0, Math.min(shots.length - 1, Math.round(stage.scrollLeft / stage.clientWidth)));
+    if (i === showing) return;
+    showing = i;
+    [...rail.children].forEach((c, n) => c.classList.toggle('on', n === i));
+    counter.textContent = `${i + 1} / ${shots.length}`;
+    // Only when the strip is the scrolling kind — on a wide screen the rail is
+    // a full column, and scrolling it would scroll the page instead.
+    if (rail.scrollWidth > rail.clientWidth) {
+      rail.children[i]?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+    }
   };
+  stage.onscroll = syncToScroll;
+
   rail.innerHTML = '';
   rail.hidden = shots.length < 2;
+  counter.hidden = shots.length < 2;
   shots.forEach((url, i) => {
     const b = document.createElement('button');
     b.type = 'button';
     b.style.backgroundImage = `url('${url}')`;
-    b.setAttribute('aria-label', `Photo ${i + 1}`);
-    b.onclick = () => showShot(url, b);
+    b.setAttribute('aria-label', `Photo ${i + 1} of ${shots.length}`);
+    b.onclick = () => {
+      // Instant, not smooth: a smooth scroll from thumbnail six to thumbnail
+      // one flies the whole strip past the customer for no reason.
+      stage.scrollTo({ left: i * stage.clientWidth, behavior: 'auto' });
+      syncToScroll();   // a press we already know about should not wait on the scroll event
+    };
     rail.append(b);
   });
-  showShot(shots[0], rail.firstElementChild);
 
   // Every variant the same colour means the colour is a fact about the shirt,
   // not a choice — so it is stated once here rather than repeated on every
@@ -777,6 +843,12 @@ function openShirt(shirt, { push = true } = {}) {
   $('#sizeBlock').classList.remove('needs');
   $('#pickFirst').hidden = true;
   show('viewProduct');
+
+  // Only now. Until the view is on screen the stage has no width, and a sync
+  // against a width of zero silently leaves the counter blank and no
+  // thumbnail marked — which is exactly what it did.
+  stage.scrollLeft = 0;          // a different shirt starts on its first photo
+  syncToScroll();
 }
 
 /**
@@ -926,7 +998,7 @@ $('#checkout').onsubmit = async (e) => {
         else { bag = []; saveBag(bag); }
         drawCartCount();
         $('#doneNum').textContent = 'Order ' + order.order_number;
-        $('#doneNote').innerHTML = 'Any questions, <a href="' + $('#waFoot').href + '">message us on WhatsApp</a>.';
+        $('#doneNote').innerHTML = 'Any questions, <a href="' + waHref + '">message us on WhatsApp</a>.';
         show('viewDone');
       },
       modal: {

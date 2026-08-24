@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Swaylo — Shirts</title>
+<meta name="description" content="Original printed tees, made when you order them. Designed and printed in India.">
+<meta name="theme-color" content="#F9F4EF">
+<link rel="icon" type="image/png" href="../launch_icon.png">
+<meta property="og:title" content="Swaylo — Shirts">
+<meta property="og:description" content="Original printed tees, made when you order them.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://swayloweb.com/store/">
+<meta property="og:image" content="https://swayloweb.com/launch_icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600..900;1,9..144,600..800&family=Schibsted+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+  /* Same paper and ink as swayloweb.com — this is the same company, and a
+     store that looked like a different one would be the first thing to make
+     somebody hesitate before typing a card number. */
+  :root {
+    --paper:      #F9F4EF;
+    --paper-deep: #F2EBE0;
+    --ink:        #0A2850;
+    --ink-70:     rgba(10, 40, 80, 0.70);
+    --ink-55:     rgba(10, 40, 80, 0.55);
+    --rule:       rgba(10, 40, 80, 0.16);
+    --rule-soft:  rgba(10, 40, 80, 0.09);
+    --wa-deep:    #0F7C42;
+    --clay:       #AC4F1D;
+    --display: "Fraunces", Georgia, "Times New Roman", serif;
+    --sans: "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --r-paper: 4px;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: var(--sans); font-size: 17px; line-height: 1.55;
+    background: var(--paper); color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 22px; }
+  a { color: inherit; }
+
+  /* ── masthead ─────────────────────────────────────────────────────────── */
+  header.top {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--rule-soft);
+    position: sticky; top: 0; background: var(--paper); z-index: 40;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .brand img { width: 30px; height: 30px; object-fit: contain; }
+  .brand b { font-family: var(--display); font-size: 21px; font-weight: 800; letter-spacing: -0.01em; }
+  .cartbtn {
+    font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
+    background: none; border: 1px solid var(--rule); border-radius: 999px;
+    padding: 8px 16px; color: var(--ink); display: inline-flex; align-items: center; gap: 8px;
+  }
+  .cartbtn .count {
+    background: var(--ink); color: var(--paper); border-radius: 999px;
+    min-width: 20px; height: 20px; font-size: 12px; font-weight: 700;
+    display: grid; place-items: center; padding: 0 5px;
+  }
+  .cartbtn[hidden] { display: none; }
+
+  /* ── hero ─────────────────────────────────────────────────────────────── */
+  .hero { padding: 54px 0 34px; max-width: 34ch; }
+  .hero h1 {
+    font-family: var(--display); font-size: clamp(34px, 6vw, 52px);
+    font-weight: 800; line-height: 1.05; letter-spacing: -0.02em;
+  }
+  .hero p { margin-top: 14px; color: var(--ink-70); font-size: 18px; }
+
+  /* ── the grid ─────────────────────────────────────────────────────────── */
+  .grid { display: grid; gap: 30px 24px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); padding-bottom: 70px; }
+  .tile { cursor: pointer; border: 0; background: none; padding: 0; text-align: left; font: inherit; color: inherit; }
+  .tile .shot {
+    aspect-ratio: 4 / 5; background: var(--paper-deep) center/cover no-repeat;
+    border-radius: var(--r-paper); border: 1px solid var(--rule-soft);
+    transition: transform 0.4s var(--ease);
+  }
+  .tile:hover .shot { transform: translateY(-4px); }
+  .tile h3 { font-family: var(--display); font-size: 19px; font-weight: 700; margin-top: 12px; }
+  .tile .price { color: var(--ink-70); font-size: 15px; margin-top: 2px; }
+  .tile .price s { color: var(--ink-55); margin-left: 6px; }
+
+  /* ── product ──────────────────────────────────────────────────────────── */
+  .product { display: grid; gap: 40px; grid-template-columns: 1fr 1fr; padding: 34px 0 80px; }
+  @media (max-width: 760px) { .product { grid-template-columns: 1fr; gap: 26px; } }
+  .gallery { display: grid; gap: 10px; }
+  .gallery img { width: 100%; border-radius: var(--r-paper); border: 1px solid var(--rule-soft); background: var(--paper-deep); }
+  .product h2 { font-family: var(--display); font-size: clamp(28px, 4.4vw, 38px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+  .product .cost { font-size: 23px; font-weight: 700; margin-top: 10px; }
+  .product .cost s { font-weight: 400; color: var(--ink-55); font-size: 18px; margin-left: 8px; }
+  .product .blurb { margin-top: 16px; color: var(--ink-70); white-space: pre-line; }
+
+  .sizes { margin-top: 26px; }
+  .sizes h4, .field-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-55); font-weight: 700; }
+  .chips { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 10px; }
+  .chip {
+    font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
+    background: none; border: 1px solid var(--rule); color: var(--ink);
+    border-radius: 999px; padding: 9px 18px; transition: 0.16s var(--ease);
+  }
+  .chip:hover { border-color: var(--ink-70); }
+  .chip.on { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+  .btn {
+    font: inherit; font-size: 17px; font-weight: 700; cursor: pointer;
+    background: var(--wa-deep); color: #fff; border: 0;
+    border-radius: 999px; padding: 15px 30px; margin-top: 26px; width: 100%;
+    transition: 0.16s var(--ease);
+  }
+  .btn:hover { filter: brightness(1.07); }
+  .btn[disabled] { opacity: 0.45; cursor: default; filter: none; }
+  .btn.ghost { background: none; color: var(--ink); border: 1px solid var(--rule); }
+
+  .back {
+    background: none; border: 0; font: inherit; font-size: 15px; color: var(--ink-70);
+    cursor: pointer; padding: 22px 0 0;
+  }
+
+  /* ── cart & checkout ──────────────────────────────────────────────────── */
+  .sheet { padding: 34px 0 80px; max-width: 620px; }
+  .sheet h2 { font-family: var(--display); font-size: 32px; font-weight: 800; letter-spacing: -0.02em; }
+  .line { display: flex; gap: 14px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--rule-soft); }
+  .line img { width: 62px; height: 78px; object-fit: cover; border-radius: var(--r-paper); background: var(--paper-deep); flex: none; }
+  .line .who { flex: 1; min-width: 0; }
+  .line .who b { display: block; font-weight: 700; }
+  .line .who span { color: var(--ink-55); font-size: 14px; }
+  .qty { display: flex; align-items: center; gap: 4px; }
+  .qty button {
+    width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--rule);
+    background: none; font: inherit; font-size: 17px; cursor: pointer; color: var(--ink); line-height: 1;
+  }
+  .qty span { min-width: 26px; text-align: center; font-weight: 700; }
+  .totals { padding: 18px 0; font-size: 16px; }
+  .totals div { display: flex; justify-content: space-between; padding: 4px 0; color: var(--ink-70); }
+  .totals .grand { font-size: 21px; font-weight: 800; color: var(--ink); border-top: 1px solid var(--rule); margin-top: 8px; padding-top: 12px; }
+
+  form { margin-top: 26px; display: grid; gap: 14px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 560px) { .pair { grid-template-columns: 1fr; } }
+  label { display: block; }
+  label > span { display: block; font-size: 13px; font-weight: 600; color: var(--ink-55); margin-bottom: 5px; }
+  input, select {
+    width: 100%; font: inherit; font-size: 16px; color: var(--ink);
+    background: #fff; border: 1px solid var(--rule); border-radius: var(--r-paper);
+    padding: 12px 13px;
+  }
+  input:focus, select:focus { outline: 2px solid var(--wa-deep); outline-offset: -1px; border-color: transparent; }
+
+  .note { font-size: 14px; color: var(--ink-55); margin-top: 12px; }
+  .err { color: var(--clay); font-weight: 600; margin-top: 12px; min-height: 1.4em; }
+
+  .done { padding: 80px 0; max-width: 34ch; }
+  .done h2 { font-family: var(--display); font-size: 38px; font-weight: 800; letter-spacing: -0.02em; }
+  .done p { margin-top: 14px; color: var(--ink-70); }
+  .done .num { font-family: var(--display); font-size: 22px; font-weight: 700; margin-top: 18px; }
+
+  .empty { padding: 70px 0; color: var(--ink-55); }
+  footer { border-top: 1px solid var(--rule-soft); padding: 26px 0 50px; color: var(--ink-55); font-size: 14px; }
+  footer a { color: var(--wa-deep); font-weight: 600; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;width:100%">
+    <a class="brand" href="#" id="home">
+      <img src="../swallow.png" alt="">
+      <b>Swaylo</b>
+    </a>
+    <button class="cartbtn" id="cartBtn" hidden>Bag <span class="count" id="cartCount">0</span></button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- catalogue -->
+  <section id="viewList">
+    <div class="hero">
+      <h1>Shirts worth explaining.</h1>
+      <p>Original designs, printed one at a time when you order. Nothing sits in a warehouse.</p>
+    </div>
+    <div class="grid" id="grid"></div>
+    <p class="empty" id="listEmpty" hidden>Nothing here just yet — the first drop is on its way.</p>
+  </section>
+
+  <!-- one shirt -->
+  <section id="viewProduct" hidden>
+    <button class="back" id="backList">← Everything</button>
+    <div class="product">
+      <div class="gallery" id="gallery"></div>
+      <div>
+        <h2 id="pName"></h2>
+        <p class="cost" id="pPrice"></p>
+        <p class="blurb" id="pBlurb"></p>
+        <div class="sizes">
+          <h4>Size</h4>
+          <div class="chips" id="pSizes"></div>
+        </div>
+        <button class="btn" id="addToBag" disabled>Pick a size</button>
+        <p class="note" id="pNote"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- bag + checkout -->
+  <section id="viewCart" hidden>
+    <div class="sheet">
+      <button class="back" id="backList2" style="padding-top:0">← Keep looking</button>
+      <h2 style="margin-top:14px">Your bag</h2>
+      <div id="cartLines"></div>
+      <div class="totals" id="cartTotals"></div>
+
+      <form id="checkout" novalidate>
+        <p class="field-title">Where it goes</p>
+        <div class="pair">
+          <label><span>Full name</span><input name="name" autocomplete="name" required></label>
+          <label><span>Mobile number</span><input name="phone" inputmode="numeric" autocomplete="tel" placeholder="10 digits" required></label>
+        </div>
+        <label><span>Email (for the receipt)</span><input name="email" type="email" autocomplete="email"></label>
+        <label><span>Address</span><input name="address1" autocomplete="address-line1" placeholder="House, street, area" required></label>
+        <label><span>Landmark or second line (optional)</span><input name="address2" autocomplete="address-line2"></label>
+        <div class="pair">
+          <label><span>City</span><input name="city" autocomplete="address-level2" required></label>
+          <label><span>PIN code</span><input name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="6" required></label>
+        </div>
+        <label><span>State</span><select name="province" required><option value="">Choose…</option></select></label>
+
+        <button class="btn" type="submit" id="payBtn">Pay securely</button>
+        <p class="note">You will pay through Razorpay — UPI, cards, netbanking. We never see your card.</p>
+        <p class="err" id="cartErr"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- after payment -->
+  <section id="viewDone" hidden>
+    <div class="done">
+      <h2>Paid. Thank you.</h2>
+      <p>Your shirt goes into print today. You will get a message when it ships — usually in three to five days.</p>
+      <p class="num" id="doneNum"></p>
+      <p class="note" id="doneNote"></p>
+      <button class="btn ghost" id="doneBack">Back to the shirts</button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <p>Swaylo · printed to order in India · <a id="waLink" href="#">Questions? Message us on WhatsApp</a></p>
+</footer>
+
+<script>
+/* The Swaylo store.
+ *
+ * One page, four views, no framework. Everything about money is decided by the
+ * server: this file sends variant ids and quantities and is TOLD what it costs.
+ * The totals drawn in the bag are a courtesy for the customer's eyes — if they
+ * ever disagreed with the server's, the server would be the one that is right
+ * and the one that gets charged. */
+
+const API = 'https://whatsapp-bot-production-725a.up.railway.app';
+
+const $ = (s, r = document) => r.querySelector(s);
+const rupees = (n) => '₹' + Number(n || 0).toLocaleString('en-IN');
+
+const STATES = ['Andaman and Nicobar Islands','Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chandigarh','Chhattisgarh','Dadra and Nagar Haveli and Daman and Diu','Delhi','Goa','Gujarat','Haryana','Himachal Pradesh','Jammu and Kashmir','Jharkhand','Karnataka','Kerala','Ladakh','Lakshadweep','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Puducherry','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal'];
+
+let catalogue = null;
+let current = null;      // the shirt being looked at
+let chosen = null;       // the variant id picked on it
+
+/* The bag survives a reload, because a customer who came back to check their
+   PIN code should not find it emptied. Variant ids only — never prices. */
+const loadBag = () => { try { return JSON.parse(localStorage.getItem('swaylo_bag') || '[]'); } catch { return []; } };
+const saveBag = (b) => localStorage.setItem('swaylo_bag', JSON.stringify(b));
+let bag = loadBag();
+
+/* ── views ─────────────────────────────────────────────────────────────── */
+
+function show(view) {
+  for (const id of ['viewList', 'viewProduct', 'viewCart', 'viewDone']) $('#' + id).hidden = (id !== view);
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function variantById(id) {
+  for (const s of catalogue?.shirts || []) {
+    const v = s.variants.find((x) => x.id === id);
+    if (v) return { shirt: s, variant: v };
+  }
+  return null;
+}
+
+function drawCartCount() {
+  const n = bag.reduce((s, i) => s + i.qty, 0);
+  $('#cartCount').textContent = n;
+  $('#cartBtn').hidden = n === 0;
+}
+
+/* ── catalogue ─────────────────────────────────────────────────────────── */
+
+async function boot() {
+  STATES.forEach((s) => {
+    const o = document.createElement('option');
+    o.value = s; o.textContent = s;
+    $('select[name=province]').append(o);
+  });
+
+  try {
+    const res = await fetch(API + '/shop/catalogue.json');
+    catalogue = await res.json();
+  } catch {
+    $('#listEmpty').hidden = false;
+    $('#listEmpty').textContent = 'The shop is not reachable right now. Please try again in a minute.';
+    return;
+  }
+
+  $('#waLink').href = 'https://wa.me/' + catalogue.wa_number
+    + '?text=' + encodeURIComponent('Hi, I have a question about the Swaylo shirts.');
+
+  // Anything still in the bag from a previous visit may have been retired
+  // since. Drop it quietly rather than failing at checkout.
+  bag = bag.filter((i) => variantById(i.variant_id));
+  saveBag(bag);
+  drawCartCount();
+
+  const grid = $('#grid');
+  grid.innerHTML = '';
+  for (const shirt of catalogue.shirts) {
+    const tile = document.createElement('button');
+    tile.className = 'tile';
+    tile.innerHTML = `
+      <div class="shot" style="background-image:url('${shirt.images[0] || ''}')"></div>
+      <h3></h3>
+      <p class="price">${rupees(shirt.price)}${shirt.mrp ? `<s>${rupees(shirt.mrp)}</s>` : ''}</p>`;
+    tile.querySelector('h3').textContent = shirt.name;
+    tile.onclick = () => openShirt(shirt);
+    grid.append(tile);
+  }
+  $('#listEmpty').hidden = catalogue.shirts.length > 0;
+  if (!catalogue.checkout_open) {
+    $('#listEmpty').hidden = false;
+    $('#listEmpty').textContent = 'The shop opens shortly. Follow along on WhatsApp.';
+  }
+}
+
+/* ── one shirt ─────────────────────────────────────────────────────────── */
+
+function openShirt(shirt) {
+  current = shirt;
+  chosen = null;
+  $('#pName').textContent = shirt.name;
+  $('#pPrice').innerHTML = rupees(shirt.price) + (shirt.mrp ? `<s>${rupees(shirt.mrp)}</s>` : '');
+  $('#pBlurb').textContent = shirt.blurb || '';
+  $('#pNote').textContent = '';
+
+  const gal = $('#gallery');
+  gal.innerHTML = '';
+  (shirt.images.length ? shirt.images : ['']).forEach((url) => {
+    const img = document.createElement('img');
+    img.src = url; img.alt = shirt.name; img.loading = 'lazy';
+    gal.append(img);
+  });
+
+  const sizes = $('#pSizes');
+  sizes.innerHTML = '';
+  for (const v of shirt.variants) {
+    const b = document.createElement('button');
+    b.className = 'chip';
+    b.textContent = v.size + (v.colour ? ` · ${v.colour}` : '');
+    b.onclick = () => {
+      chosen = v.id;
+      [...sizes.children].forEach((c) => c.classList.toggle('on', c === b));
+      $('#addToBag').disabled = false;
+      $('#addToBag').textContent = `Add to bag — ${rupees(v.price)}`;
+    };
+    sizes.append(b);
+  }
+  // One size only? Nobody wants to be asked a question with one answer.
+  if (shirt.variants.length === 1) sizes.firstElementChild.click();
+
+  $('#addToBag').disabled = !chosen;
+  if (!chosen) $('#addToBag').textContent = 'Pick a size';
+  show('viewProduct');
+}
+
+$('#addToBag').onclick = () => {
+  if (!chosen) return;
+  const line = bag.find((i) => i.variant_id === chosen);
+  if (line) line.qty = Math.min(10, line.qty + 1);
+  else bag.push({ variant_id: chosen, qty: 1 });
+  saveBag(bag);
+  drawCartCount();
+  openCart();
+};
+
+/* ── the bag ───────────────────────────────────────────────────────────── */
+
+function openCart() {
+  const lines = $('#cartLines');
+  lines.innerHTML = '';
+  let subtotal = 0;
+
+  for (const item of bag) {
+    const found = variantById(item.variant_id);
+    if (!found) continue;
+    const { shirt, variant } = found;
+    subtotal += variant.price * item.qty;
+
+    const row = document.createElement('div');
+    row.className = 'line';
+    row.innerHTML = `
+      <img src="${shirt.images[0] || ''}" alt="">
+      <div class="who"><b></b><span>${variant.size}${variant.colour ? ' · ' + variant.colour : ''} — ${rupees(variant.price)}</span></div>
+      <div class="qty">
+        <button type="button" class="less">−</button><span>${item.qty}</span><button type="button" class="more">+</button>
+      </div>`;
+    row.querySelector('b').textContent = shirt.name;
+    row.querySelector('.less').onclick = () => {
+      item.qty -= 1;
+      if (item.qty < 1) bag = bag.filter((i) => i !== item);
+      saveBag(bag); drawCartCount(); openCart();
+    };
+    row.querySelector('.more').onclick = () => {
+      item.qty = Math.min(10, item.qty + 1);
+      saveBag(bag); drawCartCount(); openCart();
+    };
+    lines.append(row);
+  }
+
+  const free = catalogue.free_shipping_above && subtotal >= catalogue.free_shipping_above;
+  const ship = subtotal === 0 ? 0 : (free ? 0 : catalogue.shipping);
+  $('#cartTotals').innerHTML = `
+    <div><span>Subtotal</span><span>${rupees(subtotal)}</span></div>
+    <div><span>Delivery</span><span>${ship ? rupees(ship) : 'Free'}</span></div>
+    <div class="grand"><span>Total</span><span>${rupees(subtotal + ship)}</span></div>`;
+
+  $('#checkout').hidden = bag.length === 0;
+  if (!bag.length) lines.innerHTML = '<p class="empty">Your bag is empty.</p>';
+  show('viewCart');
+}
+
+/* ── paying ────────────────────────────────────────────────────────────── */
+
+$('#checkout').onsubmit = async (e) => {
+  e.preventDefault();
+  const btn = $('#payBtn');
+  const err = $('#cartErr');
+  err.textContent = '';
+  btn.disabled = true;
+  btn.textContent = 'One moment…';
+
+  const form = Object.fromEntries(new FormData(e.target).entries());
+
+  try {
+    // The server prices this. What comes back is what Razorpay will charge.
+    const res = await fetch(API + '/shop/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: bag, customer: form }),
+    });
+    const order = await res.json();
+    if (!res.ok) throw new Error(order.error || 'Checkout failed.');
+
+    const rzp = new Razorpay({
+      key: order.key_id,
+      order_id: order.rzp_order_id,
+      amount: order.amount * 100,
+      currency: 'INR',
+      name: order.name,
+      description: order.order_number,
+      image: 'https://swayloweb.com/launch_icon.png',
+      prefill: order.prefill,
+      theme: { color: '#0A2850' },
+      handler: async (r) => {
+        // Best effort only. The webhook is what actually confirms the order,
+        // so a failure here must never tell the customer they were not
+        // charged — they were.
+        try {
+          await fetch(API + '/shop/confirm', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(r),
+          });
+        } catch { /* the webhook has it */ }
+        bag = []; saveBag(bag); drawCartCount();
+        $('#doneNum').textContent = 'Order ' + order.order_number;
+        $('#doneNote').innerHTML = 'Any questions, <a href="' + $('#waLink').href + '">message us on WhatsApp</a>.';
+        show('viewDone');
+      },
+      modal: {
+        ondismiss: () => {
+          btn.disabled = false;
+          btn.textContent = 'Pay securely';
+          err.textContent = 'Payment cancelled — your bag is still here.';
+        },
+      },
+    });
+    rzp.on('payment.failed', (resp) => {
+      btn.disabled = false;
+      btn.textContent = 'Pay securely';
+      err.textContent = resp.error?.description || 'That payment did not go through. Please try again.';
+    });
+    rzp.open();
+    btn.textContent = 'Pay securely';
+  } catch (ex) {
+    err.textContent = ex.message;
+    btn.disabled = false;
+    btn.textContent = 'Pay securely';
+  }
+};
+
+/* ── chrome ────────────────────────────────────────────────────────────── */
+
+$('#cartBtn').onclick = openCart;
+$('#backList').onclick = () => show('viewList');
+$('#backList2').onclick = () => show('viewList');
+$('#doneBack').onclick = () => show('viewList');
+$('#home').onclick = (e) => { e.preventDefault(); show('viewList'); };
+
+boot();
+</script>
+</body>
+</html>

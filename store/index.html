@@ -155,6 +155,16 @@
   .btn:hover { filter: brightness(1.07); }
   .btn[disabled] { opacity: 0.45; cursor: default; filter: none; }
   .btn.ghost { background: none; color: var(--ink); border: 1px solid var(--rule); }
+  /* Buy now leads, because someone who has picked a size has decided. Add to
+     bag is the quieter one — it is for a second shirt, not for this one. */
+  .buyrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .buyrow .btn { margin-top: 26px; }
+  @media (max-width: 420px) { .buyrow { grid-template-columns: 1fr; gap: 0; }
+    .buyrow .btn:last-child { margin-top: 10px; } }
+  .pickfirst { font-size: 14px; color: var(--ink-55); margin-top: 10px; }
+  .pickfirst[hidden] { display: none; }
+  .added { font-size: 15px; color: var(--wa-deep); font-weight: 600; margin-top: 12px; }
+  .added a { color: var(--wa-deep); }
 
   /* The three things a first-time buyer on an unknown store actually wants to
      know before typing a card number. */
@@ -252,7 +262,11 @@
           <h4>Size</h4>
           <div class="chips" id="pSizes"></div>
         </div>
-        <button class="btn" id="addToBag" disabled>Pick a size</button>
+        <div class="buyrow">
+          <button class="btn" id="buyNow" disabled>Buy now</button>
+          <button class="btn ghost" id="addToBag" disabled>Add to bag</button>
+        </div>
+        <p class="pickfirst" id="pickFirst">Choose a size to continue.</p>
         <div class="assure">
           <div><span class="mark">✓</span><span><b>Printed when you order</b> — dispatched in 3–5 days</span></div>
           <div><span class="mark">✓</span><span><b>Free delivery</b> anywhere in India</span></div>
@@ -267,7 +281,7 @@
   <section id="viewCart" hidden>
     <div class="sheet">
       <button class="back" id="backList2" style="padding-top:0">← Keep looking</button>
-      <h2 style="margin-top:14px">Your bag</h2>
+      <h2 style="margin-top:14px" id="cartTitle">Your bag</h2>
       <div id="cartLines"></div>
       <div class="totals" id="cartTotals"></div>
 
@@ -335,6 +349,13 @@ let chosen = null;       // the variant id picked on it
 const loadBag = () => { try { return JSON.parse(localStorage.getItem('swaylo_bag') || '[]'); } catch { return []; } };
 const saveBag = (b) => localStorage.setItem('swaylo_bag', JSON.stringify(b));
 let bag = loadBag();
+
+/* "Buy now" checks out this one shirt without disturbing the bag. Kept apart
+   from `bag` rather than emptying it and putting one thing in: somebody with
+   two shirts saved who buys a third directly must still have their two
+   afterwards. Never persisted — a direct buy is this moment or nothing. */
+let directBuy = null;
+const activeItems = () => (directBuy ? [directBuy] : bag);
 
 /* ── views ─────────────────────────────────────────────────────────────── */
 
@@ -449,7 +470,10 @@ function openShirt(shirt) {
       chosen = v.id;
       [...sizes.children].forEach((c) => c.classList.toggle('on', c === b));
       $('#addToBag').disabled = false;
-      $('#addToBag').textContent = `Add to bag — ${rupees(v.price)}`;
+      $('#buyNow').disabled = false;
+      $('#buyNow').textContent = `Buy now — ${rupees(v.price)}`;
+      $('#pickFirst').hidden = true;
+      $('#pNote').textContent = '';
     };
     sizes.append(b);
   }
@@ -457,7 +481,9 @@ function openShirt(shirt) {
   if (shirt.variants.length === 1) sizes.firstElementChild.click();
 
   $('#addToBag').disabled = !chosen;
-  if (!chosen) $('#addToBag').textContent = 'Pick a size';
+  $('#buyNow').disabled = !chosen;
+  if (!chosen) $('#buyNow').textContent = 'Buy now';
+  $('#pickFirst').hidden = Boolean(chosen);
   show('viewProduct');
 }
 
@@ -468,6 +494,16 @@ $('#addToBag').onclick = () => {
   else bag.push({ variant_id: chosen, qty: 1 });
   saveBag(bag);
   drawCartCount();
+  // Deliberately does NOT jump to the bag. Adding is what you do when you are
+  // not finished looking, and being thrown to a checkout form mid-browse is
+  // how a second shirt stops getting added.
+  $('#pNote').innerHTML = 'Added to your bag. <a href="#" id="goBag">View bag →</a>';
+  $('#goBag').onclick = (e) => { e.preventDefault(); directBuy = null; openCart(); };
+};
+
+$('#buyNow').onclick = () => {
+  if (!chosen) return;
+  directBuy = { variant_id: chosen, qty: 1 };
   openCart();
 };
 
@@ -475,10 +511,15 @@ $('#addToBag').onclick = () => {
 
 function openCart() {
   const lines = $('#cartLines');
+  const items = activeItems();
   lines.innerHTML = '';
   let subtotal = 0;
 
-  for (const item of bag) {
+  // Says which of the two things is happening. A direct buy that still said
+  // "Your bag" would look like it had quietly emptied the bag to get here.
+  $('#cartTitle').textContent = directBuy ? 'Checkout' : 'Your bag';
+
+  for (const item of items) {
     const found = variantById(item.variant_id);
     if (!found) continue;
     const { shirt, variant } = found;
@@ -495,12 +536,19 @@ function openCart() {
     row.querySelector('b').textContent = shirt.name;
     row.querySelector('.less').onclick = () => {
       item.qty -= 1;
-      if (item.qty < 1) bag = bag.filter((i) => i !== item);
-      saveBag(bag); drawCartCount(); openCart();
+      if (item.qty < 1) {
+        // Emptying a direct buy drops back to whatever was already in the bag,
+        // rather than to a dead end.
+        if (directBuy) directBuy = null;
+        else bag = bag.filter((i) => i !== item);
+      }
+      if (!directBuy) saveBag(bag);
+      drawCartCount(); openCart();
     };
     row.querySelector('.more').onclick = () => {
       item.qty = Math.min(10, item.qty + 1);
-      saveBag(bag); drawCartCount(); openCart();
+      if (!directBuy) saveBag(bag);
+      drawCartCount(); openCart();
     };
     lines.append(row);
   }
@@ -512,8 +560,8 @@ function openCart() {
     <div><span>Delivery</span><span>${ship ? rupees(ship) : 'Free'}</span></div>
     <div class="grand"><span>Total</span><span>${rupees(subtotal + ship)}</span></div>`;
 
-  $('#checkout').hidden = bag.length === 0;
-  if (!bag.length) lines.innerHTML = '<p class="empty">Your bag is empty.</p>';
+  $('#checkout').hidden = items.length === 0;
+  if (!items.length) lines.innerHTML = '<p class="empty">Your bag is empty.</p>';
   show('viewCart');
 }
 
@@ -534,7 +582,7 @@ $('#checkout').onsubmit = async (e) => {
     const res = await fetch(API + '/shop/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: bag, customer: form }),
+      body: JSON.stringify({ items: activeItems(), customer: form }),
     });
     const order = await res.json();
     if (!res.ok) throw new Error(order.error || 'Checkout failed.');
@@ -560,7 +608,11 @@ $('#checkout').onsubmit = async (e) => {
             body: JSON.stringify(r),
           });
         } catch { /* the webhook has it */ }
-        bag = []; saveBag(bag); drawCartCount();
+        // Clear what was actually bought. A direct buy must leave the saved
+        // bag exactly as it was.
+        if (directBuy) directBuy = null;
+        else { bag = []; saveBag(bag); }
+        drawCartCount();
         $('#doneNum').textContent = 'Order ' + order.order_number;
         $('#doneNote').innerHTML = 'Any questions, <a href="' + $('#waLink').href + '">message us on WhatsApp</a>.';
         show('viewDone');
@@ -589,11 +641,11 @@ $('#checkout').onsubmit = async (e) => {
 
 /* ── chrome ────────────────────────────────────────────────────────────── */
 
-$('#cartBtn').onclick = openCart;
+$('#cartBtn').onclick = () => { directBuy = null; openCart(); };
 $('#backList').onclick = () => show('viewList');
-$('#backList2').onclick = () => show('viewList');
-$('#doneBack').onclick = () => show('viewList');
-$('#home').onclick = (e) => { e.preventDefault(); show('viewList'); };
+$('#backList2').onclick = () => { directBuy = null; show('viewList'); };
+$('#doneBack').onclick = () => { directBuy = null; show('viewList'); };
+$('#home').onclick = (e) => { e.preventDefault(); directBuy = null; show('viewList'); };
 
 boot();
 </script>

@@ -94,10 +94,42 @@
   .tile .price s { color: var(--ink-55); margin-left: 6px; }
 
   /* ── product ──────────────────────────────────────────────────────────── */
-  .product { display: grid; gap: 40px; grid-template-columns: 1fr 1fr; padding: 34px 0 80px; }
-  @media (max-width: 760px) { .product { grid-template-columns: 1fr; gap: 26px; } }
-  .gallery { display: grid; gap: 10px; }
-  .gallery img { width: 100%; border-radius: var(--r-paper); border: 1px solid var(--rule-soft); background: #fff; }
+  /* Thumbnail rail beside one large image, with the details column pinned —
+     the shape every shopper already knows from Amazon and Flipkart. The old
+     layout stacked every photo full-width down the left, so a second photo
+     pushed the buy button off the screen and left the right half empty. */
+  .product {
+    display: grid; gap: 36px; padding: 28px 0 80px;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: start;
+  }
+  .gallery { display: grid; grid-template-columns: 66px minmax(0, 1fr); gap: 12px; align-items: start; }
+  .gallery:has(.rail[hidden]) { grid-template-columns: minmax(0, 1fr); }
+  .rail { display: flex; flex-direction: column; gap: 8px; }
+  .rail button {
+    padding: 0; border: 1px solid var(--rule); background: #fff center/contain no-repeat;
+    border-radius: var(--r-paper); aspect-ratio: 4 / 5; cursor: pointer;
+    transition: border-color 0.15s var(--ease);
+  }
+  .rail button:hover { border-color: var(--ink-70); }
+  .rail button.on { border-color: var(--ink); border-width: 2px; }
+  .stage {
+    aspect-ratio: 4 / 5; background: #fff center/contain no-repeat;
+    border-radius: var(--r-paper); border: 1px solid var(--rule-soft);
+  }
+  /* Pinned so the price, the sizes and the button stay put while the eye
+     moves over the photos. On a short page it simply never engages. */
+  .details { position: sticky; top: 92px; }
+  @media (max-width: 760px) {
+    .product { grid-template-columns: 1fr; gap: 22px; }
+    /* Rail moves under the image and lies flat: a vertical strip beside a
+       full-width photo would leave both too narrow to read. */
+    .gallery { grid-template-columns: 1fr; }
+    .rail { flex-direction: row; order: 2; overflow-x: auto; padding-bottom: 4px; }
+    .rail button { flex: none; width: 58px; }
+    .stage { order: 1; }
+    .details { position: static; }
+  }
   .product h2 { font-family: var(--display); font-size: clamp(28px, 4.4vw, 38px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
   .product .cost { font-size: 23px; font-weight: 700; margin-top: 10px; }
   .product .cost s { font-weight: 400; color: var(--ink-55); font-size: 18px; margin-left: 8px; }
@@ -123,6 +155,13 @@
   .btn:hover { filter: brightness(1.07); }
   .btn[disabled] { opacity: 0.45; cursor: default; filter: none; }
   .btn.ghost { background: none; color: var(--ink); border: 1px solid var(--rule); }
+
+  /* The three things a first-time buyer on an unknown store actually wants to
+     know before typing a card number. */
+  .assure { margin-top: 20px; border-top: 1px solid var(--rule-soft); padding-top: 16px; }
+  .assure div { display: flex; gap: 10px; align-items: baseline; padding: 5px 0; font-size: 15px; color: var(--ink-70); }
+  .assure b { color: var(--ink); font-weight: 600; }
+  .assure .mark { color: var(--wa-deep); font-weight: 700; flex: none; }
 
   .back {
     background: none; border: 0; font: inherit; font-size: 15px; color: var(--ink-70);
@@ -201,8 +240,11 @@
   <section id="viewProduct" hidden>
     <button class="back" id="backList">← Everything</button>
     <div class="product">
-      <div class="gallery" id="gallery"></div>
-      <div>
+      <div class="gallery">
+        <div class="rail" id="rail"></div>
+        <div class="stage" id="stage"></div>
+      </div>
+      <div class="details">
         <h2 id="pName"></h2>
         <p class="cost" id="pPrice"></p>
         <p class="blurb" id="pBlurb"></p>
@@ -211,6 +253,11 @@
           <div class="chips" id="pSizes"></div>
         </div>
         <button class="btn" id="addToBag" disabled>Pick a size</button>
+        <div class="assure">
+          <div><span class="mark">✓</span><span><b>Printed when you order</b> — dispatched in 3–5 days</span></div>
+          <div><span class="mark">✓</span><span><b>Free delivery</b> anywhere in India</span></div>
+          <div><span class="mark">✓</span><span><b>Pay securely</b> — UPI, cards or netbanking via Razorpay</span></div>
+        </div>
         <p class="note" id="pNote"></p>
       </div>
     </div>
@@ -367,13 +414,30 @@ function openShirt(shirt) {
   $('#pBlurb').textContent = shirt.blurb || '';
   $('#pNote').textContent = '';
 
-  const gal = $('#gallery');
-  gal.innerHTML = '';
-  (shirt.images.length ? shirt.images : ['']).forEach((url) => {
-    const img = document.createElement('img');
-    img.src = url; img.alt = shirt.name; img.loading = 'lazy';
-    gal.append(img);
+  // One large image with a rail of thumbnails beside it. The rail hides itself
+  // for a single-photo shirt rather than showing a column of one.
+  const shots = shirt.images.length ? shirt.images : [''];
+  const stage = $('#stage');
+  const rail = $('#rail');
+  // NOT called show(). There is already a show() that switches which view the
+  // page is on, and a local one by the same name shadows it — openShirt ends
+  // by calling show('viewProduct'), which then quietly set the photo to
+  // url('viewProduct') and left the product page hidden.
+  const showShot = (url, btn) => {
+    stage.style.backgroundImage = url ? `url('${url}')` : 'none';
+    [...rail.children].forEach((c) => c.classList.toggle('on', c === btn));
+  };
+  rail.innerHTML = '';
+  rail.hidden = shots.length < 2;
+  shots.forEach((url, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.style.backgroundImage = `url('${url}')`;
+    b.setAttribute('aria-label', `Photo ${i + 1}`);
+    b.onclick = () => showShot(url, b);
+    rail.append(b);
   });
+  showShot(shots[0], rail.firstElementChild);
 
   const sizes = $('#pSizes');
   sizes.innerHTML = '';

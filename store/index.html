@@ -161,7 +161,20 @@
   .buyrow .btn { margin-top: 26px; }
   @media (max-width: 420px) { .buyrow { grid-template-columns: 1fr; gap: 0; }
     .buyrow .btn:last-child { margin-top: 10px; } }
-  .pickfirst { font-size: 14px; color: var(--ink-55); margin-top: 10px; }
+  .pickfirst { font-size: 15px; color: var(--clay); font-weight: 600; margin-top: 12px; }
+
+  /* Pressing a buy button without a size does not fail — it points. The chips
+     take the accent colour and the block shifts once, which says "here, this
+     bit" faster than any sentence does. */
+  .sizes.needs h4 { color: var(--clay); }
+  .sizes.needs .chip:not(.on) { border-color: var(--clay); }
+  .sizes.needs { animation: nudge 0.45s var(--ease); }
+  @keyframes nudge {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    60% { transform: translateX(4px); }
+  }
+  @media (prefers-reduced-motion: reduce) { .sizes.needs { animation: none; } }
   .pickfirst[hidden] { display: none; }
   .added { font-size: 15px; color: var(--wa-deep); font-weight: 600; margin-top: 12px; }
   .added a { color: var(--wa-deep); }
@@ -258,15 +271,15 @@
         <h2 id="pName"></h2>
         <p class="cost" id="pPrice"></p>
         <p class="blurb" id="pBlurb"></p>
-        <div class="sizes">
+        <div class="sizes" id="sizeBlock">
           <h4>Size</h4>
           <div class="chips" id="pSizes"></div>
         </div>
         <div class="buyrow">
-          <button class="btn" id="buyNow" disabled>Buy now</button>
-          <button class="btn ghost" id="addToBag" disabled>Add to bag</button>
+          <button class="btn" id="buyNow">Buy now</button>
+          <button class="btn ghost" id="addToBag">Add to bag</button>
         </div>
-        <p class="pickfirst" id="pickFirst">Choose a size to continue.</p>
+        <p class="pickfirst" id="pickFirst" hidden>Choose a size first.</p>
         <div class="assure">
           <div><span class="mark">✓</span><span><b>Printed when you order</b> — dispatched in 3–5 days</span></div>
           <div><span class="mark">✓</span><span><b>Free delivery</b> anywhere in India</span></div>
@@ -469,9 +482,9 @@ function openShirt(shirt) {
     b.onclick = () => {
       chosen = v.id;
       [...sizes.children].forEach((c) => c.classList.toggle('on', c === b));
-      $('#addToBag').disabled = false;
-      $('#buyNow').disabled = false;
       $('#buyNow').textContent = `Buy now — ${rupees(v.price)}`;
+      // Picking a size answers the nudge, so the nudge goes away.
+      $('#sizeBlock').classList.remove('needs');
       $('#pickFirst').hidden = true;
       $('#pNote').textContent = '';
     };
@@ -480,15 +493,34 @@ function openShirt(shirt) {
   // One size only? Nobody wants to be asked a question with one answer.
   if (shirt.variants.length === 1) sizes.firstElementChild.click();
 
-  $('#addToBag').disabled = !chosen;
-  $('#buyNow').disabled = !chosen;
   if (!chosen) $('#buyNow').textContent = 'Buy now';
-  $('#pickFirst').hidden = Boolean(chosen);
+  $('#sizeBlock').classList.remove('needs');
+  $('#pickFirst').hidden = true;
   show('viewProduct');
 }
 
+/**
+ * Someone pressed a buy button without choosing a size.
+ *
+ * Nothing is refused and nothing is greyed out — a disabled button is a dead
+ * end that does not say why. This colours the sizes, shifts them once, and
+ * brings them on screen if they are not already.
+ */
+function nudgeSizes() {
+  const block = $('#sizeBlock');
+  block.classList.remove('needs');
+  void block.offsetWidth;               // restart the animation on a repeat press
+  block.classList.add('needs');
+  $('#pickFirst').hidden = false;
+  $('#pNote').textContent = '';
+  const r = block.getBoundingClientRect();
+  if (r.top < 70 || r.bottom > innerHeight) {
+    block.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+}
+
 $('#addToBag').onclick = () => {
-  if (!chosen) return;
+  if (!chosen) return nudgeSizes();
   const line = bag.find((i) => i.variant_id === chosen);
   if (line) line.qty = Math.min(10, line.qty + 1);
   else bag.push({ variant_id: chosen, qty: 1 });
@@ -502,7 +534,7 @@ $('#addToBag').onclick = () => {
 };
 
 $('#buyNow').onclick = () => {
-  if (!chosen) return;
+  if (!chosen) return nudgeSizes();
   directBuy = { variant_id: chosen, qty: 1 };
   openCart();
 };

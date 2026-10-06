@@ -231,7 +231,8 @@
     padding: 4px 9px; border-radius: 999px;
   }
   .counter[hidden] { display: none; }
-  .details { position: sticky; top: 86px; min-width: 0; }
+  .details { min-width: 0; }
+  .gallery { position: sticky; top: 86px; }
   .product h2 { font-family: var(--display); font-size: clamp(1.7rem, 3.6vw, 2.4rem); font-weight: 800; line-height: 1.06; letter-spacing: -0.03em; margin-top: 10px; }
   .product .cost { font-size: 1.6rem; font-weight: 700; margin-top: 14px; }
   .product .cost s { font-weight: 400; color: var(--ink-45); font-size: 1rem; margin-left: 10px; }
@@ -353,6 +354,7 @@
     .shotwrap { order: 1; }
     .stage { max-height: 54vh; }
     .details { position: static; }
+    .gallery { position: static; }
     .buybar {
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
       background: rgba(249, 244, 239, 0.94); backdrop-filter: saturate(140%) blur(10px);
@@ -365,26 +367,40 @@
     #viewProduct { padding-bottom: 108px; }
   }
 
-  /* Reviews. Every one is somebody else's purchase of the same item from the
-     same seller, so the section says so in its heading, shows the real average
-     with the bad stars in it, and keeps the critical reviews in the list. */
-  .reviews { margin-top: 56px; border-top: 1px solid var(--rule); padding-top: 32px; }
-  .reviews h2 { font-family: var(--display); font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
-  .reviews .src { color: var(--ink-45); font-size: 0.86rem; margin-top: 4px; }
-  .rsum { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 24px; align-items: center; margin-top: 20px; max-width: 520px; }
-  .rsum .big { font-family: var(--display); font-size: 3rem; font-weight: 800; line-height: 1; }
-  .rsum .big small { display: block; font-family: var(--sans); font-size: 0.8rem; font-weight: 400; color: var(--ink-45); margin-top: 6px; }
-  .bars div { display: grid; grid-template-columns: 22px minmax(0, 1fr) 40px; gap: 8px; align-items: center; font-size: 0.8rem; color: var(--ink-70); }
-  .bars i { display: block; height: 7px; border-radius: 4px; background: var(--rule-soft); overflow: hidden; }
-  .bars i b { display: block; height: 100%; background: var(--clay); }
-  .rlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 26px; }
-  .rcard { background: var(--plate); border: 1px solid var(--rule-soft); border-radius: var(--r-lg); padding: 16px; }
-  .rcard .stars { color: var(--clay); letter-spacing: 2px; font-size: 0.95rem; }
-  .rcard .who { font-size: 0.8rem; color: var(--ink-45); margin-top: 2px; }
+  /* Reviews, laid out the way Meesho's product page does it: a rating badge
+     under the price, then a ratings card with coloured bars, a strip of every
+     buyer photo, and the reviews as a list. Every one is somebody else's
+     purchase of the same item from the same seller, so the heading says so,
+     the real average shows with its bad stars, and critical reviews stay in. */
+  .rbadge { display: inline-flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 0.84rem; color: var(--ink-45); cursor: pointer; background: none; border: 0; font-family: inherit; padding: 0; }
+  .pill { display: inline-flex; align-items: center; gap: 3px; background: #038D63; color: #fff; font-weight: 700; font-size: 0.82rem; border-radius: 12px; padding: 2px 9px; line-height: 1.5; }
+  .pill.mid { background: #F4B619; }
+  .pill.low { background: #E7655A; }
+  .reviews { margin-top: 26px; border: 1px solid var(--rule); border-radius: var(--r-lg); background: var(--plate); padding: 18px; }
+  .reviews h2 { font-family: var(--display); font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; }
+  .reviews .src { color: var(--ink-45); font-size: 0.82rem; margin-top: 4px; }
+  .rsum { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: center; margin-top: 18px; }
+  .rsum .big { text-align: center; }
+  .rsum .big b { display: block; font-size: 2.4rem; font-weight: 700; color: #038D63; line-height: 1; }
+  .rsum .big small { display: block; font-size: 0.78rem; color: var(--ink-45); margin-top: 6px; line-height: 1.4; }
+  .bars div { display: grid; grid-template-columns: 74px minmax(0, 1fr) 34px; gap: 10px; align-items: center; font-size: 0.8rem; color: var(--ink-70); padding: 2px 0; }
+  .bars i { display: block; height: 6px; border-radius: 4px; background: var(--rule-soft); overflow: hidden; }
+  .bars i b { display: block; height: 100%; }
+  .bars span:last-child { color: var(--ink-45); text-align: right; }
+  .realpics { margin-top: 20px; }
+  .realpics h4, .rlist h4 { font-size: 0.86rem; font-weight: 700; color: var(--ink); }
+  .strip { display: flex; gap: 8px; overflow-x: auto; margin-top: 10px; padding-bottom: 4px; }
+  .strip button, .rcard .pics button { flex: none; width: 76px; height: 76px; border: 0; border-radius: var(--r); background: center/cover no-repeat var(--paper-deep); cursor: zoom-in; padding: 0; }
+  .rlist { margin-top: 18px; }
+  .rcard { border-top: 1px solid var(--rule-soft); padding: 16px 0; }
+  .rcard:last-child { padding-bottom: 0; }
+  .rcard .who { display: flex; align-items: center; gap: 10px; font-size: 0.86rem; font-weight: 600; color: var(--ink); }
+  .rcard .who img { width: 26px; height: 26px; border-radius: 50%; }
+  .rcard .who .av { width: 28px; height: 28px; border-radius: 50%; background: var(--paper-deep); color: var(--ink-70); display: grid; place-items: center; font-size: 0.78rem; font-weight: 700; }
+  .rcard .line2 { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 0.8rem; color: var(--ink-45); }
   .rcard p { margin-top: 8px; font-size: 0.92rem; color: var(--ink-70); }
-  .rcard .pics { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-  .rcard .pics button { width: 84px; height: 84px; border: 0; border-radius: var(--r); background: center/cover no-repeat var(--paper-deep); cursor: zoom-in; padding: 0; }
-  .viewer { position: fixed; inset: 0; background: rgba(0,0,0,0.88); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 16px; }
+  .rcard .pics { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .viewer { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 60; padding: 16px; }
   .viewer[hidden] { display: none; }
   .viewer img { max-width: 100%; max-height: 100%; border-radius: var(--r); }
   .buyrow .btn { flex: 1; white-space: nowrap; }
@@ -460,6 +476,7 @@
         <p class="eyebrow">Swaylo store</p>
         <h2 id="pName"></h2>
         <p class="cost" id="pPrice"></p>
+        <button class="rbadge" id="pRating" type="button" hidden></button>
         <p class="taxline">Inclusive of all taxes · free delivery</p>
         <p class="blurb" id="pBlurb"></p>
         <p class="kitnote" id="pKit" hidden></p>
@@ -486,9 +503,9 @@
             <span><b>Questions first?</b> <a id="waProduct" href="#" target="_blank" rel="noopener">Ask us on WhatsApp</a></span>
           </div>
         </div>
+        <section class="reviews" id="reviews" hidden></section>
       </div>
     </div>
-    <section class="reviews" id="reviews" hidden></section>
   </section>
 
   <div class="colophon">
@@ -552,7 +569,9 @@ function priceHtml(price, mrp) {
 let products = [];
 let waNumber = '';
 const askHref = (text) => 'https://wa.me/' + waNumber + '?text=' + encodeURIComponent(text);
-const photos = (p) => [API + p.image, ...(p.gallery || []).map((g) => API + g)];
+/* The listing photos only. Buyer photos (image keys with _real_ in them) are
+   for the bot to send on request, and on this page they live in the reviews. */
+const photos = (p) => [p.image, ...(p.gallery || [])].filter((g) => g && !/_real_/.test(g)).map((g) => API + g);
 
 /* ?p=key gives each product its own link, on a static site. */
 const keyInUrl = () => new URLSearchParams(location.search).get('p');
@@ -673,7 +692,8 @@ function openProduct(p, { push = true } = {}) {
    reviews/<key>/. A product without that file simply has no section. */
 async function drawReviews(key) {
   const box = $('#reviews');
-  box.hidden = true;
+  const badge = $('#pRating');
+  box.hidden = true; badge.hidden = true;
   box.innerHTML = '';
   let r;
   try {
@@ -681,27 +701,36 @@ async function drawReviews(key) {
     if (!res.ok) return;
     r = await res.json();
   } catch { return; }
-  const total = Object.values(r.breakdown).reduce((a, b) => a + b, 0);
-  const stars = (n) => '★'.repeat(n) + '☆'.repeat(5 - n);
+  const pill = (n, text) => `<span class="pill ${n >= 4 ? '' : n >= 3 ? 'mid' : 'low'}">${text}★</span>`;
   const when = (d) => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  const counts = `${r.ratings.toLocaleString('en-IN')} Ratings, ${r.reviews_count.toLocaleString('en-IN')} Reviews`;
+  badge.innerHTML = `${pill(r.average, r.average.toFixed(1))}<span>${counts}</span>`;
+  badge.onclick = () => box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  badge.hidden = false;
+
+  const max = Math.max(...Object.values(r.breakdown));
+  const rows = [[5, 'Excellent', '#038D63'], [4, 'Very Good', '#66BB6A'], [3, 'Good', '#F4B619'], [2, 'Average', '#F49719'], [1, 'Poor', '#E7655A']];
+  const pics = r.reviews.flatMap((v) => v.photos);
+  const thumb = (f) => `<button type="button" data-src="reviews/${key}/${f}" style="background-image:url('reviews/${key}/${f}')" aria-label="Buyer photo"></button>`;
   box.innerHTML = `
-    <h2>What buyers say</h2>
+    <h2>Product Ratings &amp; Reviews</h2>
     <p class="src">${esc(r.source)}</p>
     <div class="rsum">
-      <div class="big">${r.average.toFixed(1)}<small>${r.ratings.toLocaleString('en-IN')} ratings</small></div>
-      <div class="bars">${[5, 4, 3, 2, 1].map((s) => `
-        <div><span>${s}★</span><i><b style="width:${(r.breakdown[s] / total * 100).toFixed(1)}%"></b></i><span>${r.breakdown[s]}</span></div>`).join('')}
+      <div class="big"><b>${r.average.toFixed(1)}★</b><small>${r.ratings.toLocaleString('en-IN')} Ratings,<br>${r.reviews_count.toLocaleString('en-IN')} Reviews</small></div>
+      <div class="bars">${rows.map(([s, label, c]) => `
+        <div><span>${label}</span><i><b style="width:${(r.breakdown[s] / max * 100).toFixed(1)}%;background:${c}"></b></i><span>${r.breakdown[s]}</span></div>`).join('')}
       </div>
     </div>
+    ${pics.length ? `<div class="realpics"><h4>Real images from buyers</h4><div class="strip">${pics.map(thumb).join('')}</div></div>` : ''}
     <div class="rlist">${r.reviews.map((v) => `
       <div class="rcard">
-        <div class="stars" aria-label="${v.stars} out of 5">${stars(v.stars)}</div>
-        <div class="who">${esc(v.name)} · ${when(v.date)}</div>
-        <p>${esc(v.text)}</p>
-        ${v.photos.length ? `<div class="pics">${v.photos.map((f) => `<button type="button" data-src="reviews/${key}/${f}" style="background-image:url('reviews/${key}/${f}')" aria-label="Buyer photo"></button>`).join('')}</div>` : ''}
+        <div class="who"><span class="av">${esc(v.name === 'A buyer' ? 'B' : v.name[0])}</span>${esc(v.name)}</div>
+        <div class="line2">${pill(v.stars, v.stars.toFixed(1))}<span>Posted on ${when(v.date)}</span></div>
+        ${v.text ? `<p>${esc(v.text)}</p>` : ''}
+        ${v.photos.length ? `<div class="pics">${v.photos.map(thumb).join('')}</div>` : ''}
       </div>`).join('')}
     </div>`;
-  box.querySelectorAll('.pics button').forEach((b) => {
+  box.querySelectorAll('button[data-src]').forEach((b) => {
     b.onclick = () => { $('#viewerImg').src = b.dataset.src; $('#viewer').hidden = false; };
   });
   box.hidden = false;

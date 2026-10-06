@@ -420,6 +420,17 @@
   .buyrow .btn { flex: 1; white-space: nowrap; }
   .kitnote { margin-top: 16px; padding: 12px 14px; border-radius: var(--r); background: var(--paper-deep); font-size: 0.9rem; color: var(--ink); }
 </style>
+<!-- Meta Pixel on the bot's dataset, so website orders teach the ads who buys.
+     The bot reports the same Purchase from the server with the same event id. -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2570473966761359');
+fbq('track', 'PageView');
+</script>
 </head>
 <body>
 
@@ -677,6 +688,7 @@ async function boot() {
 
 function openProduct(p, { push = true } = {}) {
   if (push) setUrl(p.key);
+  track('ViewContent', p);
   document.title = `${p.name} · Swaylo`;
   $('#pName').textContent = p.name;
   $('#pPrice').innerHTML = priceHtml(p.price, p.mrp);
@@ -786,6 +798,7 @@ async function drawReviews(key) {
    desk Cash on Delivery. The customer never has to open WhatsApp. */
 
 function openCod(p) {
+  track('InitiateCheckout', p);
   const f = $('#codForm');
   $('#codTitle').textContent = p.name;
   $('#codSub').textContent = `${rupees(p.price)} · Cash on Delivery · free delivery`;
@@ -840,7 +853,7 @@ $('#codForm').onsubmit = async (e) => {
   f.querySelectorAll('label').forEach((l) => l.classList.remove('bad'));
   btn.disabled = true;
   btn.textContent = 'Placing…';
-  const body = { product_key: p.key, qty: 1 };
+  const body = { product_key: p.key, qty: 1, fbp: cookie('_fbp'), fbc: fbc(), page_url: location.href };
   for (const k of ['name', 'phone', 'house', 'road', 'pincode', 'city', 'state']) body[k] = f[k].value;
   try {
     const res = await fetch(`${API}/store/order`, {
@@ -856,12 +869,14 @@ $('#codForm').onsubmit = async (e) => {
       return;
     }
     f.hidden = true;
+    if (!d.duplicate) track('Purchase', p, { value: d.amount }, `order-${d.order_id}`);
     const done = document.createElement('div');
     done.className = 'done';
     const chat = askHref(`Hi, I placed order #${d.order_id} on your website.`);
     done.innerHTML = `
       <h2>${d.duplicate ? 'Already booked' : 'Order placed'}</h2>
       <p class="num">Order #${d.order_id} · ${esc(p.name)} · ${rupees(d.amount)}</p>
+      <p class="num">Payment: Cash on Delivery</p>
       <p>${d.advance_due
         ? `We will message you on WhatsApp to collect the ${rupees(d.advance_due)} advance, then it ships. The rest is Cash on Delivery.`
         : 'Nothing to pay now. You pay cash when it arrives. Delivery takes 10 to 15 days and we will message you on WhatsApp before it is dispatched.'}</p>
@@ -873,6 +888,23 @@ $('#codForm').onsubmit = async (e) => {
     btn.textContent = label;
   }
 };
+
+/* Pixel helpers. Never let tracking break the page: fbq may be blocked. */
+function track(name, p, extra = {}, eventID) {
+  try {
+    fbq('track', name, { content_ids: [p.key], content_type: 'product', content_name: p.name,
+      currency: 'INR', value: p.price, ...extra }, eventID ? { eventID } : undefined);
+  } catch {}
+}
+function cookie(n) {
+  return (document.cookie.match(new RegExp(`(?:^|; )${n}=([^;]*)`)) || [])[1] || '';
+}
+function fbc() {
+  const c = cookie('_fbc');
+  if (c) return c;
+  const id = new URLSearchParams(location.search).get('fbclid');
+  return id ? `fb.1.${Date.now()}.${id}` : '';
+}
 
 $('#viewer').onclick = () => { $('#viewer').hidden = true; };
 const toList = () => { setUrl(null); document.title = 'Swaylo Store'; show('viewList'); };

@@ -281,6 +281,28 @@
   .cartsum { display: flex; justify-content: space-between; align-items: baseline; margin: 16px 0 14px; font-size: 1rem; color: var(--ink); }
   .cartsum b { font-size: 1.2rem; }
   .cartempty { color: var(--ink-45); padding: 26px 0 8px; text-align: center; }
+  .medot { position: absolute; top: 8px; right: 7px; width: 9px; height: 9px; border-radius: 50%; background: #0F9D58; border: 2px solid var(--paper); }
+  .medot[hidden] { display: none; }
+  .ocard { border: 1px solid var(--rule-soft); border-radius: var(--r-lg); padding: 14px; margin-top: 12px; animation: hintIn 0.35s var(--ease) both; }
+  .ocard .top { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; align-items: center; }
+  .ocard .ph { width: 56px; height: 56px; border-radius: var(--r); background: center/cover no-repeat var(--paper-deep); }
+  .ocard b { display: block; font-size: 0.92rem; color: var(--ink); line-height: 1.3; }
+  .ocard small { color: var(--ink-45); font-size: 0.8rem; }
+  .track { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 14px; position: relative; }
+  .track div { text-align: center; font-size: 0.74rem; color: var(--ink-45); position: relative; padding-top: 20px; }
+  .track div::before { content: ''; position: absolute; top: 3px; left: 50%; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--paper); border: 2px solid var(--rule); z-index: 1; }
+  .track div::after { content: ''; position: absolute; top: 8px; left: -50%; width: 100%; height: 3px; background: var(--rule-soft); }
+  .track div:first-child::after { display: none; }
+  .track div.on { color: var(--ink); font-weight: 700; }
+  .track div.on::before { background: #0F9D58; border-color: #0F9D58; }
+  .track div.on::after { background: #0F9D58; }
+  .track div.now::before { box-shadow: 0 0 0 4px rgba(15, 157, 88, 0.2); }
+  .ostate { display: inline-block; margin-top: 10px; font-size: 0.8rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: #E3F6EA; color: #0B7A43; }
+  .ostate.bad { background: #FDECEA; color: var(--bad); }
+  .ocard .help { display: inline-block; margin-top: 10px; font-size: 0.82rem; color: var(--wa-deep); font-weight: 600; }
+  .meempty { color: var(--ink-45); padding: 24px 4px 8px; text-align: center; line-height: 1.5; }
+  .meforget { display: block; margin: 18px auto 0; border: 0; background: none; color: var(--ink-45); font: inherit; font-size: 0.8rem; text-decoration: underline; cursor: pointer; }
+  .done .btn.outline { margin-top: 14px; }
   .toast { position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: #fff; padding: 10px 16px; border-radius: 999px; font-size: 0.88rem; font-weight: 600; z-index: 80; white-space: nowrap; }
   .toast[hidden] { display: none; }
   .buyrow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px; }
@@ -518,6 +540,10 @@ fbq('track', 'PageView');
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
         <span class="cartcount" id="cartCount" hidden>0</span>
       </button>
+      <button class="cartbtn" id="meBtn" type="button" aria-label="My profile and orders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
+        <span class="medot" id="meDot" hidden></span>
+      </button>
       <a class="talk" id="waTop" href="#" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.16 8.16 0 0 1-1.26-4.36c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.21-8.24 8.21Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.38.1-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.16 0-.43.06-.65.31-.22.25-.86.84-.86 2.05s.88 2.38 1 2.54c.12.17 1.73 2.64 4.19 3.7.59.26 1.04.41 1.4.52.59.19 1.12.16 1.54.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>
         <span>Ask us anything</span>
@@ -640,6 +666,15 @@ fbq('track', 'PageView');
     <div id="cartBody"></div>
   </div>
 </div>
+<div class="modal" id="meModal" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="meTitle">
+    <div class="sheethead">
+      <div><h2 id="meTitle">My orders</h2><p id="meSub"></p></div>
+      <button class="xbtn" id="meClose" type="button" aria-label="Close">×</button>
+    </div>
+    <div id="meBody"></div>
+  </div>
+</div>
 <div class="toast" id="toast" hidden></div>
 
 <div class="modal" id="codModal" hidden>
@@ -737,6 +772,7 @@ async function boot() {
     waNumber = feed.wa_number;
     products = SHOW.map((k) => feed.products.find((p) => p.key === k)).filter(Boolean);
     drawCartCount();
+    drawMeDot();
   } catch {
     $('#listEmpty').hidden = false;
     $('#listEmpty').textContent = 'The store is not reachable right now. Please try again in a minute.';
@@ -907,6 +943,8 @@ function openCod(items, { fromCart = false } = {}) {
   $('#codErr').textContent = '';
   $('#codBody').querySelector('.done')?.remove();
   f.classList.remove('leaving');
+  const me = getMe();
+  if (me) { if (!f.name.value) f.name.value = me.name || ''; if (!f.phone.value) f.phone.value = me.phone || ''; }
   $('#codSubmit').classList.remove('busy');
   f.hidden = false;
   f.querySelectorAll('label').forEach((l) => l.classList.remove('bad'));
@@ -988,6 +1026,66 @@ function drawCart() {
   $('#cartCheckout').onclick = () => openCod(cartItems(), { fromCart: true });
 }
 $('#cartBtn').onclick = openCart;
+
+/* ── Profile and My orders ── this browser remembers the orders it placed and
+   the phone they were booked with; the bot answers only when the two match. */
+const store = (k, v) => { try { if (v === undefined) return JSON.parse(localStorage.getItem(k) || 'null'); localStorage.setItem(k, JSON.stringify(v)); } catch { return null; } };
+const getMe = () => store('swaylo_me');
+const myOrders = () => store('swaylo_orders') || [];
+function rememberOrders(placed, who) {
+  if (!placed.length) return;
+  store('swaylo_me', { name: who.name.trim(), phone: who.phone.replace(/\D/g, '').slice(-10) });
+  const list = myOrders().filter((o) => !placed.some((x) => x.order_id === o.id));
+  for (const x of placed) list.unshift({ id: x.order_id, key: x.p.key, name: x.p.name, amount: x.amount, at: Date.now() });
+  store('swaylo_orders', list.slice(0, 30));
+  drawMeDot();
+}
+function drawMeDot() { $('#meDot').hidden = !myOrders().length; }
+async function openMe() {
+  const me = getMe(), list = myOrders();
+  $('#meTitle').textContent = me?.name ? `Hi, ${me.name.split(' ')[0]}` : 'My orders';
+  $('#meSub').textContent = me?.phone ? `Orders placed with ${me.phone}` : 'Orders you place here show up in this list.';
+  const body = $('#meBody');
+  $('#meModal').hidden = false;
+  document.body.style.overflow = 'hidden';
+  if (!list.length) {
+    body.innerHTML = '<p class="meempty">No orders yet.<br>Once you order, you can follow it here: confirmed, shipped, delivered.</p>';
+    return;
+  }
+  body.innerHTML = '<p class="meempty">Checking your orders…</p>';
+  let live = [];
+  try {
+    const r = await fetch(`${API}/store/my-orders`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: me?.phone, ids: list.map((o) => o.id) }) });
+    live = (await r.json()).orders || [];
+  } catch {}
+  const byId = new Map(live.map((o) => [o.id, o]));
+  const steps = ['confirmed', 'shipped', 'delivered'];
+  const when = (t) => new Date(t).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+  body.innerHTML = list.map((o) => {
+    const l = byId.get(o.id);
+    const p = products.find((x) => x.key === o.key);
+    const stage = l?.stage || 'confirmed';
+    const at = steps.indexOf(stage === 'packing' ? 'confirmed' : stage);
+    const ended = stage === 'cancelled' || stage === 'returned';
+    const track = ended ? `<span class="ostate bad">${stage === 'cancelled' ? 'Cancelled' : 'Returned'}</span>`
+      : `<div class="track">${['Confirmed', 'Shipped', 'Delivered'].map((t, i) => `<div class="${i <= at ? 'on' : ''} ${i === at ? 'now' : ''}">${t}</div>`).join('')}</div>
+         <span class="ostate">${stage === 'delivered' ? 'Delivered. Enjoy it!' : stage === 'shipped' ? (l?.attempt_failed ? 'Delivery attempted, the courier will try again' : 'On the way to you') : stage === 'packing' ? 'Being packed for dispatch' : 'Order confirmed · Cash on Delivery'}</span>`;
+    return `<div class="ocard">
+      <div class="top"><span class="ph" style="background-image:url('${p ? photos(p)[0] || '' : ''}')"></span>
+        <div><b>${esc(l?.product || o.name)}</b><small>Order #${o.id} · ${rupees(l?.amount || o.amount)} · ${when(l?.created_at || o.at)}</small></div></div>
+      ${track}
+      <a class="help" href="${askHref(`Hi, I have a question about my order #${o.id}.`)}" target="_blank" rel="noopener">Question about this order? Message us</a>
+    </div>`;
+  }).join('') + '<button class="meforget" type="button" id="meForget">Not you? Forget my details on this phone</button>';
+  $('#meForget').onclick = () => {
+    try { localStorage.removeItem('swaylo_me'); localStorage.removeItem('swaylo_orders'); } catch {}
+    drawMeDot(); closeMe();
+  };
+}
+function closeMe() { $('#meModal').hidden = true; document.body.style.overflow = ''; }
+$('#meBtn').onclick = openMe;
+$('#meClose').onclick = closeMe;
+$('#meModal').onclick = (e) => { if (e.target.id === 'meModal') closeMe(); };
 $('#cartClose').onclick = closeCart;
 $('#cartModal').onclick = (e) => { if (e.target.id === 'cartModal') closeCart(); };
 
@@ -1081,6 +1179,7 @@ $('#codForm').onsubmit = async (e) => {
       return;
     }
   }
+  rememberOrders(placed, who);
   const booked = new Set(placed.map((x) => x.p.key));
   if (fromCart) { cart = cart.filter((c) => !booked.has(c.key)); saveCart(); }
   const open = products.find((x) => x.key === new URLSearchParams(location.search).get('p'));
@@ -1111,8 +1210,10 @@ $('#codForm').onsubmit = async (e) => {
     <p>${advance
       ? `We will message you on WhatsApp to collect the ${rupees(advance)} advance, then it ships. The rest is Cash on Delivery.`
       : 'Nothing to pay now. You pay cash when it arrives. Delivery takes 10 to 15 days and we will message you on WhatsApp before it is dispatched.'}</p>
+    <button class="btn outline" type="button" id="seeOrders">View my orders</button>
     <p><a href="${chat}" rel="noopener">Message us about this order</a></p>`;
   $('#codBody').append(done);
+  $('#seeOrders').onclick = () => { closeCod(); openMe(); };
 };
 
 /* Pixel helpers. Never let tracking break the page: fbq may be blocked. */

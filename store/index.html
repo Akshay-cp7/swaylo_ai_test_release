@@ -740,10 +740,11 @@ async function drawReviews(key) {
   box.innerHTML = '';
   let r;
   try {
-    const res = await fetch(`reviews/${key}.json`);
+    const res = await fetch(`reviews/${key}.json`, { cache: 'no-cache' });
     if (!res.ok) return;
     r = await res.json();
   } catch { return; }
+  r.reviews_count ??= r.reviews.length;
   const pill = (n, text) => `<span class="pill ${n >= 4 ? '' : n >= 3 ? 'mid' : 'low'}">${text}★</span>`;
   const when = (d) => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
   const counts = `${r.ratings.toLocaleString('en-IN')} Ratings, ${r.reviews_count.toLocaleString('en-IN')} Reviews`;

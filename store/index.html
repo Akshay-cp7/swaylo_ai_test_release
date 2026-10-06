@@ -403,6 +403,20 @@
   .viewer { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 60; padding: 16px; }
   .viewer[hidden] { display: none; }
   .viewer img { max-width: 100%; max-height: 100%; border-radius: var(--r); }
+  /* The Cash on Delivery form: a sheet over the page, so the customer never
+     loses the product they were looking at. */
+  .modal { position: fixed; inset: 0; z-index: 70; background: rgba(10, 40, 80, 0.45); display: flex; align-items: flex-end; justify-content: center; }
+  .modal[hidden] { display: none; }
+  .modal .sheet { width: 100%; max-width: 520px; max-height: 92vh; overflow-y: auto; margin: 0; border-radius: var(--r-lg) var(--r-lg) 0 0; background: var(--paper); padding: 20px 18px calc(22px + env(safe-area-inset-bottom, 0px)); }
+  @media (min-width: 640px) { .modal { align-items: center; } .modal .sheet { border-radius: var(--r-lg); } }
+  .sheethead { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .sheethead p { color: var(--ink-45); font-size: 0.86rem; margin-top: 4px; }
+  .xbtn { background: none; border: 0; font-size: 1.6rem; line-height: 1; color: var(--ink-45); cursor: pointer; padding: 0 4px; }
+  .modal form { margin-top: 16px; }
+  .modal .hint { color: var(--ink-45); font-size: 0.82rem; }
+  label.bad input { border-color: var(--bad); }
+  .modal .done { margin: 16px 0 0; max-width: none; padding: 22px 18px; }
+  .modal .done a { color: var(--wa-deep); font-weight: 600; }
   .buyrow .btn { flex: 1; white-space: nowrap; }
   .kitnote { margin-top: 16px; padding: 12px 14px; border-radius: var(--r); background: var(--paper-deep); font-size: 0.9rem; color: var(--ink); }
 </style>
@@ -482,7 +496,8 @@
         <p class="kitnote" id="pKit" hidden></p>
         <div class="buybar">
           <div class="buyrow">
-            <button class="btn" id="buyNow">Order on WhatsApp</button>
+            <button class="btn" id="codBtn">Buy now · Cash on Delivery</button>
+            <button class="btn ghost" id="buyNow">WhatsApp</button>
           </div>
         </div>
         <div class="assure">
@@ -531,6 +546,33 @@
   </div>
 
 </main>
+
+<div class="modal" id="codModal" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="codTitle">
+    <div class="sheethead">
+      <div><h2 id="codTitle"></h2><p id="codSub"></p></div>
+      <button class="xbtn" id="codClose" type="button" aria-label="Close">×</button>
+    </div>
+    <div id="codBody">
+      <form id="codForm" novalidate>
+        <label><span>Your name</span><input name="name" autocomplete="name" maxlength="80"></label>
+        <label><span>WhatsApp number</span><input name="phone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="13" placeholder="10 digit mobile"></label>
+        <label><span>House / flat number, building</span><input name="house" maxlength="120"></label>
+        <label><span>Street, area, landmark</span><input name="road" autocomplete="street-address" maxlength="200"></label>
+        <div class="pair">
+          <label><span>Pincode</span><input name="pincode" inputmode="numeric" autocomplete="postal-code" maxlength="6"></label>
+          <label><span>Town</span><input name="city" autocomplete="address-level2" maxlength="80" list="codAreas"></label>
+        </div>
+        <datalist id="codAreas"></datalist>
+        <label><span>State</span><input name="state" autocomplete="address-level1" maxlength="80"></label>
+        <p class="hint" id="codPinHint"></p>
+        <p class="err" id="codErr"></p>
+        <button class="btn" type="submit" id="codSubmit"></button>
+        <p class="hint">Nothing to pay now. You pay cash when it reaches you. We message you on WhatsApp before dispatch.</p>
+      </form>
+    </div>
+  </div>
+</div>
 
 <div class="viewer" id="viewer" hidden><img id="viewerImg" alt=""></div>
 
@@ -645,7 +687,8 @@ function openProduct(p, { push = true } = {}) {
   $('#pKit').hidden = !kit;
   $('#pKit').textContent = kit ? 'Comes as a DIY kit. You put it together yourself, and a hot glue gun helps. Take a look at the buyer photos below to see how it turns out.' : '';
   $('#waProduct').href = askHref(`Hi, I have a question about the ${p.name}, ${rupees(p.price)}.`);
-  $('#buyNow').textContent = `Order on WhatsApp · ${rupees(p.price)}`;
+  $('#codBtn').textContent = `Buy now · ${rupees(p.price)}`;
+  $('#codBtn').onclick = () => openCod(p);
   $('#buyNow').onclick = () => {
     location.href = askHref(`Hi, I want to order the ${p.name}, ${rupees(p.price)}, Cash on Delivery.`);
   };
@@ -735,6 +778,100 @@ async function drawReviews(key) {
   });
   box.hidden = false;
 }
+
+/* ── Cash on Delivery from the website ──────────────────────────────────
+   The same endpoint as akshaycp.com/store: the bot checks the pincode with
+   India Post, folds a double tap into one order, and books it into the order
+   desk Cash on Delivery. The customer never has to open WhatsApp. */
+
+function openCod(p) {
+  const f = $('#codForm');
+  $('#codTitle').textContent = p.name;
+  $('#codSub').textContent = `${rupees(p.price)} · Cash on Delivery · free delivery`;
+  $('#codSubmit').textContent = `Place order · ${rupees(p.price)}`;
+  $('#codSubmit').disabled = false;
+  $('#codErr').textContent = '';
+  $('#codBody').querySelector('.done')?.remove();
+  f.hidden = false;
+  f.querySelectorAll('label').forEach((l) => l.classList.remove('bad'));
+  f.dataset.key = p.key;
+  $('#codModal').hidden = false;
+  document.body.style.overflow = 'hidden';
+  f.name.focus();
+}
+
+function closeCod() {
+  $('#codModal').hidden = true;
+  document.body.style.overflow = '';
+}
+$('#codClose').onclick = closeCod;
+$('#codModal').onclick = (e) => { if (e.target.id === 'codModal') closeCod(); };
+
+/* Six digits in, ask India Post, and fill the town and state the customer has
+   not typed themselves. Never overwrite what they typed: they know their own
+   address better than a lookup does. */
+let lastPin = '';
+$('#codForm').pincode.addEventListener('input', async (e) => {
+  const f = $('#codForm');
+  const pin = e.target.value.replace(/\D/g, '').slice(0, 6);
+  if (pin.length !== 6 || pin === lastPin) return;
+  lastPin = pin;
+  const hint = $('#codPinHint');
+  hint.textContent = 'Checking pincode…';
+  try {
+    const d = await (await fetch(`${API}/store/pincode/${pin}`)).json();
+    hint.textContent = '';
+    if (!d?.found) return;
+    $('#codAreas').innerHTML = (d.areas || []).map((a) => `<option value="${esc(a)}">`).join('');
+    if (!f.state.value && d.states?.length === 1) f.state.value = d.states[0];
+    if (!f.city.value && d.districts?.length === 1) f.city.value = d.districts[0];
+    if (d.states?.length > 1) hint.textContent = `That pincode covers ${d.states.join(' and ')}. Please type the right one.`;
+  } catch { hint.textContent = ''; }
+});
+
+$('#codForm').onsubmit = async (e) => {
+  e.preventDefault();
+  const f = e.target;
+  const p = products.find((x) => x.key === f.dataset.key);
+  const btn = $('#codSubmit'), err = $('#codErr');
+  const label = `Place order · ${rupees(p.price)}`;
+  err.textContent = '';
+  f.querySelectorAll('label').forEach((l) => l.classList.remove('bad'));
+  btn.disabled = true;
+  btn.textContent = 'Placing…';
+  const body = { product_key: p.key, qty: 1 };
+  for (const k of ['name', 'phone', 'house', 'road', 'pincode', 'city', 'state']) body[k] = f[k].value;
+  try {
+    const res = await fetch(`${API}/store/order`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+    });
+    const d = await res.json();
+    if (!res.ok || !d.ok) {
+      err.textContent = d.error || 'Something went wrong. Please try again.';
+      for (const k of d.missing || []) f[k]?.closest('label').classList.add('bad');
+      if (d.field === 'pincode') f.pincode.closest('label').classList.add('bad');
+      btn.disabled = false;
+      btn.textContent = label;
+      return;
+    }
+    f.hidden = true;
+    const done = document.createElement('div');
+    done.className = 'done';
+    const chat = askHref(`Hi, I placed order #${d.order_id} on your website.`);
+    done.innerHTML = `
+      <h2>${d.duplicate ? 'Already booked' : 'Order placed'}</h2>
+      <p class="num">Order #${d.order_id} · ${esc(p.name)} · ${rupees(d.amount)}</p>
+      <p>${d.advance_due
+        ? `We will message you on WhatsApp to collect the ${rupees(d.advance_due)} advance, then it ships. The rest is Cash on Delivery.`
+        : 'Nothing to pay now. You pay cash when it arrives. Delivery takes 10 to 15 days and we will message you on WhatsApp before it is dispatched.'}</p>
+      <p><a href="${chat}" rel="noopener">Message us about this order</a></p>`;
+    $('#codBody').append(done);
+  } catch {
+    err.innerHTML = `Could not reach us just now. Please <a href="${askHref(`Hi, I want to order the ${p.name}, ${rupees(p.price)}, Cash on Delivery.`)}">order on WhatsApp</a> instead.`;
+    btn.disabled = false;
+    btn.textContent = label;
+  }
+};
 
 $('#viewer').onclick = () => { $('#viewer').hidden = true; };
 const toList = () => { setUrl(null); document.title = 'Swaylo Store'; show('viewList'); };

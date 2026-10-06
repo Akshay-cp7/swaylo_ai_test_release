@@ -33,6 +33,13 @@
   },
   {
    "name": "A buyer",
+   "stars": 4,
+   "date": "2026-05-24",
+   "text": "The process of making it was very creative I loved adjusting it .Also mirror is not actually a mirror it isade of plastic but it's clear and bright 🌞.It look amazing 😍.Tulips my favourite. You can buy it ☺️",
+   "photos": []
+  },
+  {
+   "name": "A buyer",
    "stars": 5,
    "date": "2026-06-26",
    "text": "Good",
@@ -51,6 +58,13 @@
     "n02_1.jpg",
     "n02_2.jpg"
    ]
+  },
+  {
+   "name": "A buyer",
+   "stars": 4,
+   "date": "2026-06-26",
+   "text": "Nice product but it takes time to diy it, so it is not for lazy people 😭 thus the product is good and the overall things is also in good quality 💓",
+   "photos": []
   },
   {
    "name": "A buyer",
@@ -74,6 +88,13 @@
    ]
   },
   {
+   "name": "A buyer",
+   "stars": 4,
+   "date": "2026-05-21",
+   "text": "Everything was very good but mujhe lagta hai ki vah logon Ko aise banaa kar dena chahie kyunki bahut jyada time taken hai",
+   "photos": []
+  },
+  {
    "name": "Mimi",
    "stars": 5,
    "date": "2026-06-19",
@@ -90,6 +111,13 @@
    "photos": [
     "r05_0.jpg"
    ]
+  },
+  {
+   "name": "Hemlata",
+   "stars": 4,
+   "date": "2026-06-05",
+   "text": "Good 👍but product k sath ek chhota sa manual book bhi dena chahiye taki assemble krne me easy ho.",
+   "photos": []
   },
   {
    "name": "Anoop",
@@ -110,6 +138,13 @@
    ]
   },
   {
+   "name": "Arsh",
+   "stars": 4,
+   "date": "2026-07-06",
+   "text": "Very adorable and looks so attractive in darkness.",
+   "photos": []
+  },
+  {
    "name": "Rupali",
    "stars": 5,
    "date": "2026-07-06",
@@ -126,6 +161,13 @@
    "photos": [
     "r15_1.jpg"
    ]
+  },
+  {
+   "name": "Surmi",
+   "stars": 4,
+   "date": "2026-06-29",
+   "text": "All over product is good but some of the tulips have slight defects.",
+   "photos": []
   },
   {
    "name": "A buyer",
@@ -146,6 +188,13 @@
    ]
   },
   {
+   "name": "Sona",
+   "stars": 4,
+   "date": "2026-08-05",
+   "text": "Very nice product aap log le sakte hai ,🤗❤️✨❤️‍🔥",
+   "photos": []
+  },
+  {
    "name": "Jaipal",
    "stars": 5,
    "date": "2026-07-03",
@@ -162,6 +211,13 @@
    "photos": [
     "n09_0.jpg"
    ]
+  },
+  {
+   "name": "Janvi",
+   "stars": 4,
+   "date": "2026-07-26",
+   "text": "It's nice but size is very small.",
+   "photos": []
   },
   {
    "name": "A buyer",
@@ -183,6 +239,13 @@
   },
   {
    "name": "A buyer",
+   "stars": 4,
+   "date": "2026-07-03",
+   "text": "Nuce but light is very less",
+   "photos": []
+  },
+  {
+   "name": "A buyer",
    "stars": 5,
    "date": "2026-06-22",
    "text": "very good product",
@@ -198,6 +261,13 @@
    "photos": [
     "n14_0.jpg"
    ]
+  },
+  {
+   "name": "Buddhadev",
+   "stars": 4,
+   "date": "2026-06-02",
+   "text": "Light accha hai par glue quality kharap thi🤧",
+   "photos": []
   },
   {
    "name": "A buyer",
@@ -219,6 +289,13 @@
   },
   {
    "name": "A buyer",
+   "stars": 4,
+   "date": "2026-05-04",
+   "text": "Nice but very hard to set",
+   "photos": []
+  },
+  {
+   "name": "A buyer",
    "stars": 5,
    "date": "2026-05-09",
    "text": "Very very good",
@@ -234,6 +311,13 @@
    "photos": [
     "n18_0.jpg"
    ]
+  },
+  {
+   "name": "Aksheti",
+   "stars": 4,
+   "date": "2026-05-20",
+   "text": "Looks cute",
+   "photos": []
   },
   {
    "name": "A buyer",
@@ -254,6 +338,13 @@
    ]
   },
   {
+   "name": "Queen",
+   "stars": 4,
+   "date": "2026-07-05",
+   "text": "Quality is good.",
+   "photos": []
+  },
+  {
    "name": "Sanju",
    "stars": 4,
    "date": "2026-07-24",
@@ -270,6 +361,13 @@
    "photos": [
     "n22_0.jpg"
    ]
+  },
+  {
+   "name": "Dasari",
+   "stars": 4,
+   "date": "2026-07-09",
+   "text": "Perfect go for it",
+   "photos": []
   },
   {
    "name": "Shikha",
@@ -290,6 +388,13 @@
    ]
   },
   {
+   "name": "Khan",
+   "stars": 4,
+   "date": "2026-07-24",
+   "text": "Its amazing",
+   "photos": []
+  },
+  {
    "name": "Nagalakshmi",
    "stars": 5,
    "date": "2026-07-14",
@@ -304,10 +409,24 @@
    "photos": []
   },
   {
+   "name": "Pratibha",
+   "stars": 4,
+   "date": "2026-10-02",
+   "text": "Pretty product 👍",
+   "photos": []
+  },
+  {
    "name": "Suma",
    "stars": 4,
    "date": "2026-08-11",
    "text": "Very nice product 😊",
+   "photos": []
+  },
+  {
+   "name": "Archana",
+   "stars": 4,
+   "date": "2026-09-27",
+   "text": "It's valuable",
    "photos": []
   }
  ]

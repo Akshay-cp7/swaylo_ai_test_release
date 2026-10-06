@@ -3,19 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Swaylo — Shirts</title>
-<meta name="description" content="Original printed tees, made when you order them. Designed and printed in India.">
+<title>Swaylo Store</title>
+<meta name="description" content="Pretty little things for your room and for gifting. Cash on Delivery, free delivery across India.">
 <meta name="theme-color" content="#F9F4EF">
 <link rel="icon" type="image/png" href="../launch_icon.png">
-<meta property="og:title" content="Swaylo — Shirts">
-<meta property="og:description" content="Original printed tees, made when you order them.">
+<meta property="og:title" content="Swaylo Store">
+<meta property="og:description" content="Cash on Delivery, free delivery across India.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://swayloweb.com/store/">
 <meta property="og:image" content="https://swayloweb.com/launch_icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600..900;1,9..144,600..800&family=Schibsted+Grotesk:wght@400..700&display=swap" rel="stylesheet">
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <style>
   /* The shop wears the same clothes as swayloweb.com — cream paper, navy ink,
      clay for anything you press, Fraunces for the things you read first. The
@@ -365,12 +364,36 @@
     .pickfirst { margin: 6px 0 0; text-align: center; }
     #viewProduct { padding-bottom: 108px; }
   }
+
+  /* Reviews. Every one is somebody else's purchase of the same item from the
+     same seller, so the section says so in its heading, shows the real average
+     with the bad stars in it, and keeps the critical reviews in the list. */
+  .reviews { margin-top: 56px; border-top: 1px solid var(--rule); padding-top: 32px; }
+  .reviews h2 { font-family: var(--display); font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
+  .reviews .src { color: var(--ink-45); font-size: 0.86rem; margin-top: 4px; }
+  .rsum { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 24px; align-items: center; margin-top: 20px; max-width: 520px; }
+  .rsum .big { font-family: var(--display); font-size: 3rem; font-weight: 800; line-height: 1; }
+  .rsum .big small { display: block; font-family: var(--sans); font-size: 0.8rem; font-weight: 400; color: var(--ink-45); margin-top: 6px; }
+  .bars div { display: grid; grid-template-columns: 22px minmax(0, 1fr) 40px; gap: 8px; align-items: center; font-size: 0.8rem; color: var(--ink-70); }
+  .bars i { display: block; height: 7px; border-radius: 4px; background: var(--rule-soft); overflow: hidden; }
+  .bars i b { display: block; height: 100%; background: var(--clay); }
+  .rlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 26px; }
+  .rcard { background: var(--plate); border: 1px solid var(--rule-soft); border-radius: var(--r-lg); padding: 16px; }
+  .rcard .stars { color: var(--clay); letter-spacing: 2px; font-size: 0.95rem; }
+  .rcard .who { font-size: 0.8rem; color: var(--ink-45); margin-top: 2px; }
+  .rcard p { margin-top: 8px; font-size: 0.92rem; color: var(--ink-70); }
+  .rcard .pics { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .rcard .pics button { width: 84px; height: 84px; border: 0; border-radius: var(--r); background: center/cover no-repeat var(--paper-deep); cursor: zoom-in; padding: 0; }
+  .viewer { position: fixed; inset: 0; background: rgba(0,0,0,0.88); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 16px; }
+  .viewer[hidden] { display: none; }
+  .viewer img { max-width: 100%; max-height: 100%; border-radius: var(--r); }
+  .kitnote { margin-top: 16px; padding: 12px 14px; border-radius: var(--r); background: var(--paper-deep); font-size: 0.9rem; color: var(--ink); }
 </style>
 </head>
 <body>
 
 <div class="ticker">
-  <b>Free delivery anywhere in India</b><span class="dot">·</span>Printed to order, dispatched in 3–5 days
+  <b>Free delivery anywhere in India</b><span class="dot">·</span>Cash on Delivery
 </div>
 
 <header class="top">
@@ -384,47 +407,44 @@
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.16 8.16 0 0 1-1.26-4.36c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.21-8.24 8.21Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.38.1-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.16 0-.43.06-.65.31-.22.25-.86.84-.86 2.05s.88 2.38 1 2.54c.12.17 1.73 2.64 4.19 3.7.59.26 1.04.41 1.4.52.59.19 1.12.16 1.54.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>
         <span>Ask us anything</span>
       </a>
-      <button class="cartbtn" id="cartBtn" hidden>Bag <span class="count" id="cartCount">0</span></button>
     </div>
   </div>
 </header>
 
 <main class="wrap">
 
-  <!-- catalogue -->
   <section id="viewList">
     <div class="opening">
     <div class="hero">
-      <p class="eyebrow">Swaylo · printed in India</p>
-      <h1>Shirts worth <em>explaining.</em></h1>
-      <p>Original designs, printed one at a time when you order. Nothing sits in a warehouse, so nothing you wear is something a thousand other people already bought.</p>
+      <p class="eyebrow">Swaylo store</p>
+      <h1>Little things that <em>glow.</em></h1>
+      <p>Pretty pieces for your room, and gifts people actually keep. Order on WhatsApp and pay when it reaches you.</p>
     </div>
 
     <div class="promises">
       <div>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="7" rx="2"/><path d="M6 14h12v7H6z"/></svg>
-        <div><b>Made for your order</b><span>Nothing is pre-printed. Yours goes on the press when you order.</span></div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <div><b>Cash on Delivery</b><span>Pay when it reaches you. Nothing up front.</span></div>
       </div>
       <div>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
-        <div><b>Free delivery, all of India</b><span>Dispatched in 3–5 days. No delivery charge, no minimum.</span></div>
+        <div><b>Free delivery, all of India</b><span>No delivery charge, no minimum.</span></div>
       </div>
       <div>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-        <div><b>Cash on Delivery</b><span>Order on WhatsApp and pay when the shirt reaches you.</span></div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+        <div><b>7 day refund</b><span>Damaged or wrong? Tell us within 7 days and get your money back.</span></div>
       </div>
     </div>
     </div>
 
     <div class="sectionhead">
-      <h2>The shirts</h2>
+      <h2>In the store</h2>
       <span id="gridCount"></span>
     </div>
     <div class="grid" id="grid"></div>
-    <p class="empty" id="listEmpty" hidden>Nothing here just yet — the first drop is on its way.</p>
+    <p class="empty" id="listEmpty" hidden>Nothing here just yet.</p>
   </section>
 
-  <!-- one shirt -->
   <section id="viewProduct" hidden>
     <button class="back" id="backList">← Everything</button>
     <div class="product">
@@ -436,104 +456,57 @@
         </div>
       </div>
       <div class="details">
-        <p class="eyebrow">Swaylo original</p>
+        <p class="eyebrow">Swaylo store</p>
         <h2 id="pName"></h2>
         <p class="cost" id="pPrice"></p>
         <p class="taxline">Inclusive of all taxes · free delivery</p>
         <p class="blurb" id="pBlurb"></p>
-        <p class="colourline" id="pColour" hidden></p>
-        <div class="sizes" id="sizeBlock">
-          <h4>Size</h4>
-          <div class="chips" id="pSizes"></div>
-        </div>
+        <p class="kitnote" id="pKit" hidden></p>
         <div class="buybar">
           <div class="buyrow">
-            <button class="btn" id="buyNow">Buy now</button>
-            <button class="btn ghost" id="addToBag">Add to bag</button>
+            <button class="btn" id="buyNow">Order on WhatsApp</button>
           </div>
-          <p class="pickfirst" id="pickFirst" hidden>Choose a size first.</p>
         </div>
         <div class="assure">
           <div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="7" rx="2"/><path d="M6 14h12v7H6z"/></svg>
-            <span><b>Printed when you order</b> — dispatched in 3–5 days</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <span><b>Cash on Delivery</b>, pay when it arrives</span>
           </div>
           <div>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
             <span><b>Free delivery</b> anywhere in India</span>
           </div>
           <div>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-            <span><b>Cash on Delivery</b>, pay when it arrives</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+            <span><b>7 day refund</b> if it arrives damaged or wrong</span>
           </div>
           <div>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.9 8.9 0 0 1-4-1L3 20l1.1-4.6a8.4 8.4 0 0 1-1-4A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5Z"/></svg>
-            <span><b>A person on the other end</b> — <a id="waProduct" href="#" target="_blank" rel="noopener">message us on WhatsApp</a> before or after you buy</span>
+            <span><b>Questions first?</b> <a id="waProduct" href="#" target="_blank" rel="noopener">Ask us on WhatsApp</a></span>
           </div>
         </div>
-        <p class="note" id="pNote"></p>
       </div>
     </div>
-  </section>
-
-  <!-- bag + checkout -->
-  <section id="viewCart" hidden>
-    <div class="sheet">
-      <button class="back" id="backList2" style="padding-top:0">← Keep looking</button>
-      <h2 style="margin-top:14px" id="cartTitle">Your bag</h2>
-      <div id="cartLines"></div>
-      <div class="totals" id="cartTotals"></div>
-
-      <form id="checkout" novalidate>
-        <p class="field-title">Where it goes</p>
-        <div class="pair">
-          <label><span>Full name</span><input name="name" autocomplete="name" required></label>
-          <label><span>Mobile number</span><input name="phone" inputmode="numeric" autocomplete="tel" placeholder="10 digits" required></label>
-        </div>
-        <label><span>Email (for the receipt)</span><input name="email" type="email" autocomplete="email"></label>
-        <label><span>Address</span><input name="address1" autocomplete="address-line1" placeholder="House, street, area" required></label>
-        <label><span>Landmark or second line (optional)</span><input name="address2" autocomplete="address-line2"></label>
-        <div class="pair">
-          <label><span>City</span><input name="city" autocomplete="address-level2" required></label>
-          <label><span>PIN code</span><input name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="6" required></label>
-        </div>
-        <label><span>State</span><select name="province" required><option value="">Choose…</option></select></label>
-
-        <button class="btn" type="submit" id="payBtn">Pay securely</button>
-        <p class="note">You will pay through Razorpay — UPI, cards, netbanking. We never see your card.</p>
-        <p class="err" id="cartErr"></p>
-      </form>
-    </div>
-  </section>
-
-  <!-- after payment -->
-  <section id="viewDone" hidden>
-    <div class="done">
-      <h2>Paid. Thank you.</h2>
-      <p>Your shirt goes into print today. You will get a message when it ships — usually in three to five days.</p>
-      <p class="num" id="doneNum"></p>
-      <p class="note" id="doneNote"></p>
-      <button class="btn ghost" id="doneBack">Back to the shirts</button>
-    </div>
+    <section class="reviews" id="reviews" hidden></section>
   </section>
 
   <div class="colophon">
     <div>
       <div class="mark"><img src="../swallow.png" alt=""><b>Swaylo</b></div>
-      <p>A small independent label. We draw the designs, a print house in India presses them one shirt at a time, and it comes straight to you.</p>
+      <p>A small independent shop. We pick the pieces, you order on WhatsApp, and it comes to your door.</p>
     </div>
     <div>
       <h4>Getting it</h4>
       <ul>
-        <li>Printed to order — leaves in 3–5 days</li>
+        <li>Order on WhatsApp in one message</li>
         <li>Free delivery, everywhere in India</li>
-        <li>Prepaid only: UPI, cards, netbanking</li>
+        <li>Cash on Delivery</li>
       </ul>
     </div>
     <div>
       <h4>If something is wrong</h4>
       <ul>
-        <li>Wrong size, bad print, damaged in transit — tell us and we will sort it out.</li>
+        <li>Damaged or wrong item: tell us within 7 days for a refund.</li>
         <li><a id="waFoot" href="#" target="_blank" rel="noopener">Message us on WhatsApp</a></li>
       </ul>
     </div>
@@ -541,258 +514,142 @@
 
 </main>
 
+<div class="viewer" id="viewer" hidden><img id="viewerImg" alt=""></div>
+
 <footer class="foot">
   <div class="wrap">
-    <span>© <span id="yr"></span> Swaylo · Printed to order in India</span>
+    <span>© <span id="yr"></span> Swaylo</span>
     <span>Cash on Delivery across India</span>
   </div>
 </footer>
-
 <script>
 /* The Swaylo store.
  *
- * One page, four views, no framework. Everything about money is decided by the
- * server: this file sends variant ids and quantities and is TOLD what it costs.
- * The totals drawn in the bag are a courtesy for the customer's eyes — if they
- * ever disagreed with the server's, the server would be the one that is right
- * and the one that gets charged. */
+ * Holds no product data. Names, prices and photos come from the bot's public
+ * /store.json, the same feed as akshaycp.com/store, so the panel stays the one
+ * place a price lives. SHOW only says WHICH panel products appear here.
+ *
+ * Ordering is a WhatsApp message to the bot, prefilled with the product's full
+ * name and price: the bot reads that sentence to work out what they want and
+ * books it Cash on Delivery like any ad order. Change the wording and that
+ * matching breaks (see autoMatch in the bot's src/ads.js).
+ */
 
 const API = 'https://whatsapp-bot-production-725a.up.railway.app';
-
-/**
- * Akshay's own number, for anybody with a question about a shirt.
- *
- * Deliberately not `catalogue.wa_number` — that is the bot's line, and the bot
- * sells websites now. A shirt question answered by a website salesman is worse
- * than no answer. The permanent home for this is SHOP_CONTACT_WA on Railway
- * (see config.js `shop.contactWa`), which also puts it on the order
- * confirmation; until that is set, the page carries it.
- */
-const SHOP_WA = '918943418093';
-const waHref = 'https://wa.me/' + SHOP_WA
-  + '?text=' + encodeURIComponent('Hi, I have a question about the Swaylo shirts.');
+const SHOW = ['tulip_lamp'];
 
 const $ = (s, r = document) => r.querySelector(s);
 const rupees = (n) => '₹' + Number(n || 0).toLocaleString('en-IN');
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-const SIZE_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'];
-const sizeRank = (size) => {
-  const i = SIZE_ORDER.indexOf(String(size).toUpperCase());
-  return i === -1 ? SIZE_ORDER.length : i;   // anything unrecognised sorts last
-};
-
-/**
- * "Sizes XS–4XL · Black" — assembled from the variants rather than typed in,
- * so it can never drift from what is actually buyable. A card carrying only a
- * name and a price looks like a placeholder; this is the cheapest true thing
- * to put under it.
- */
-function specLine(shirt) {
-  const sizes = [...new Set(shirt.variants.map((v) => v.size).filter(Boolean))]
-    .sort((a, b) => sizeRank(a) - sizeRank(b));
-  const colours = [...new Set(shirt.variants.map((v) => v.colour).filter(Boolean))];
-  const parts = [];
-  if (sizes.length > 1) parts.push(`Sizes ${sizes[0]}–${sizes[sizes.length - 1]}`);
-  else if (sizes.length === 1) parts.push(`Size ${sizes[0]}`);
-  if (colours.length === 1) parts.push(colours[0]);
-  else if (colours.length > 1) parts.push(`${colours.length} colours`);
-  return parts.join(' · ');
-}
-
-/** Price, was-price, and the percentage off — read in that order everywhere. */
 function priceHtml(price, mrp) {
   if (!mrp || mrp <= price) return rupees(price);
   const off = Math.round((1 - price / mrp) * 100);
   return `${rupees(price)}<s>${rupees(mrp)}</s><span class="off">${off}% off</span>`;
 }
 
-const STATES = ['Andaman and Nicobar Islands','Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chandigarh','Chhattisgarh','Dadra and Nagar Haveli and Daman and Diu','Delhi','Goa','Gujarat','Haryana','Himachal Pradesh','Jammu and Kashmir','Jharkhand','Karnataka','Kerala','Ladakh','Lakshadweep','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Puducherry','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal'];
+let products = [];
+let waNumber = '';
+const askHref = (text) => 'https://wa.me/' + waNumber + '?text=' + encodeURIComponent(text);
+const photos = (p) => [API + p.image, ...(p.gallery || []).map((g) => API + g)];
 
-let catalogue = null;
-let current = null;      // the shirt being looked at
-let chosen = null;       // the variant id picked on it
-
-/* The bag survives a reload, because a customer who came back to check their
-   PIN code should not find it emptied. Variant ids only — never prices. */
-const loadBag = () => { try { return JSON.parse(localStorage.getItem('swaylo_bag') || '[]'); } catch { return []; } };
-const saveBag = (b) => localStorage.setItem('swaylo_bag', JSON.stringify(b));
-let bag = loadBag();
-
-/* "Buy now" checks out this one shirt without disturbing the bag. Kept apart
-   from `bag` rather than emptying it and putting one thing in: somebody with
-   two shirts saved who buys a third directly must still have their two
-   afterwards. Never persisted — a direct buy is this moment or nothing. */
-let directBuy = null;
-const activeItems = () => (directBuy ? [directBuy] : bag);
-
-/* ── addresses ─────────────────────────────────────────────────────────── */
-
-/* A shirt needs its own URL or it cannot be sent to anybody, which for a shop
-   sold over WhatsApp is most of the point. A query string rather than a path,
-   because this is a static site: /store/yolo-adventure/ would need a file at
-   that address and GitHub Pages would 404 it. ?p=slug is one file, any slug.
-   It also gives the browser's back button something to do — before this it
-   left the site from a product page, which reads as "this shop broke". */
-const slugInUrl = () => new URLSearchParams(location.search).get('p');
-
-const setUrl = (slug) => {
-  const url = slug ? `${location.pathname}?p=${encodeURIComponent(slug)}` : location.pathname;
-  if (url !== location.pathname + location.search) history.pushState({ slug: slug || null }, '', url);
+/* ?p=key gives each product its own link, on a static site. */
+const keyInUrl = () => new URLSearchParams(location.search).get('p');
+const setUrl = (key) => {
+  const url = key ? `${location.pathname}?p=${encodeURIComponent(key)}` : location.pathname;
+  if (url !== location.pathname + location.search) history.pushState({ key: key || null }, '', url);
 };
 
-/** Show whatever the current address asks for. Also the popstate handler. */
 function route() {
-  const slug = slugInUrl();
-  const shirt = slug && catalogue?.shirts.find((s) => s.slug === slug);
-  if (shirt) openShirt(shirt, { push: false });
-  else {
-    // A link to a shirt that has since been retired lands on the shop rather
-    // than on an error. They came to buy something; show them what there is.
-    directBuy = null;
-    document.title = 'Swaylo — Shirts';
-    show('viewList');
-  }
+  const p = products.find((x) => x.key === keyInUrl());
+  if (p) openProduct(p, { push: false });
+  else { document.title = 'Swaylo Store'; show('viewList'); }
 }
-
 addEventListener('popstate', route);
 
-/* ── views ─────────────────────────────────────────────────────────────── */
-
 function show(view) {
-  for (const id of ['viewList', 'viewProduct', 'viewCart', 'viewDone']) $('#' + id).hidden = (id !== view);
+  for (const id of ['viewList', 'viewProduct']) $('#' + id).hidden = (id !== view);
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
-function variantById(id) {
-  for (const s of catalogue?.shirts || []) {
-    const v = s.variants.find((x) => x.id === id);
-    if (v) return { shirt: s, variant: v };
-  }
-  return null;
-}
-
-function drawCartCount() {
-  const n = bag.reduce((s, i) => s + i.qty, 0);
-  $('#cartCount').textContent = n;
-  $('#cartBtn').hidden = n === 0;
-}
-
-/* ── catalogue ─────────────────────────────────────────────────────────── */
-
 async function boot() {
   $('#yr').textContent = new Date().getFullYear();
-  for (const el of document.querySelectorAll('#waTop, #waProduct, #waFoot')) el.href = waHref;
-  STATES.forEach((s) => {
-    const o = document.createElement('option');
-    o.value = s; o.textContent = s;
-    $('select[name=province]').append(o);
-  });
-
   try {
-    const res = await fetch(API + '/shop/catalogue.json');
-    catalogue = await res.json();
+    const res = await fetch(API + '/store.json');
+    const feed = await res.json();
+    waNumber = feed.wa_number;
+    products = SHOW.map((k) => feed.products.find((p) => p.key === k)).filter(Boolean);
   } catch {
     $('#listEmpty').hidden = false;
-    $('#listEmpty').textContent = 'The shop is not reachable right now. Please try again in a minute.';
+    $('#listEmpty').textContent = 'The store is not reachable right now. Please try again in a minute.';
     return;
   }
-
-  // Anything still in the bag from a previous visit may have been retired
-  // since. Drop it quietly rather than failing at checkout.
-  bag = bag.filter((i) => variantById(i.variant_id));
-  saveBag(bag);
-  drawCartCount();
+  const ask = askHref('Hi, I have a question about your store.');
+  for (const el of document.querySelectorAll('#waTop, #waFoot')) el.href = ask;
 
   const grid = $('#grid');
   grid.innerHTML = '';
-  for (const shirt of catalogue.shirts) {
+  for (const p of products) {
+    const [a, b] = photos(p);
     const tile = document.createElement('button');
     tile.className = 'tile';
-    // The second photo is revealed on hover — see .plate.alt. A shirt with
-    // only one photo simply has nothing underneath to reveal.
     tile.innerHTML = `
       <div class="shot">
-        <span class="plate" style="background-image:url('${shirt.images[0] || ''}')"></span>
-        ${shirt.images[1] ? `<span class="plate alt" style="background-image:url('${shirt.images[1]}')"></span>` : ''}
+        <span class="plate" style="background-image:url('${a}')"></span>
+        ${b ? `<span class="plate alt" style="background-image:url('${b}')"></span>` : ''}
       </div>
       <div class="meta">
         <h3></h3>
-        <p class="price">${priceHtml(shirt.price, shirt.mrp)}</p>
-        <span class="spec">${specLine(shirt)}</span>
-        <span class="cta">View shirt →</span>
+        <p class="price">${priceHtml(p.price, p.mrp)}</p>
+        <span class="spec">Cash on Delivery · free delivery</span>
+        <span class="cta">View →</span>
       </div>`;
-    tile.querySelector('h3').textContent = shirt.name;
-    tile.onclick = () => openShirt(shirt);
+    tile.querySelector('h3').textContent = p.name;
+    tile.onclick = () => openProduct(p);
     grid.append(tile);
   }
-  $('#listEmpty').hidden = catalogue.shirts.length > 0;
-  const n = catalogue.shirts.length;
-  $('#gridCount').textContent = n ? `${n} design${n > 1 ? 's' : ''}` : '';
-
-  // Somebody may have arrived on a link to one shirt rather than the shop.
+  $('#listEmpty').hidden = products.length > 0;
+  $('#gridCount').textContent = products.length ? `${products.length} item${products.length > 1 ? 's' : ''}` : '';
   route();
-  // No online checkout: shirts are ordered on WhatsApp, Cash on Delivery.
-  if (!catalogue.checkout_open) {
-    $('#addToBag').hidden = true;
-    $('#cartBtn').hidden = true;
-    $('#buyNow').textContent = 'Order on WhatsApp';
-  }
 }
 
-/* ── one shirt ─────────────────────────────────────────────────────────── */
+function openProduct(p, { push = true } = {}) {
+  if (push) setUrl(p.key);
+  document.title = `${p.name} · Swaylo`;
+  $('#pName').textContent = p.name;
+  $('#pPrice').innerHTML = priceHtml(p.price, p.mrp);
+  $('#pBlurb').textContent = p.contents ? 'In the box: ' + p.contents.replace(/^1\s+/, '') : '';
+  $('#pBlurb').hidden = !p.contents;
+  // A kit that arrives in pieces has to say so before the order, not at the door.
+  const kit = /kit|put it together|assembl/i.test(p.contents || '');
+  $('#pKit').hidden = !kit;
+  $('#pKit').textContent = kit ? 'Comes as a DIY kit. You put it together yourself, and a hot glue gun helps. Take a look at the buyer photos below to see how it turns out.' : '';
+  $('#waProduct').href = askHref(`Hi, I have a question about the ${p.name}, ${rupees(p.price)}.`);
+  $('#buyNow').textContent = `Order on WhatsApp · ${rupees(p.price)}`;
+  $('#buyNow').onclick = () => {
+    location.href = askHref(`Hi, I want to order the ${p.name}, ${rupees(p.price)}, Cash on Delivery.`);
+  };
 
-function openShirt(shirt, { push = true } = {}) {
-  current = shirt;
-  chosen = null;
-  if (push) setUrl(shirt.slug);
-  // Named so a bookmark, a shared link and a browser tab all say what it is.
-  document.title = `${shirt.name} — Swaylo`;
-  $('#pName').textContent = shirt.name;
-  $('#pPrice').innerHTML = priceHtml(shirt.price, shirt.mrp);
-  $('#pBlurb').textContent = shirt.blurb || '';
-  $('#pBlurb').hidden = !shirt.blurb;
-  $('#pNote').textContent = '';
-
-  // One large image with a rail of thumbnails beside it. The rail hides itself
-  // for a single-photo shirt rather than showing a column of one.
-  // Every photo is laid out side by side in the stage and the stage is
-  // scrolled — by a thumb on a phone, by the thumbnails everywhere else. One
-  // mechanism, so the two can never disagree about which photo is showing.
-  const shots = shirt.images.length ? shirt.images : [''];
-  const stage = $('#stage');
-  const rail = $('#rail');
-  const counter = $('#shotCount');
-
+  const shots = photos(p);
+  const stage = $('#stage'), rail = $('#rail'), counter = $('#shotCount');
   stage.innerHTML = '';
   for (const url of shots) {
     const slide = document.createElement('div');
     slide.className = 'slide';
-    if (url) slide.style.backgroundImage = `url('${url}')`;
+    slide.style.backgroundImage = `url('${url}')`;
     stage.append(slide);
   }
-
-  // The scroll position is the single source of truth for which photo is up.
-  //
-  // Cheap enough to run on every scroll event — and a momentum swipe fires a
-  // lot of them — because the only work that costs anything is skipped unless
-  // the photo has actually changed. Which is also why this is a plain handler
-  // rather than one deferred to requestAnimationFrame.
   let showing = -1;
-  const syncToScroll = () => {
+  const sync = () => {
     if (!stage.clientWidth) return;
     const i = Math.max(0, Math.min(shots.length - 1, Math.round(stage.scrollLeft / stage.clientWidth)));
     if (i === showing) return;
     showing = i;
     [...rail.children].forEach((c, n) => c.classList.toggle('on', n === i));
     counter.textContent = `${i + 1} / ${shots.length}`;
-    // Only when the strip is the scrolling kind — on a wide screen the rail is
-    // a full column, and scrolling it would scroll the page instead.
-    if (rail.scrollWidth > rail.clientWidth) {
-      rail.children[i]?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
-    }
+    if (rail.scrollWidth > rail.clientWidth) rail.children[i]?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
   };
-  stage.onscroll = syncToScroll;
-
+  stage.onscroll = sync;
   rail.innerHTML = '';
   rail.hidden = shots.length < 2;
   counter.hidden = shots.length < 2;
@@ -801,249 +658,57 @@ function openShirt(shirt, { push = true } = {}) {
     b.type = 'button';
     b.style.backgroundImage = `url('${url}')`;
     b.setAttribute('aria-label', `Photo ${i + 1} of ${shots.length}`);
-    b.onclick = () => {
-      // Instant, not smooth: a smooth scroll from thumbnail six to thumbnail
-      // one flies the whole strip past the customer for no reason.
-      stage.scrollTo({ left: i * stage.clientWidth, behavior: 'auto' });
-      syncToScroll();   // a press we already know about should not wait on the scroll event
-    };
+    b.onclick = () => { stage.scrollTo({ left: i * stage.clientWidth, behavior: 'auto' }); sync(); };
     rail.append(b);
   });
 
-  // Every variant the same colour means the colour is a fact about the shirt,
-  // not a choice — so it is stated once here rather than repeated on every
-  // size chip, where eight of "M · Black" reads as a form, not a product.
-  const colours = [...new Set(shirt.variants.map((v) => v.colour).filter(Boolean))];
-  const oneColour = colours.length === 1 ? colours[0] : null;
-  const colourLine = $('#pColour');
-  colourLine.hidden = !oneColour;
-  if (oneColour) colourLine.innerHTML = `Colour: <b></b>`, colourLine.querySelector('b').textContent = oneColour;
-
-  const ordered = [...shirt.variants].sort((a, b) => sizeRank(a.size) - sizeRank(b.size));
-
-  const sizes = $('#pSizes');
-  sizes.innerHTML = '';
-  for (const v of ordered) {
-    const b = document.createElement('button');
-    b.className = 'chip';
-    b.textContent = oneColour ? v.size : v.size + (v.colour ? ` · ${v.colour}` : '');
-    b.onclick = () => {
-      chosen = v.id;
-      [...sizes.children].forEach((c) => c.classList.toggle('on', c === b));
-      $('#buyNow').textContent = `${catalogue.checkout_open ? 'Buy now' : 'Order on WhatsApp'} · ${rupees(v.price)}`;
-      // Picking a size answers the nudge, so the nudge goes away.
-      $('#sizeBlock').classList.remove('needs');
-      $('#pickFirst').hidden = true;
-      $('#pNote').textContent = '';
-    };
-    sizes.append(b);
-  }
-  // One size only? Nobody wants to be asked a question with one answer.
-  if (shirt.variants.length === 1) sizes.firstElementChild.click();
-
-  if (!chosen) $('#buyNow').textContent = catalogue.checkout_open ? 'Buy now' : 'Order on WhatsApp';
-  $('#sizeBlock').classList.remove('needs');
-  $('#pickFirst').hidden = true;
   show('viewProduct');
-
-  // Only now. Until the view is on screen the stage has no width, and a sync
-  // against a width of zero silently leaves the counter blank and no
-  // thumbnail marked — which is exactly what it did.
-  stage.scrollLeft = 0;          // a different shirt starts on its first photo
-  syncToScroll();
+  stage.scrollLeft = 0;
+  sync();
+  drawReviews(p.key);
 }
 
-/**
- * Someone pressed a buy button without choosing a size.
- *
- * Nothing is refused and nothing is greyed out — a disabled button is a dead
- * end that does not say why. This colours the sizes, shifts them once, and
- * brings them on screen if they are not already.
- */
-function nudgeSizes() {
-  const block = $('#sizeBlock');
-  block.classList.remove('needs');
-  void block.offsetWidth;               // restart the animation on a repeat press
-  block.classList.add('needs');
-  $('#pickFirst').hidden = false;
-  $('#pNote').textContent = '';
-  const r = block.getBoundingClientRect();
-  if (r.top < 70 || r.bottom > innerHeight) {
-    block.scrollIntoView({ block: 'center', behavior: 'smooth' });
-  }
-}
-
-$('#addToBag').onclick = () => {
-  if (!chosen) return nudgeSizes();
-  const line = bag.find((i) => i.variant_id === chosen);
-  if (line) line.qty = Math.min(10, line.qty + 1);
-  else bag.push({ variant_id: chosen, qty: 1 });
-  saveBag(bag);
-  drawCartCount();
-  // Deliberately does NOT jump to the bag. Adding is what you do when you are
-  // not finished looking, and being thrown to a checkout form mid-browse is
-  // how a second shirt stops getting added.
-  $('#pNote').innerHTML = 'Added to your bag. <a href="#" id="goBag">View bag →</a>';
-  $('#goBag').onclick = (e) => { e.preventDefault(); directBuy = null; openCart(); };
-};
-
-$('#buyNow').onclick = () => {
-  if (!chosen) return nudgeSizes();
-  if (!catalogue.checkout_open) {
-    const v = current.variants.find((x) => x.id === chosen);
-    const text = `Hi, I want to order the ${current.name} shirt, size ${v.size}${v.colour ? ', ' + v.colour : ''}, ${rupees(v.price)}, Cash on Delivery.`;
-    location.href = 'https://wa.me/' + SHOP_WA + '?text=' + encodeURIComponent(text);
-    return;
-  }
-  directBuy = { variant_id: chosen, qty: 1 };
-  openCart();
-};
-
-/* ── the bag ───────────────────────────────────────────────────────────── */
-
-function openCart() {
-  const lines = $('#cartLines');
-  const items = activeItems();
-  lines.innerHTML = '';
-  let subtotal = 0;
-
-  // Says which of the two things is happening. A direct buy that still said
-  // "Your bag" would look like it had quietly emptied the bag to get here.
-  $('#cartTitle').textContent = directBuy ? 'Checkout' : 'Your bag';
-
-  for (const item of items) {
-    const found = variantById(item.variant_id);
-    if (!found) continue;
-    const { shirt, variant } = found;
-    subtotal += variant.price * item.qty;
-
-    const row = document.createElement('div');
-    row.className = 'line';
-    row.innerHTML = `
-      <img src="${shirt.images[0] || ''}" alt="">
-      <div class="who"><b></b><span>${variant.size}${variant.colour ? ' · ' + variant.colour : ''} — ${rupees(variant.price)}</span></div>
-      <div class="qty">
-        <button type="button" class="less">−</button><span>${item.qty}</span><button type="button" class="more">+</button>
-      </div>`;
-    row.querySelector('b').textContent = shirt.name;
-    row.querySelector('.less').onclick = () => {
-      item.qty -= 1;
-      if (item.qty < 1) {
-        // Emptying a direct buy drops back to whatever was already in the bag,
-        // rather than to a dead end.
-        if (directBuy) directBuy = null;
-        else bag = bag.filter((i) => i !== item);
-      }
-      if (!directBuy) saveBag(bag);
-      drawCartCount(); openCart();
-    };
-    row.querySelector('.more').onclick = () => {
-      item.qty = Math.min(10, item.qty + 1);
-      if (!directBuy) saveBag(bag);
-      drawCartCount(); openCart();
-    };
-    lines.append(row);
-  }
-
-  const free = catalogue.free_shipping_above && subtotal >= catalogue.free_shipping_above;
-  const ship = subtotal === 0 ? 0 : (free ? 0 : catalogue.shipping);
-  $('#cartTotals').innerHTML = `
-    <div><span>Subtotal</span><span>${rupees(subtotal)}</span></div>
-    <div><span>Delivery</span><span>${ship ? rupees(ship) : 'Free'}</span></div>
-    <div class="grand"><span>Total</span><span>${rupees(subtotal + ship)}</span></div>`;
-
-  $('#checkout').hidden = items.length === 0;
-  if (!items.length) lines.innerHTML = '<p class="empty">Your bag is empty.</p>';
-  show('viewCart');
-}
-
-/* ── paying ────────────────────────────────────────────────────────────── */
-
-$('#checkout').onsubmit = async (e) => {
-  e.preventDefault();
-  const btn = $('#payBtn');
-  const err = $('#cartErr');
-  err.textContent = '';
-  btn.disabled = true;
-  btn.textContent = 'One moment…';
-
-  const form = Object.fromEntries(new FormData(e.target).entries());
-
+/* Reviews live beside this page as reviews/<key>.json, with the photos in
+   reviews/<key>/. A product without that file simply has no section. */
+async function drawReviews(key) {
+  const box = $('#reviews');
+  box.hidden = true;
+  box.innerHTML = '';
+  let r;
   try {
-    // The server prices this. What comes back is what Razorpay will charge.
-    const res = await fetch(API + '/shop/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: activeItems(), customer: form }),
-    });
-    const order = await res.json();
-    if (!res.ok) throw new Error(order.error || 'Checkout failed.');
+    const res = await fetch(`reviews/${key}.json`);
+    if (!res.ok) return;
+    r = await res.json();
+  } catch { return; }
+  const total = Object.values(r.breakdown).reduce((a, b) => a + b, 0);
+  const stars = (n) => '★'.repeat(n) + '☆'.repeat(5 - n);
+  const when = (d) => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  box.innerHTML = `
+    <h2>What buyers say</h2>
+    <p class="src">${esc(r.source)}</p>
+    <div class="rsum">
+      <div class="big">${r.average.toFixed(1)}<small>${r.ratings.toLocaleString('en-IN')} ratings</small></div>
+      <div class="bars">${[5, 4, 3, 2, 1].map((s) => `
+        <div><span>${s}★</span><i><b style="width:${(r.breakdown[s] / total * 100).toFixed(1)}%"></b></i><span>${r.breakdown[s]}</span></div>`).join('')}
+      </div>
+    </div>
+    <div class="rlist">${r.reviews.map((v) => `
+      <div class="rcard">
+        <div class="stars" aria-label="${v.stars} out of 5">${stars(v.stars)}</div>
+        <div class="who">${esc(v.name)} · ${when(v.date)}</div>
+        <p>${esc(v.text)}</p>
+        ${v.photos.length ? `<div class="pics">${v.photos.map((f) => `<button type="button" data-src="reviews/${key}/${f}" style="background-image:url('reviews/${key}/${f}')" aria-label="Buyer photo"></button>`).join('')}</div>` : ''}
+      </div>`).join('')}
+    </div>`;
+  box.querySelectorAll('.pics button').forEach((b) => {
+    b.onclick = () => { $('#viewerImg').src = b.dataset.src; $('#viewer').hidden = false; };
+  });
+  box.hidden = false;
+}
 
-    const rzp = new Razorpay({
-      key: order.key_id,
-      order_id: order.rzp_order_id,
-      amount: order.amount * 100,
-      currency: 'INR',
-      name: order.name,
-      description: order.order_number,
-      image: 'https://swayloweb.com/launch_icon.png',
-      prefill: order.prefill,
-      theme: { color: '#0A2850' },
-      handler: async (r) => {
-        // Best effort only. The webhook is what actually confirms the order,
-        // so a failure here must never tell the customer they were not
-        // charged — they were.
-        try {
-          await fetch(API + '/shop/confirm', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(r),
-          });
-        } catch { /* the webhook has it */ }
-        // Clear what was actually bought. A direct buy must leave the saved
-        // bag exactly as it was.
-        if (directBuy) directBuy = null;
-        else { bag = []; saveBag(bag); }
-        drawCartCount();
-        $('#doneNum').textContent = 'Order ' + order.order_number;
-        $('#doneNote').innerHTML = 'Any questions, <a href="' + waHref + '">message us on WhatsApp</a>.';
-        show('viewDone');
-      },
-      modal: {
-        ondismiss: () => {
-          btn.disabled = false;
-          btn.textContent = 'Pay securely';
-          err.textContent = 'Payment cancelled — your bag is still here.';
-        },
-      },
-    });
-    rzp.on('payment.failed', (resp) => {
-      btn.disabled = false;
-      btn.textContent = 'Pay securely';
-      err.textContent = resp.error?.description || 'That payment did not go through. Please try again.';
-    });
-    rzp.open();
-    btn.textContent = 'Pay securely';
-  } catch (ex) {
-    err.textContent = ex.message;
-    btn.disabled = false;
-    btn.textContent = 'Pay securely';
-  }
-};
-
-/* ── chrome ────────────────────────────────────────────────────────────── */
-
-$('#cartBtn').onclick = () => { directBuy = null; openCart(); };
-const toList = () => {
-  directBuy = null;
-  setUrl(null);
-  document.title = 'Swaylo — Shirts';
-  show('viewList');
-};
-
+$('#viewer').onclick = () => { $('#viewer').hidden = true; };
+const toList = () => { setUrl(null); document.title = 'Swaylo Store'; show('viewList'); };
 $('#backList').onclick = toList;
-$('#backList2').onclick = toList;
-$('#doneBack').onclick = toList;
 $('#home').onclick = (e) => { e.preventDefault(); toList(); };
 
 boot();

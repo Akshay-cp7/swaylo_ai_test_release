@@ -276,7 +276,7 @@
   .citem b { display: block; font-size: 0.92rem; color: var(--ink); line-height: 1.3; }
   .citem small { color: var(--ink-45); font-size: 0.82rem; }
   .qty { display: inline-flex; align-items: center; border: 1px solid var(--rule); border-radius: var(--r); overflow: hidden; }
-  .qty button { width: 32px; height: 32px; border: 0; background: transparent; font: inherit; font-size: 1.05rem; color: var(--ink); cursor: pointer; }
+  .crm { border: 0; background: transparent; color: var(--ink-45); font: inherit; font-size: 0.82rem; text-decoration: underline; cursor: pointer; padding: 6px 0; }
   .qty span { min-width: 26px; text-align: center; font-weight: 700; font-size: 0.9rem; }
   .cartsum { display: flex; justify-content: space-between; align-items: baseline; margin: 16px 0 14px; font-size: 1rem; color: var(--ink); }
   .cartsum b { font-size: 1.2rem; }
@@ -873,7 +873,7 @@ function openCod(items, { fromCart = false } = {}) {
 let cart = [];
 try { cart = JSON.parse(localStorage.getItem('swaylo_cart') || '[]').filter((c) => c && c.key && c.qty > 0); } catch { cart = []; }
 const saveCart = () => { try { localStorage.setItem('swaylo_cart', JSON.stringify(cart)); } catch {} drawCartCount(); };
-const cartItems = () => cart.map((c) => ({ p: products.find((x) => x.key === c.key), qty: c.qty })).filter((i) => i.p);
+const cartItems = () => cart.map((c) => ({ p: products.find((x) => x.key === c.key), qty: 1 })).filter((i) => i.p).slice(0, 5);
 function drawCartCount() {
   const n = cartItems().reduce((t, i) => t + i.qty, 0);
   $('#cartCount').textContent = n;
@@ -891,6 +891,8 @@ function syncAddBtn(p) {
   b.textContent = inCart ? 'Go to cart' : 'Add to cart';
   b.onclick = () => {
     if (cart.some((c) => c.key === p.key)) return openCart();
+    // The shop takes one of each item, five items at most per person.
+    if (cart.length >= 5) return toast('Up to 5 different items per order');
     cart.push({ key: p.key, qty: 1 });
     saveCart();
     track('AddToCart', p);
@@ -921,19 +923,16 @@ function drawCart() {
     <div class="cartlist">${items.map((i) => `
       <div class="citem">
         <span class="ph" style="background-image:url('${photos(i.p)[0] || ''}')"></span>
-        <div><b>${esc(i.p.name)}</b><small>${rupees(i.p.price)}${i.qty > 1 ? ` × ${i.qty} = ${rupees(i.p.price * i.qty)}` : ''}</small></div>
-        <div class="qty" data-key="${i.p.key}"><button type="button" data-d="-1" aria-label="One less">${i.qty === 1 ? '🗑' : '−'}</button><span>${i.qty}</span><button type="button" data-d="1" aria-label="One more">+</button></div>
+        <div><b>${esc(i.p.name)}</b><small>${rupees(i.p.price)}</small></div>
+        <button class="crm" type="button" data-key="${i.p.key}">Remove</button>
       </div>`).join('')}
     </div>
+    <p class="hint">One of each item, up to 5 items per person.</p>
     <div class="cartsum"><span>Total, Cash on Delivery</span><b>${rupees(total)}</b></div>
     <button class="btn" type="button" id="cartCheckout">Place order · ${rupees(total)}</button>`;
-  body.querySelectorAll('.qty button').forEach((btn) => {
+  body.querySelectorAll('.crm').forEach((btn) => {
     btn.onclick = () => {
-      const key = btn.parentElement.dataset.key;
-      const c = cart.find((x) => x.key === key);
-      if (!c) return;
-      c.qty = Math.min(10, c.qty + Number(btn.dataset.d));
-      if (c.qty <= 0) cart = cart.filter((x) => x.key !== key);
+      cart = cart.filter((x) => x.key !== btn.dataset.key);
       saveCart();
       drawCart();
     };
@@ -987,6 +986,7 @@ $('#codForm').onsubmit = async (e) => {
   const who = {};
   for (const k of ['name', 'phone', 'house', 'road', 'pincode', 'city', 'state']) who[k] = f[k].value;
   const placed = [];
+  items.forEach((it) => { delete it.why; });
   try {
     for (const it of items) {
       const res = await fetch(`${API}/store/order`, {
@@ -995,15 +995,21 @@ $('#codForm').onsubmit = async (e) => {
       });
       const d = await res.json();
       if (!res.ok || !d.ok) {
-        if (!placed.length) {
-          err.textContent = d.error || 'Something went wrong. Please try again.';
+        it.why = d.error;
+        // A problem with the form itself stops everything; a limit on one
+        // item (already ordered, five on the way) only skips that item.
+        const formProblem = d.missing || d.field || !d.code;
+        if (!placed.length && (formProblem || it === items[items.length - 1])) {
+          err.textContent = formProblem ? (d.error || 'Something went wrong. Please try again.')
+            : items.filter((x) => x.why).map((x) => (items.length > 1 ? `${x.p.name}: ${x.why}` : x.why)).join(' ');
           for (const k of d.missing || []) f[k]?.closest('label').classList.add('bad');
           if (d.field === 'pincode') f.pincode.closest('label').classList.add('bad');
           btn.disabled = false;
           btn.textContent = label;
           return;
         }
-        break;
+        if (formProblem) break;
+        continue;
       }
       if (!d.duplicate) track('Purchase', it.p, { value: d.amount, num_items: it.qty }, `order-${d.order_id}`);
       placed.push({ ...d, p: it.p, qty: it.qty });
@@ -1033,7 +1039,7 @@ $('#codForm').onsubmit = async (e) => {
     <h2>${placed.every((x) => x.duplicate) ? 'Already booked' : 'Order placed'}</h2>
     ${placed.map((x) => `<p class="num">Order #${x.order_id} · ${esc(x.p.name)}${x.qty > 1 ? ` × ${x.qty}` : ''} · ${rupees(x.amount)}</p>`).join('')}
     <p class="num">Payment: Cash on Delivery${placed.length > 1 ? ` · ${rupees(sum)} in total` : ''}</p>
-    ${missed.length ? `<p class="err">${missed.map((i) => esc(i.p.name)).join(', ')} could not be booked just now. It is still in your cart.</p>` : ''}
+    ${missed.map((i) => `<p class="err">${esc(i.p.name)}: ${esc(i.why || 'could not be booked just now. It is still in your cart.')}</p>`).join('')}
     <p>${advance
       ? `We will message you on WhatsApp to collect the ${rupees(advance)} advance, then it ships. The rest is Cash on Delivery.`
       : 'Nothing to pay now. You pay cash when it arrives. Delivery takes 10 to 15 days and we will message you on WhatsApp before it is dispatched.'}</p>

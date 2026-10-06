@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Swaylo Store</title>
 <meta name="description" content="Pretty little things for your room and for gifting. Cash on Delivery, free delivery across India.">
-<meta name="theme-color" content="#FFFFFF">
+<meta name="theme-color" content="#F1F2F4">
 <link rel="icon" type="image/png" href="../launch_icon.png">
 <meta property="og:title" content="Swaylo Store">
 <meta property="og:description" content="Cash on Delivery, free delivery across India.">
@@ -25,8 +25,8 @@
      so the brand comes back, and every promise gets said out loud on the page
      the ad lands on rather than one click in. */
   :root {
-    --paper:      #FFFFFF;
-    --paper-deep: #F5F6F8;
+    --paper:      #F1F2F4;   /* the page: light grey, so white cards and photos stand out */
+    --paper-deep: #E8EAED;
     --plate:      #FFFFFF;   /* the white square a product photo sits on */
     --ink:        #0A2850;
     --ink-70:     rgba(10, 40, 80, 0.72);
@@ -262,7 +262,7 @@
   .btn:hover { background: var(--clay-deep); border-color: var(--clay-deep); }
   .btn.ghost { background: transparent; color: var(--ink); border-color: var(--rule); }
   .btn.ghost:hover { background: transparent; border-color: var(--ink); }
-  .btn.outline { background: var(--paper); color: var(--clay); border-color: var(--clay); }
+  .btn.outline { background: var(--plate); color: var(--clay); border-color: var(--clay); }
   .btn.outline:hover { background: var(--paper-deep); border-color: var(--clay-deep); color: var(--clay-deep); }
   .cartbtn { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 0; background: transparent; color: var(--ink); cursor: pointer; border-radius: 50%; }
   .cartbtn:hover { background: var(--paper-deep); }
@@ -281,7 +281,7 @@
   .cartsum { display: flex; justify-content: space-between; align-items: baseline; margin: 16px 0 14px; font-size: 1rem; color: var(--ink); }
   .cartsum b { font-size: 1.2rem; }
   .cartempty { color: var(--ink-45); padding: 26px 0 8px; text-align: center; }
-  .medot { position: absolute; top: 8px; right: 7px; width: 9px; height: 9px; border-radius: 50%; background: #0F9D58; border: 2px solid var(--paper); }
+  .medot { position: absolute; top: 8px; right: 7px; width: 9px; height: 9px; border-radius: 50%; background: #0F9D58; border: 2px solid var(--plate); }
   .medot[hidden] { display: none; }
   .ocard { border: 1px solid var(--rule-soft); border-radius: var(--r-lg); padding: 14px; margin-top: 12px; animation: hintIn 0.35s var(--ease) both; }
   .ocard .top { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; align-items: center; }
@@ -395,6 +395,26 @@
   .modal .done > :nth-child(2) { animation-delay: 0.45s; } .modal .done > :nth-child(3) { animation-delay: 0.55s; }
   .modal .done > :nth-child(4) { animation-delay: 0.65s; } .modal .done > :nth-child(5) { animation-delay: 0.75s; }
   .modal .done > :nth-child(n+6) { animation-delay: 0.85s; }
+  /* ── Home: products first, two per row on a phone (6 Oct 2026) ── */
+  .shophead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 18px 0 8px; }
+  .shophead h1 { font-family: var(--display); font-weight: 800; font-size: clamp(1.35rem, 4.5vw, 2rem); letter-spacing: -0.03em; line-height: 1.1; }
+  .shophead h1 em { font-style: italic; color: var(--clay); }
+  .shophead span { color: var(--ink-45); font-size: 0.82rem; white-space: nowrap; }
+  .shophead + .chips { display: flex; flex-wrap: nowrap; gap: 5px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chips span { flex: none; font-size: 0.69rem; font-weight: 600; color: #0B7A43; background: #E3F4EA; border-radius: 999px; padding: 4px 8px; white-space: nowrap; letter-spacing: -0.01em; }
+  .grid { gap: 12px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr 1fr; gap: 8px; } }
+  .tile { padding: 0; background: var(--plate); overflow: hidden; border-radius: 10px; }
+  .tile .shot { aspect-ratio: 1 / 1; border-radius: 0; margin-bottom: 0; }
+  .tile .plate { background-size: cover; }
+  .tile .meta { padding: 9px 10px 12px; }
+  .tile h3 { font-family: var(--sans); font-size: 0.86rem; font-weight: 500; letter-spacing: 0; color: var(--ink-70); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; }
+  .tile .price { font-size: 1.08rem; font-weight: 800; margin-top: 4px; color: var(--ink); }
+  .tile .free { display: block; font-size: 0.74rem; color: var(--ink-45); margin-top: 2px; }
+  .tile .rate { display: flex; align-items: center; gap: 6px; margin-top: 7px; font-size: 0.74rem; color: var(--ink-45); min-height: 20px; }
+  .tile .rate b { background: #038D63; color: #fff; font-size: 0.74rem; padding: 2px 7px; border-radius: 999px; }
+  .grid:has(> .tile:only-child) { grid-template-columns: 1fr 1fr; }
   @keyframes bump { 0%, 100% { transform: scale(1); } 40% { transform: scale(1.35); } }
   .cartcount.bump { animation: bump 0.45s var(--ease); }
   @media (prefers-reduced-motion: reduce) {
@@ -498,7 +518,7 @@
      loses the product they were looking at. */
   .modal { position: fixed; inset: 0; z-index: 70; background: rgba(10, 40, 80, 0.45); display: flex; align-items: flex-end; justify-content: center; }
   .modal[hidden] { display: none; }
-  .modal .sheet { width: 100%; max-width: 520px; max-height: 92vh; overflow-y: auto; margin: 0; border-radius: var(--r-lg) var(--r-lg) 0 0; background: var(--paper); padding: 20px 18px calc(22px + env(safe-area-inset-bottom, 0px)); }
+  .modal .sheet { width: 100%; max-width: 520px; max-height: 92vh; overflow-y: auto; margin: 0; border-radius: var(--r-lg) var(--r-lg) 0 0; background: var(--plate); padding: 20px 18px calc(22px + env(safe-area-inset-bottom, 0px)); }
   @media (min-width: 640px) { .modal { align-items: center; } .modal .sheet { border-radius: var(--r-lg); } }
   .sheethead { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
   .sheethead p { color: var(--ink-45); font-size: 0.86rem; margin-top: 4px; }
@@ -555,32 +575,12 @@ fbq('track', 'PageView');
 <main class="wrap">
 
   <section id="viewList">
-    <div class="opening">
-    <div class="hero">
-      <p class="eyebrow">Swaylo store</p>
-      <h1>Little things that <em>glow.</em></h1>
-      <p>Pretty pieces for your room, and gifts people actually keep. Order in two taps and pay cash when it reaches you.</p>
-    </div>
-
-    <div class="promises">
-      <div>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-        <div><b>Cash on Delivery</b><span>Pay when it reaches you. Nothing up front.</span></div>
-      </div>
-      <div>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
-        <div><b>Free delivery, all of India</b><span>No delivery charge, no minimum.</span></div>
-      </div>
-      <div>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-        <div><b>7 day refund</b><span>Damaged or wrong? Tell us within 7 days and get your money back.</span></div>
-      </div>
-    </div>
-    </div>
-
-    <div class="sectionhead">
-      <h2>In the store</h2>
+    <div class="shophead">
+      <h1>Little things that <em>glow</em></h1>
       <span id="gridCount"></span>
+    </div>
+    <div class="chips">
+      <span>✓ Cash on Delivery</span><span>✓ Free delivery</span><span>✓ 7 day refund</span>
     </div>
     <div class="grid" id="grid"></div>
     <p class="empty" id="listEmpty" hidden>Nothing here just yet.</p>
@@ -795,14 +795,21 @@ async function boot() {
       <div class="meta">
         <h3></h3>
         <p class="price">${priceHtml(p.price, p.mrp)}</p>
-        <span class="spec">Cash on Delivery · free delivery</span>
-        <span class="cta">View →</span>
+        <span class="free">Free delivery</span>
+        <span class="rate" data-key="${p.key}"></span>
       </div>`;
     tile.querySelector('h3').textContent = p.name;
     tile.onclick = () => openProduct(p);
     grid.append(tile);
   }
   $('#listEmpty').hidden = products.length > 0;
+  // The star pill on each card, from the same review files the product page uses.
+  for (const el of grid.querySelectorAll('.rate')) {
+    fetch(`reviews/${el.dataset.key}.json`).then((r) => (r.ok ? r.json() : null)).then((r) => {
+      if (!r) return;
+      el.innerHTML = `<b>${r.average.toFixed(1)}★</b>${r.ratings.toLocaleString('en-IN')} ratings`;
+    }).catch(() => {});
+  }
   $('#gridCount').textContent = products.length ? `${products.length} item${products.length > 1 ? 's' : ''}` : '';
   route();
 }

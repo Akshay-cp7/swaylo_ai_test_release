@@ -12,15 +12,6 @@
  },
  "reviews": [
   {
-   "name": "Mimi",
-   "stars": 5,
-   "date": "2026-06-19",
-   "text": "It's really pretty however you've gotta put a lot of effort into building it as it's very fragile and difficult to build 🙌",
-   "photos": [
-    "r01_0.jpg"
-   ]
-  },
-  {
    "name": "A buyer",
    "stars": 5,
    "date": "2026-06-08",
@@ -28,24 +19,6 @@
    "photos": [
     "r02_1.jpg",
     "r02_2.jpg"
-   ]
-  },
-  {
-   "name": "Sephali",
-   "stars": 5,
-   "date": "2026-06-10",
-   "text": "Very nice my daughter and I love it",
-   "photos": [
-    "r05_0.jpg"
-   ]
-  },
-  {
-   "name": "Sathi",
-   "stars": 3,
-   "date": "2026-06-11",
-   "text": "You will not get this as a lamp (as shown in the photo)... the order will give you all the essential materials to set up the lamp + you have to have your own glue gun... product is nice but go for it only if you can set up all those things all together",
-   "photos": [
-    "r16_0.jpg"
    ]
   },
   {
@@ -59,22 +32,6 @@
    ]
   },
   {
-   "name": "Anoop",
-   "stars": 5,
-   "date": "2026-07-03",
-   "text": "Product bahut hi achcha aaya hai, jodne mein bahut time lagega",
-   "photos": [
-    "r04_1.jpg"
-   ]
-  },
-  {
-   "name": "Suma",
-   "stars": 4,
-   "date": "2026-08-11",
-   "text": "Very nice product 😊",
-   "photos": []
-  },
-  {
    "name": "A buyer",
    "stars": 5,
    "date": "2026-06-26",
@@ -82,6 +39,65 @@
    "photos": [
     "r13_0.jpg",
     "r13_1.jpg"
+   ]
+  },
+  {
+   "name": "A buyer",
+   "stars": 5,
+   "date": "2026-05-22",
+   "text": "Bahut achcha hai aap bhi isiliye sakte hain thank u mis u",
+   "photos": [
+    "n02_0.jpg",
+    "n02_1.jpg",
+    "n02_2.jpg"
+   ]
+  },
+  {
+   "name": "A buyer",
+   "stars": 5,
+   "date": "2026-07-25",
+   "text": "🥰",
+   "photos": [
+    "n05_0.jpg",
+    "n05_1.jpg",
+    "n05_2.jpg"
+   ]
+  },
+  {
+   "name": "A buyer",
+   "stars": 5,
+   "date": "2026-07-06",
+   "text": "",
+   "photos": [
+    "n07_0.jpg",
+    "n07_1.jpg"
+   ]
+  },
+  {
+   "name": "Mimi",
+   "stars": 5,
+   "date": "2026-06-19",
+   "text": "It's really pretty however you've gotta put a lot of effort into building it as it's very fragile and difficult to build 🙌",
+   "photos": [
+    "r01_0.jpg"
+   ]
+  },
+  {
+   "name": "Sephali",
+   "stars": 5,
+   "date": "2026-06-10",
+   "text": "Very nice my daughter and I love it",
+   "photos": [
+    "r05_0.jpg"
+   ]
+  },
+  {
+   "name": "Anoop",
+   "stars": 5,
+   "date": "2026-07-03",
+   "text": "Product bahut hi achcha aaya hai, jodne mein bahut time lagega",
+   "photos": [
+    "r04_1.jpg"
    ]
   },
   {
@@ -112,6 +128,168 @@
    ]
   },
   {
+   "name": "A buyer",
+   "stars": 5,
+   "date": "2026-07-16",
+   "text": "It is ok ok 😛",
+   "photos": [
+    "r18_0.jpg"
+   ]
+  },
+  {
+   "name": "A buyer",
+   "stars": 5,
+   "date": "2026-06-28",
+   "text": "All good but light is very bad quality used my own light for this",
+   "photos": [
+    "n04_0.jpg"
+   ]
+  },
+  {
+   "name": "Jaipal",
+   "stars": 5,
+   "date": "2026-07-03",
+   "text": "Nice",
+   "photos": [
+    "n06_2.jpg"
+   ]
+  },
+  {
+   "name": "A buyer",
+   "stars": 5,
+   "date": "2026-07-16",
+   "text": "It is ok ok😛😛😛😛",
+   "photos": [
+    "n09_0.jpg"
+   ]
+  },
+  {
+   "name": "A buyer",
+   "stars": 5,
+   "date": "2026-07-07",
+   "text": "So pretty 🤩",
+   "photos": [
+    "n10_0.jpg"
+   ]
+  },
+  {
+   "name": "Rahul",
+   "stars": 5,
+   "date": "2026-06-28",
+   "text": "Wow wow ap lo le sakte ho❤️❤️",
+   "photos": [
+    "n11_0.jpg"
+   ]
+  },
+  {
+   "name": "A buyer",
+   "stars": 5,
+   "date": "2026-06-22",
+   "text": "very good product",
+   "photos": [
+    "n12_0.jpg"
+   ]
+  },
+  {
+   "name": "Ruma",
+   "stars": 5,
+   "date": "2026-06-14",
+   "text": "Very good product",
+   "photos": [
+    "n14_0.jpg"
+   ]
+  },
+  {
+   "name": "A buyer",
+   "stars": 5,
+   "date": "2026-06-02",
+   "text": "Nice 👍🙂",
+   "photos": [
+    "n15_0.jpg"
+   ]
+  },
+  {
+   "name": "A buyer",
+   "stars": 5,
+   "date": "2026-05-23",
+   "text": "Awesome",
+   "photos": [
+    "n16_0.jpg"
+   ]
+  },
+  {
+   "name": "A buyer",
+   "stars": 5,
+   "date": "2026-05-09",
+   "text": "Very very good",
+   "photos": [
+    "n17_0.jpg"
+   ]
+  },
+  {
+   "name": "A buyer",
+   "stars": 5,
+   "date": "2026-05-04",
+   "text": "Very beautiful",
+   "photos": [
+    "n18_0.jpg"
+   ]
+  },
+  {
+   "name": "A buyer",
+   "stars": 5,
+   "date": "2026-05-02",
+   "text": "I really love it 😍",
+   "photos": [
+    "n19_0.jpg"
+   ]
+  },
+  {
+   "name": "Saniya",
+   "stars": 5,
+   "date": "2026-05-02",
+   "text": "Very good nice product",
+   "photos": [
+    "n20_0.jpg"
+   ]
+  },
+  {
+   "name": "Sanju",
+   "stars": 4,
+   "date": "2026-07-24",
+   "text": "",
+   "photos": [
+    "n21_0.jpg"
+   ]
+  },
+  {
+   "name": "Ragini",
+   "stars": 4,
+   "date": "2026-07-09",
+   "text": "",
+   "photos": [
+    "n22_0.jpg"
+   ]
+  },
+  {
+   "name": "Shikha",
+   "stars": 4,
+   "date": "2026-05-07",
+   "text": "Bhut 4 light damage tha",
+   "photos": [
+    "n25_0.jpg"
+   ]
+  },
+  {
+   "name": "Sathi",
+   "stars": 3,
+   "date": "2026-06-11",
+   "text": "You will not get this as a lamp (as shown in the photo)... the order will give you all the essential materials to set up the lamp + you have to have your own glue gun... product is nice but go for it only if you can set up all those things all together",
+   "photos": [
+    "r16_0.jpg"
+   ]
+  },
+  {
    "name": "Nagalakshmi",
    "stars": 5,
    "date": "2026-07-14",
@@ -121,11 +299,16 @@
   {
    "name": "A buyer",
    "stars": 5,
-   "date": "2026-07-16",
-   "text": "It is ok ok 😛",
-   "photos": [
-    "r18_0.jpg"
-   ]
+   "date": "2026-06-15",
+   "text": "Ya glue lagta nahin",
+   "photos": []
+  },
+  {
+   "name": "Suma",
+   "stars": 4,
+   "date": "2026-08-11",
+   "text": "Very nice product 😊",
+   "photos": []
   }
  ]
 }

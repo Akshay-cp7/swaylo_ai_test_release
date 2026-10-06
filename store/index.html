@@ -415,6 +415,12 @@
   .tile .rate { display: flex; align-items: center; gap: 6px; margin-top: 7px; font-size: 0.74rem; color: var(--ink-45); min-height: 20px; }
   .tile .rate b { background: #038D63; color: #fff; font-size: 0.74rem; padding: 2px 7px; border-radius: 999px; }
   .grid:has(> .tile:only-child) { grid-template-columns: 1fr 1fr; }
+  .codline { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; padding: 8px 12px; border-radius: var(--r); background: #E3F4EA; color: #0B6B3A; font-size: 0.86rem; }
+  .codline b { font-weight: 800; }
+  .codline i { font-style: normal; }
+  @media (max-width: 440px) { .codline .clfree { display: none; } }
+  .codline svg { width: 20px; height: 20px; flex: none; }
+  @media (max-width: 900px) { .codline { margin-bottom: 8px; padding: 6px 10px; font-size: 0.8rem; } }
   @keyframes bump { 0%, 100% { transform: scale(1); } 40% { transform: scale(1.35); } }
   .cartcount.bump { animation: bump 0.45s var(--ease); }
   @media (prefers-reduced-motion: reduce) {
@@ -472,7 +478,7 @@
     .buyrow { margin-top: 0; gap: 9px; }
     .btn { padding: 14px 12px; font-size: 0.9rem; }
     .pickfirst { margin: 6px 0 0; text-align: center; }
-    #viewProduct { padding-bottom: 108px; }
+    #viewProduct { padding-bottom: 150px; }
   }
 
   /* Reviews, laid out the way Meesho's product page does it: a rating badge
@@ -615,6 +621,10 @@ fbq('track', 'PageView');
         <p class="blurb" id="pBlurb"></p>
         <p class="kitnote" id="pKit" hidden></p>
         <div class="buybar">
+          <div class="codline">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v4M18 10v4"/></svg>
+            <span><b>Cash on Delivery</b> · pay when it arrives<i class="clfree"> · free delivery</i></span>
+          </div>
           <div class="buyrow">
             <button class="btn outline" id="addCart">Add to cart</button>
             <button class="btn" id="codBtn">Buy now</button>

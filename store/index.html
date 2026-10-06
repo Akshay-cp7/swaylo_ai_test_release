@@ -262,6 +262,27 @@
   .btn:hover { background: var(--clay-deep); border-color: var(--clay-deep); }
   .btn.ghost { background: transparent; color: var(--ink); border-color: var(--rule); }
   .btn.ghost:hover { background: transparent; border-color: var(--ink); }
+  .btn.outline { background: var(--paper); color: var(--clay); border-color: var(--clay); }
+  .btn.outline:hover { background: var(--paper-deep); border-color: var(--clay-deep); color: var(--clay-deep); }
+  .cartbtn { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 0; background: transparent; color: var(--ink); cursor: pointer; border-radius: 50%; }
+  .cartbtn:hover { background: var(--paper-deep); }
+  .cartbtn svg { width: 22px; height: 22px; flex: none; }
+  header.top .cartbtn { padding: 0; flex: none; }
+  .cartcount { position: absolute; top: 2px; right: 0; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--clay); color: #fff; font-size: 0.7rem; font-weight: 700; line-height: 18px; text-align: center; }
+  .cartcount[hidden] { display: none; }
+  .cartlist { margin-top: 14px; }
+  .citem { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--rule-soft); }
+  .citem .ph { width: 64px; height: 64px; border-radius: var(--r); background: center/cover no-repeat var(--paper-deep); }
+  .citem b { display: block; font-size: 0.92rem; color: var(--ink); line-height: 1.3; }
+  .citem small { color: var(--ink-45); font-size: 0.82rem; }
+  .qty { display: inline-flex; align-items: center; border: 1px solid var(--rule); border-radius: var(--r); overflow: hidden; }
+  .qty button { width: 32px; height: 32px; border: 0; background: transparent; font: inherit; font-size: 1.05rem; color: var(--ink); cursor: pointer; }
+  .qty span { min-width: 26px; text-align: center; font-weight: 700; font-size: 0.9rem; }
+  .cartsum { display: flex; justify-content: space-between; align-items: baseline; margin: 16px 0 14px; font-size: 1rem; color: var(--ink); }
+  .cartsum b { font-size: 1.2rem; }
+  .cartempty { color: var(--ink-45); padding: 26px 0 8px; text-align: center; }
+  .toast { position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: #fff; padding: 10px 16px; border-radius: 999px; font-size: 0.88rem; font-weight: 600; z-index: 80; white-space: nowrap; }
+  .toast[hidden] { display: none; }
   .buyrow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px; }
   .pickfirst { font-size: 0.84rem; color: var(--bad); font-weight: 600; margin-top: 10px; }
   .pickfirst[hidden] { display: none; }
@@ -448,6 +469,10 @@ fbq('track', 'PageView');
       <b>Swaylo</b>
     </a>
     <div class="navside">
+      <button class="cartbtn" id="cartBtn" type="button" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+        <span class="cartcount" id="cartCount" hidden>0</span>
+      </button>
       <a class="talk" id="waTop" href="#" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.16 8.16 0 0 1-1.26-4.36c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.21-8.24 8.21Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.38.1-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.16 0-.43.06-.65.31-.22.25-.86.84-.86 2.05s.88 2.38 1 2.54c.12.17 1.73 2.64 4.19 3.7.59.26 1.04.41 1.4.52.59.19 1.12.16 1.54.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>
         <span>Ask us anything</span>
@@ -463,7 +488,7 @@ fbq('track', 'PageView');
     <div class="hero">
       <p class="eyebrow">Swaylo store</p>
       <h1>Little things that <em>glow.</em></h1>
-      <p>Pretty pieces for your room, and gifts people actually keep. Order on WhatsApp and pay when it reaches you.</p>
+      <p>Pretty pieces for your room, and gifts people actually keep. Order in two taps and pay cash when it reaches you.</p>
     </div>
 
     <div class="promises">
@@ -510,8 +535,8 @@ fbq('track', 'PageView');
         <p class="kitnote" id="pKit" hidden></p>
         <div class="buybar">
           <div class="buyrow">
-            <button class="btn" id="codBtn">Buy now · Cash on Delivery</button>
-            <button class="btn ghost" id="buyNow">WhatsApp</button>
+            <button class="btn outline" id="addCart">Add to cart</button>
+            <button class="btn" id="codBtn">Buy now</button>
           </div>
         </div>
         <div class="assure">
@@ -560,6 +585,17 @@ fbq('track', 'PageView');
   </div>
 
 </main>
+
+<div class="modal" id="cartModal" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+    <div class="sheethead">
+      <div><h2 id="cartTitle">Your cart</h2><p>Cash on Delivery · free delivery</p></div>
+      <button class="xbtn" id="cartClose" type="button" aria-label="Close">×</button>
+    </div>
+    <div id="cartBody"></div>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
 
 <div class="modal" id="codModal" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="codTitle">
@@ -655,6 +691,7 @@ async function boot() {
     const feed = await res.json();
     waNumber = feed.wa_number;
     products = SHOW.map((k) => feed.products.find((p) => p.key === k)).filter(Boolean);
+    drawCartCount();
   } catch {
     $('#listEmpty').hidden = false;
     $('#listEmpty').textContent = 'The store is not reachable right now. Please try again in a minute.';
@@ -702,11 +739,9 @@ function openProduct(p, { push = true } = {}) {
   $('#pKit').hidden = !kit;
   $('#pKit').textContent = kit ? 'Comes as a DIY kit. You put it together yourself, and a hot glue gun helps. Take a look at the buyer photos below to see how it turns out.' : '';
   $('#waProduct').href = askHref(`Hi, I have a question about the ${p.name}, ${rupees(p.price)}.`);
-  $('#codBtn').textContent = `Buy now · ${rupees(p.price)}`;
-  $('#codBtn').onclick = () => openCod(p);
-  $('#buyNow').onclick = () => {
-    location.href = askHref(`Hi, I want to order the ${p.name}, ${rupees(p.price)}, Cash on Delivery.`);
-  };
+  $('#codBtn').textContent = 'Buy now';
+  $('#codBtn').onclick = () => openCod([{ p, qty: 1 }]);
+  syncAddBtn(p);
 
   const shots = photos(p);
   const stage = $('#stage'), rail = $('#rail'), counter = $('#shotCount');
@@ -809,22 +844,105 @@ async function drawReviews(key) {
    India Post, folds a double tap into one order, and books it into the order
    desk Cash on Delivery. The customer never has to open WhatsApp. */
 
-function openCod(p) {
-  track('InitiateCheckout', p);
+/* What is being bought right now: one product from Buy now, or the whole cart.
+   Each line books as its own order (the endpoint takes one product), and the
+   desk already groups one customer's orders together. */
+let checkout = { items: [], fromCart: false };
+
+function openCod(items, { fromCart = false } = {}) {
+  checkout = { items, fromCart };
+  const total = items.reduce((t, i) => t + i.p.price * i.qty, 0);
+  const count = items.reduce((t, i) => t + i.qty, 0);
+  try { fbq('track', 'InitiateCheckout', { content_ids: items.map((i) => i.p.key), content_type: 'product', currency: 'INR', value: total, num_items: count }); } catch {}
   const f = $('#codForm');
-  $('#codTitle').textContent = p.name;
-  $('#codSub').textContent = `${rupees(p.price)} · Cash on Delivery · free delivery`;
-  $('#codSubmit').textContent = `Place order · ${rupees(p.price)}`;
+  $('#codTitle').textContent = items.length === 1 ? items[0].p.name : `${count} items`;
+  $('#codSub').textContent = `${items.length === 1 && items[0].qty > 1 ? `${items[0].qty} × ${rupees(items[0].p.price)} = ` : ''}${rupees(total)} · Cash on Delivery · free delivery`;
+  $('#codSubmit').textContent = `Place order · ${rupees(total)}`;
   $('#codSubmit').disabled = false;
   $('#codErr').textContent = '';
   $('#codBody').querySelector('.done')?.remove();
   f.hidden = false;
   f.querySelectorAll('label').forEach((l) => l.classList.remove('bad'));
-  f.dataset.key = p.key;
+  $('#cartModal').hidden = true;
   $('#codModal').hidden = false;
   document.body.style.overflow = 'hidden';
   f.name.focus();
 }
+
+/* ── Cart ── kept in this browser only; a lost cart costs a re-tap, nothing more. */
+let cart = [];
+try { cart = JSON.parse(localStorage.getItem('swaylo_cart') || '[]').filter((c) => c && c.key && c.qty > 0); } catch { cart = []; }
+const saveCart = () => { try { localStorage.setItem('swaylo_cart', JSON.stringify(cart)); } catch {} drawCartCount(); };
+const cartItems = () => cart.map((c) => ({ p: products.find((x) => x.key === c.key), qty: c.qty })).filter((i) => i.p);
+function drawCartCount() {
+  const n = cartItems().reduce((t, i) => t + i.qty, 0);
+  $('#cartCount').textContent = n;
+  $('#cartCount').hidden = !n;
+}
+function toast(text) {
+  const t = $('#toast');
+  t.textContent = text; t.hidden = false;
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => { t.hidden = true; }, 2200);
+}
+function syncAddBtn(p) {
+  const b = $('#addCart');
+  const inCart = cart.some((c) => c.key === p.key);
+  b.textContent = inCart ? 'Go to cart' : 'Add to cart';
+  b.onclick = () => {
+    if (cart.some((c) => c.key === p.key)) return openCart();
+    cart.push({ key: p.key, qty: 1 });
+    saveCart();
+    track('AddToCart', p);
+    toast('Added to cart');
+    syncAddBtn(p);
+  };
+}
+function openCart() {
+  drawCart();
+  $('#cartModal').hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+function closeCart() {
+  $('#cartModal').hidden = true;
+  document.body.style.overflow = '';
+  const open = products.find((x) => x.key === new URLSearchParams(location.search).get('p'));
+  if (open) syncAddBtn(open);
+}
+function drawCart() {
+  const items = cartItems();
+  const body = $('#cartBody');
+  if (!items.length) {
+    body.innerHTML = '<p class="cartempty">Your cart is empty.</p>';
+    return;
+  }
+  const total = items.reduce((t, i) => t + i.p.price * i.qty, 0);
+  body.innerHTML = `
+    <div class="cartlist">${items.map((i) => `
+      <div class="citem">
+        <span class="ph" style="background-image:url('${photos(i.p)[0] || ''}')"></span>
+        <div><b>${esc(i.p.name)}</b><small>${rupees(i.p.price)}${i.qty > 1 ? ` × ${i.qty} = ${rupees(i.p.price * i.qty)}` : ''}</small></div>
+        <div class="qty" data-key="${i.p.key}"><button type="button" data-d="-1" aria-label="One less">${i.qty === 1 ? '🗑' : '−'}</button><span>${i.qty}</span><button type="button" data-d="1" aria-label="One more">+</button></div>
+      </div>`).join('')}
+    </div>
+    <div class="cartsum"><span>Total, Cash on Delivery</span><b>${rupees(total)}</b></div>
+    <button class="btn" type="button" id="cartCheckout">Place order · ${rupees(total)}</button>`;
+  body.querySelectorAll('.qty button').forEach((btn) => {
+    btn.onclick = () => {
+      const key = btn.parentElement.dataset.key;
+      const c = cart.find((x) => x.key === key);
+      if (!c) return;
+      c.qty = Math.min(10, c.qty + Number(btn.dataset.d));
+      if (c.qty <= 0) cart = cart.filter((x) => x.key !== key);
+      saveCart();
+      drawCart();
+    };
+  });
+  $('#cartCheckout').onclick = () => openCod(cartItems(), { fromCart: true });
+}
+$('#cartBtn').onclick = openCart;
+$('#cartClose').onclick = closeCart;
+$('#cartModal').onclick = (e) => { if (e.target.id === 'cartModal') closeCart(); };
 
 function closeCod() {
   $('#codModal').hidden = true;
@@ -858,47 +976,69 @@ $('#codForm').pincode.addEventListener('input', async (e) => {
 $('#codForm').onsubmit = async (e) => {
   e.preventDefault();
   const f = e.target;
-  const p = products.find((x) => x.key === f.dataset.key);
+  const { items, fromCart } = checkout;
+  const total = items.reduce((t, i) => t + i.p.price * i.qty, 0);
   const btn = $('#codSubmit'), err = $('#codErr');
-  const label = `Place order · ${rupees(p.price)}`;
+  const label = `Place order · ${rupees(total)}`;
   err.textContent = '';
   f.querySelectorAll('label').forEach((l) => l.classList.remove('bad'));
   btn.disabled = true;
   btn.textContent = 'Placing…';
-  const body = { product_key: p.key, qty: 1, fbp: cookie('_fbp'), fbc: fbc(), page_url: location.href };
-  for (const k of ['name', 'phone', 'house', 'road', 'pincode', 'city', 'state']) body[k] = f[k].value;
+  const who = {};
+  for (const k of ['name', 'phone', 'house', 'road', 'pincode', 'city', 'state']) who[k] = f[k].value;
+  const placed = [];
   try {
-    const res = await fetch(`${API}/store/order`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
-    });
-    const d = await res.json();
-    if (!res.ok || !d.ok) {
-      err.textContent = d.error || 'Something went wrong. Please try again.';
-      for (const k of d.missing || []) f[k]?.closest('label').classList.add('bad');
-      if (d.field === 'pincode') f.pincode.closest('label').classList.add('bad');
+    for (const it of items) {
+      const res = await fetch(`${API}/store/order`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...who, product_key: it.p.key, qty: it.qty, fbp: cookie('_fbp'), fbc: fbc(), page_url: location.href }),
+      });
+      const d = await res.json();
+      if (!res.ok || !d.ok) {
+        if (!placed.length) {
+          err.textContent = d.error || 'Something went wrong. Please try again.';
+          for (const k of d.missing || []) f[k]?.closest('label').classList.add('bad');
+          if (d.field === 'pincode') f.pincode.closest('label').classList.add('bad');
+          btn.disabled = false;
+          btn.textContent = label;
+          return;
+        }
+        break;
+      }
+      if (!d.duplicate) track('Purchase', it.p, { value: d.amount, num_items: it.qty }, `order-${d.order_id}`);
+      placed.push({ ...d, p: it.p, qty: it.qty });
+    }
+  } catch {
+    if (!placed.length) {
+      const first = items[0].p;
+      err.innerHTML = `Could not reach us just now. Please <a href="${askHref(`Hi, I want to order the ${first.name}, ${rupees(first.price)}, Cash on Delivery.`)}">order on WhatsApp</a> instead.`;
       btn.disabled = false;
       btn.textContent = label;
       return;
     }
-    f.hidden = true;
-    if (!d.duplicate) track('Purchase', p, { value: d.amount }, `order-${d.order_id}`);
-    const done = document.createElement('div');
-    done.className = 'done';
-    const chat = askHref(`Hi, I placed order #${d.order_id} on your website.`);
-    done.innerHTML = `
-      <h2>${d.duplicate ? 'Already booked' : 'Order placed'}</h2>
-      <p class="num">Order #${d.order_id} · ${esc(p.name)} · ${rupees(d.amount)}</p>
-      <p class="num">Payment: Cash on Delivery</p>
-      <p>${d.advance_due
-        ? `We will message you on WhatsApp to collect the ${rupees(d.advance_due)} advance, then it ships. The rest is Cash on Delivery.`
-        : 'Nothing to pay now. You pay cash when it arrives. Delivery takes 10 to 15 days and we will message you on WhatsApp before it is dispatched.'}</p>
-      <p><a href="${chat}" rel="noopener">Message us about this order</a></p>`;
-    $('#codBody').append(done);
-  } catch {
-    err.innerHTML = `Could not reach us just now. Please <a href="${askHref(`Hi, I want to order the ${p.name}, ${rupees(p.price)}, Cash on Delivery.`)}">order on WhatsApp</a> instead.`;
-    btn.disabled = false;
-    btn.textContent = label;
   }
+  const booked = new Set(placed.map((x) => x.p.key));
+  if (fromCart) { cart = cart.filter((c) => !booked.has(c.key)); saveCart(); }
+  const open = products.find((x) => x.key === new URLSearchParams(location.search).get('p'));
+  if (open) syncAddBtn(open);
+  const missed = items.filter((i) => !booked.has(i.p.key));
+  const sum = placed.reduce((t, x) => t + x.amount, 0);
+  const advance = placed.reduce((t, x) => t + (x.advance_due || 0), 0);
+  f.hidden = true;
+  const done = document.createElement('div');
+  done.className = 'done';
+  const nums = placed.map((x) => `#${x.order_id}`).join(', ');
+  const chat = askHref(`Hi, I placed order ${nums} on your website.`);
+  done.innerHTML = `
+    <h2>${placed.every((x) => x.duplicate) ? 'Already booked' : 'Order placed'}</h2>
+    ${placed.map((x) => `<p class="num">Order #${x.order_id} · ${esc(x.p.name)}${x.qty > 1 ? ` × ${x.qty}` : ''} · ${rupees(x.amount)}</p>`).join('')}
+    <p class="num">Payment: Cash on Delivery${placed.length > 1 ? ` · ${rupees(sum)} in total` : ''}</p>
+    ${missed.length ? `<p class="err">${missed.map((i) => esc(i.p.name)).join(', ')} could not be booked just now. It is still in your cart.</p>` : ''}
+    <p>${advance
+      ? `We will message you on WhatsApp to collect the ${rupees(advance)} advance, then it ships. The rest is Cash on Delivery.`
+      : 'Nothing to pay now. You pay cash when it arrives. Delivery takes 10 to 15 days and we will message you on WhatsApp before it is dispatched.'}</p>
+    <p><a href="${chat}" rel="noopener">Message us about this order</a></p>`;
+  $('#codBody').append(done);
 };
 
 /* Pixel helpers. Never let tracking break the page: fbq may be blocked. */

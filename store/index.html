@@ -508,9 +508,19 @@
   .rcard .line2 { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 0.8rem; color: var(--ink-45); }
   .rcard p { margin-top: 8px; font-size: 0.92rem; color: var(--ink-70); }
   .rcard .pics { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-  .viewer { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 60; padding: 16px; }
+  .viewer { position: fixed; inset: 0; background: rgba(0,0,0,0.96); display: flex; align-items: center; justify-content: center; z-index: 90; padding: 16px; }
   .viewer[hidden] { display: none; }
-  .viewer img, .viewer video { max-width: 100%; max-height: 100%; border-radius: var(--r); }
+  .vstage { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; touch-action: pan-y; }
+  .viewer img, .viewer video { max-width: 100%; max-height: 100%; border-radius: var(--r); user-select: none; -webkit-user-drag: none; }
+  .vstage.in-l > * { animation: vInL 0.25s var(--ease); }
+  .vstage.in-r > * { animation: vInR 0.25s var(--ease); }
+  @keyframes vInL { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: none; } }
+  @keyframes vInR { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: none; } }
+  .vnav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,255,255,0.16); color: #fff; font-size: 2rem; line-height: 1; cursor: pointer; display: grid; place-items: center; padding: 0 0 4px; backdrop-filter: blur(6px); }
+  .vnav:hover { background: rgba(255,255,255,0.28); }
+  .vprev { left: 10px; } .vnext { right: 10px; }
+  .vclose { position: absolute; top: calc(10px + env(safe-area-inset-top, 0px)); right: 12px; width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(255,255,255,0.16); color: #fff; font-size: 1.7rem; line-height: 1; cursor: pointer; }
+  .vcount { position: absolute; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); color: #fff; font-size: 0.85rem; font-weight: 600; background: rgba(0,0,0,0.45); padding: 4px 12px; border-radius: 999px; }
   .viewer [hidden] { display: none; }
   .strip button.vid, .rcard .pics button.vid { position: relative; cursor: pointer; }
   button.vid::after { content: ''; position: absolute; inset: 0; margin: auto; width: 28px; height: 28px; border-radius: 50%; background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 7l8 5-8 5z' fill='white'/%3E%3C/svg%3E") center/18px no-repeat; }
@@ -704,7 +714,13 @@ fbq('track', 'PageView');
   </div>
 </div>
 
-<div class="viewer" id="viewer" hidden><img id="viewerImg" alt=""><video id="viewerVid" controls playsinline hidden></video></div>
+<div class="viewer" id="viewer" hidden>
+  <div class="vstage" id="vStage"><img id="viewerImg" alt=""><video id="viewerVid" controls playsinline hidden></video></div>
+  <button class="vnav vprev" id="vPrev" type="button" aria-label="Previous">‹</button>
+  <button class="vnav vnext" id="vNext" type="button" aria-label="Next">›</button>
+  <button class="vclose" id="vClose" type="button" aria-label="Close">×</button>
+  <span class="vcount" id="vCount"></span>
+</div>
 
 <footer class="foot">
   <div class="wrap">
@@ -914,15 +930,12 @@ async function drawReviews(key) {
         ${v.photos.length || v.videos?.length ? `<div class="pics">${(v.videos || []).map(vthumb).join('')}${v.photos.map(thumb).join('')}</div>` : ''}
       </div>`).join('')}
     </div>`;
-  box.querySelectorAll('button[data-src]').forEach((b) => {
-    b.onclick = () => { $('#viewerVid').hidden = true; $('#viewerImg').hidden = false; $('#viewerImg').src = b.dataset.src; $('#viewer').hidden = false; };
-  });
-  box.querySelectorAll('button[data-video]').forEach((b) => {
-    b.onclick = () => {
-      const v = $('#viewerVid');
-      $('#viewerImg').hidden = true; v.hidden = false; v.src = b.dataset.video;
-      $('#viewer').hidden = false; v.play().catch(() => {});
-    };
+  // Every buyer photo and video for this product, in strip order, so the
+  // viewer can step through them whichever one was tapped.
+  const media = [...vids.map((m) => ({ video: true, src: `reviews/${key}/${m.file}` })),
+    ...pics.map((f) => ({ video: false, src: `reviews/${key}/${f}` }))];
+  box.querySelectorAll('button[data-src], button[data-video]').forEach((b) => {
+    b.onclick = () => openViewer(media, media.findIndex((m) => m.src === (b.dataset.video || b.dataset.src)));
   });
   box.hidden = false;
 }
@@ -1240,11 +1253,58 @@ function fbc() {
   return id ? `fb.1.${Date.now()}.${id}` : '';
 }
 
-$('#viewer').onclick = (e) => {
-  if (e.target.id === 'viewerVid') return;
+let vList = [], vAt = 0;
+function showMedia(dir) {
+  const m = vList[vAt], img = $('#viewerImg'), v = $('#viewerVid'), st = $('#vStage');
+  v.pause();
+  if (m.video) { img.hidden = true; v.hidden = false; v.src = m.src; v.play().catch(() => {}); }
+  else { v.hidden = true; v.removeAttribute('src'); v.load(); img.hidden = false; img.src = m.src; }
+  st.classList.remove('in-l', 'in-r'); void st.offsetWidth;
+  if (dir) st.classList.add(dir > 0 ? 'in-r' : 'in-l');
+  $('#vCount').textContent = `${vAt + 1} / ${vList.length}`;
+  const many = vList.length > 1;
+  $('#vPrev').hidden = !many; $('#vNext').hidden = !many; $('#vCount').hidden = !many;
+  // Load the neighbours so the next swipe shows at once.
+  for (const n of [vList[vAt + 1], vList[vAt - 1]]) if (n && !n.video) new Image().src = n.src;
+}
+function openViewer(list, at) {
+  vList = list; vAt = Math.max(0, at);
+  $('#viewer').hidden = false;
+  document.body.style.overflow = 'hidden';
+  showMedia(0);
+}
+function stepViewer(d) {
+  if (vList.length < 2) return;
+  vAt = (vAt + d + vList.length) % vList.length;
+  showMedia(d);
+}
+function closeViewer() {
   $('#viewerVid').pause();
   $('#viewer').hidden = true;
-};
+  if ($('#codModal').hidden && $('#cartModal').hidden && $('#meModal').hidden) document.body.style.overflow = '';
+}
+$('#vPrev').onclick = (e) => { e.stopPropagation(); stepViewer(-1); };
+$('#vNext').onclick = (e) => { e.stopPropagation(); stepViewer(1); };
+$('#vClose').onclick = (e) => { e.stopPropagation(); closeViewer(); };
+$('#viewer').onclick = (e) => { if (e.target.id === 'viewer' || e.target.id === 'vStage') closeViewer(); };
+addEventListener('keydown', (e) => {
+  if ($('#viewer').hidden) return;
+  if (e.key === 'ArrowLeft') stepViewer(-1);
+  else if (e.key === 'ArrowRight') stepViewer(1);
+  else if (e.key === 'Escape') closeViewer();
+});
+{
+  // Swipe: a mostly sideways drag of 40px or more moves one along.
+  let x0 = null, y0 = 0;
+  const st = $('#vStage');
+  st.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  st.addEventListener('touchend', (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+    x0 = null;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) stepViewer(dx < 0 ? 1 : -1);
+  }, { passive: true });
+}
 const toList = () => { setUrl(null); document.title = 'Swaylo Store'; show('viewList'); };
 $('#backList').onclick = toList;
 $('#home').onclick = (e) => { e.preventDefault(); toList(); };

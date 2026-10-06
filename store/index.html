@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Swaylo Store</title>
 <meta name="description" content="Pretty little things for your room and for gifting. Cash on Delivery, free delivery across India.">
-<meta name="theme-color" content="#F9F4EF">
+<meta name="theme-color" content="#FFFFFF">
 <link rel="icon" type="image/png" href="../launch_icon.png">
 <meta property="og:title" content="Swaylo Store">
 <meta property="og:description" content="Cash on Delivery, free delivery across India.">
@@ -25,8 +25,8 @@
      so the brand comes back, and every promise gets said out loud on the page
      the ad lands on rather than one click in. */
   :root {
-    --paper:      #F9F4EF;
-    --paper-deep: #F2EBE0;
+    --paper:      #FFFFFF;
+    --paper-deep: #F5F6F8;
     --plate:      #FFFFFF;   /* the white square a product photo sits on */
     --ink:        #0A2850;
     --ink-70:     rgba(10, 40, 80, 0.72);
@@ -73,7 +73,7 @@
 
   /* ── masthead ─────────────────────────────────────────────────────────── */
   header.top {
-    background: rgba(249, 244, 239, 0.86); backdrop-filter: saturate(140%) blur(10px);
+    background: rgba(255, 255, 255, 0.9); backdrop-filter: saturate(140%) blur(10px);
     border-bottom: 1px solid var(--rule-soft);
     position: sticky; top: 0; z-index: 40;
   }
@@ -335,6 +335,51 @@
   input:focus, select:focus { outline: none; border-color: var(--clay); box-shadow: 0 0 0 3px rgba(172, 79, 29, 0.14); }
   .err { color: var(--bad); font-weight: 600; margin-top: 10px; font-size: 0.86rem; min-height: 1.3em; }
 
+  /* ── Motion: the sheet arrives, the address fills itself, the order lands ── */
+  @keyframes sheetUp { from { transform: translateY(100%); } to { transform: none; } }
+  @keyframes sheetPop { from { transform: translateY(18px) scale(0.98); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal:not([hidden]) { animation: fadeIn 0.22s ease-out; }
+  .modal:not([hidden]) .sheet { animation: sheetUp 0.42s var(--ease); }
+  @media (min-width: 640px) { .modal:not([hidden]) .sheet { animation: sheetPop 0.32s var(--ease); } }
+  label > span { transition: color 0.15s var(--ease); }
+  label:focus-within > span { color: var(--clay); }
+  label.pin { position: relative; }
+  .pinmark { position: absolute; right: 12px; bottom: 12px; width: 22px; height: 22px; pointer-events: none; }
+  .pinmark.spin { border: 2.5px solid var(--rule); border-top-color: var(--clay); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  .pinmark.ok { border-radius: 50%; background: #0F9D58; animation: pop 0.45s var(--ease); }
+  .pinmark.ok::after { content: ''; position: absolute; left: 7.5px; top: 4px; width: 5px; height: 10px; border: solid #fff; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes pop { 0% { transform: scale(0); } 60% { transform: scale(1.25); } 100% { transform: scale(1); } }
+  @keyframes filled { 0% { background: #E3F6EA; border-color: #0F9D58; } 100% { background: var(--plate); border-color: var(--rule); } }
+  input.filled { animation: filled 1.4s var(--ease); }
+  .hint.good { color: #0B7A43; font-weight: 600; animation: hintIn 0.35s var(--ease); }
+  @keyframes hintIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  .btn { position: relative; transition: transform 0.12s var(--ease), background 0.15s var(--ease), border-color 0.15s var(--ease), color 0.15s var(--ease); }
+  .btn:active { transform: scale(0.97); }
+  .btn.busy { color: transparent !important; pointer-events: none; }
+  .btn.busy::after { content: ''; position: absolute; inset: 0; margin: auto; width: 22px; height: 22px; border: 2.5px solid rgba(255,255,255,0.45); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+  #codForm.leaving { animation: formOut 0.28s var(--ease) forwards; }
+  @keyframes formOut { to { opacity: 0; transform: scale(0.97); } }
+  .okbadge { position: relative; width: 84px; height: 84px; margin: 6px auto 14px; }
+  .okbadge svg { width: 84px; height: 84px; display: block; }
+  .okbadge circle { fill: #0F9D58; transform-origin: center; animation: pop 0.5s var(--ease) both; }
+  .okbadge path { fill: none; stroke: #fff; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 48; stroke-dashoffset: 48; animation: draw 0.4s 0.35s var(--ease) forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .okbadge i { position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; border-radius: 2px; opacity: 0; animation: burst 0.9s 0.3s cubic-bezier(0.1, 0.8, 0.3, 1) forwards; }
+  @keyframes burst { 0% { opacity: 1; transform: translate(-50%, -50%) rotate(0); } 100% { opacity: 0; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) rotate(var(--r)); } }
+  .modal .done { text-align: center; }
+  .modal .done > * { animation: hintIn 0.4s var(--ease) both; }
+  .modal .done > :nth-child(2) { animation-delay: 0.45s; } .modal .done > :nth-child(3) { animation-delay: 0.55s; }
+  .modal .done > :nth-child(4) { animation-delay: 0.65s; } .modal .done > :nth-child(5) { animation-delay: 0.75s; }
+  .modal .done > :nth-child(n+6) { animation-delay: 0.85s; }
+  @keyframes bump { 0%, 100% { transform: scale(1); } 40% { transform: scale(1.35); } }
+  .cartcount.bump { animation: bump 0.45s var(--ease); }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0ms !important; transition-duration: 0.01ms !important; }
+    .okbadge path { stroke-dashoffset: 0; }
+  }
+
   .done { background: var(--paper-deep); border: 1px solid var(--rule-soft); border-radius: var(--r-lg); padding: clamp(32px, 5vw, 52px) clamp(20px, 3vw, 34px); max-width: 520px; margin-bottom: 56px; }
   .done h2 { font-family: var(--display); font-size: 1.9rem; font-weight: 800; letter-spacing: -0.03em; color: var(--ink); }
   .done p { margin-top: 12px; color: var(--ink-70); }
@@ -378,7 +423,7 @@
     .gallery { position: static; }
     .buybar {
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
-      background: rgba(249, 244, 239, 0.94); backdrop-filter: saturate(140%) blur(10px);
+      background: rgba(255, 255, 255, 0.96); backdrop-filter: saturate(140%) blur(10px);
       border-top: 1px solid var(--rule);
       padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
     }
@@ -610,7 +655,7 @@ fbq('track', 'PageView');
         <label><span>House / flat number, building</span><input name="house" maxlength="120"></label>
         <label><span>Street, area, landmark</span><input name="road" autocomplete="street-address" maxlength="200"></label>
         <div class="pair">
-          <label><span>Pincode</span><input name="pincode" inputmode="numeric" autocomplete="postal-code" maxlength="6"></label>
+          <label class="pin"><span>Pincode</span><input name="pincode" inputmode="numeric" autocomplete="postal-code" maxlength="6"><i class="pinmark" id="pinMark" hidden></i></label>
           <label><span>Town</span><input name="city" autocomplete="address-level2" maxlength="80" list="codAreas"></label>
         </div>
         <datalist id="codAreas"></datalist>
@@ -861,6 +906,8 @@ function openCod(items, { fromCart = false } = {}) {
   $('#codSubmit').disabled = false;
   $('#codErr').textContent = '';
   $('#codBody').querySelector('.done')?.remove();
+  f.classList.remove('leaving');
+  $('#codSubmit').classList.remove('busy');
   f.hidden = false;
   f.querySelectorAll('label').forEach((l) => l.classList.remove('bad'));
   $('#cartModal').hidden = true;
@@ -897,6 +944,7 @@ function syncAddBtn(p) {
     saveCart();
     track('AddToCart', p);
     toast('Added to cart');
+    const cc = $('#cartCount'); cc.classList.remove('bump'); void cc.offsetWidth; cc.classList.add('bump');
     syncAddBtn(p);
   };
 }
@@ -959,17 +1007,25 @@ $('#codForm').pincode.addEventListener('input', async (e) => {
   const pin = e.target.value.replace(/\D/g, '').slice(0, 6);
   if (pin.length !== 6 || pin === lastPin) return;
   lastPin = pin;
-  const hint = $('#codPinHint');
+  const hint = $('#codPinHint'), mark = $('#pinMark');
+  hint.className = 'hint';
   hint.textContent = 'Checking pincode…';
+  mark.className = 'pinmark spin'; mark.hidden = false;
+  const fill = (input, value) => {
+    input.value = value;
+    input.classList.remove('filled'); void input.offsetWidth; input.classList.add('filled');
+  };
   try {
     const d = await (await fetch(`${API}/store/pincode/${pin}`)).json();
     hint.textContent = '';
-    if (!d?.found) return;
+    if (!d?.found) { mark.hidden = true; return; }
+    mark.className = 'pinmark ok';
     $('#codAreas').innerHTML = (d.areas || []).map((a) => `<option value="${esc(a)}">`).join('');
-    if (!f.state.value && d.states?.length === 1) f.state.value = d.states[0];
-    if (!f.city.value && d.districts?.length === 1) f.city.value = d.districts[0];
+    if (!f.state.value && d.states?.length === 1) fill(f.state, d.states[0]);
+    if (!f.city.value && d.districts?.length === 1) setTimeout(() => fill(f.city, d.districts[0]), 120);
     if (d.states?.length > 1) hint.textContent = `That pincode covers ${d.states.join(' and ')}. Please type the right one.`;
-  } catch { hint.textContent = ''; }
+    else { hint.className = 'hint good'; hint.textContent = `✓ We deliver to ${d.districts?.length === 1 ? d.districts[0] + ', ' : 'this pincode in '}${d.states?.[0] || ''}`; }
+  } catch { hint.textContent = ''; mark.hidden = true; }
 });
 
 $('#codForm').onsubmit = async (e) => {
@@ -982,7 +1038,7 @@ $('#codForm').onsubmit = async (e) => {
   err.textContent = '';
   f.querySelectorAll('label').forEach((l) => l.classList.remove('bad'));
   btn.disabled = true;
-  btn.textContent = 'Placing…';
+  btn.classList.add('busy');
   const who = {};
   for (const k of ['name', 'phone', 'house', 'road', 'pincode', 'city', 'state']) who[k] = f[k].value;
   const placed = [];
@@ -1005,6 +1061,7 @@ $('#codForm').onsubmit = async (e) => {
           for (const k of d.missing || []) f[k]?.closest('label').classList.add('bad');
           if (d.field === 'pincode') f.pincode.closest('label').classList.add('bad');
           btn.disabled = false;
+          btn.classList.remove('busy');
           btn.textContent = label;
           return;
         }
@@ -1018,6 +1075,7 @@ $('#codForm').onsubmit = async (e) => {
     if (!placed.length) {
       const first = items[0].p;
       err.innerHTML = `Could not reach us just now. Please <a href="${askHref(`Hi, I want to order the ${first.name}, ${rupees(first.price)}, Cash on Delivery.`)}">order on WhatsApp</a> instead.`;
+      btn.classList.remove('busy');
       btn.disabled = false;
       btn.textContent = label;
       return;
@@ -1030,12 +1088,22 @@ $('#codForm').onsubmit = async (e) => {
   const missed = items.filter((i) => !booked.has(i.p.key));
   const sum = placed.reduce((t, x) => t + x.amount, 0);
   const advance = placed.reduce((t, x) => t + (x.advance_due || 0), 0);
+  f.classList.add('leaving');
+  await new Promise((r) => setTimeout(r, 260));
   f.hidden = true;
+  btn.classList.remove('busy');
+  try { navigator.vibrate?.(30); } catch {}
+  const colors = ['#AC4F1D', '#0F9D58', '#F4B619', '#0A2850', '#E7655A'];
+  const bits = Array.from({ length: 18 }, (_, i) => {
+    const a = (i / 18) * Math.PI * 2, dist = 70 + (i % 3) * 22;
+    return `<i style="background:${colors[i % 5]};--x:${Math.round(Math.cos(a) * dist)}px;--y:${Math.round(Math.sin(a) * dist)}px;--r:${(i * 47) % 360}deg"></i>`;
+  }).join('');
   const done = document.createElement('div');
   done.className = 'done';
   const nums = placed.map((x) => `#${x.order_id}`).join(', ');
   const chat = askHref(`Hi, I placed order ${nums} on your website.`);
   done.innerHTML = `
+    <div class="okbadge">${bits}<svg viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="40"/><path d="M26 43l11 11 21-23"/></svg></div>
     <h2>${placed.every((x) => x.duplicate) ? 'Already booked' : 'Order placed'}</h2>
     ${placed.map((x) => `<p class="num">Order #${x.order_id} · ${esc(x.p.name)}${x.qty > 1 ? ` × ${x.qty}` : ''} · ${rupees(x.amount)}</p>`).join('')}
     <p class="num">Payment: Cash on Delivery${placed.length > 1 ? ` · ${rupees(sum)} in total` : ''}</p>

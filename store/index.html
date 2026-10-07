@@ -233,6 +233,22 @@
     padding: 4px 9px; border-radius: 999px;
   }
   .counter[hidden] { display: none; }
+  /* Best seller / New, top left of the photo, like every shop people trust. */
+  .ptag {
+    position: absolute; left: 12px; top: 12px; pointer-events: none;
+    background: var(--ink); color: var(--paper);
+    font-size: 0.74rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 6px 11px; border-radius: 6px;
+  }
+  .ptag[hidden] { display: none; }
+  .hook { margin-top: 10px; color: var(--clay); font-weight: 700; font-size: 1.02rem; }
+  .hook[hidden] { display: none; }
+  .hook + h2 { margin-top: 4px; }
+  /* Three reasons to buy, as icons, right above the buttons. */
+  .perks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 18px 0 4px; }
+  .perks div { display: flex; flex-direction: column; align-items: center; gap: 7px; text-align: center; font-size: 0.8rem; font-weight: 600; color: var(--ink-70); }
+  .perks i { width: 46px; height: 46px; border-radius: 50%; background: var(--plate); display: grid; place-items: center; color: var(--clay); }
+  .perks svg { width: 22px; height: 22px; }
   .details { min-width: 0; }
   .gallery { position: sticky; top: 86px; }
   .product h2 { font-family: var(--display); font-size: clamp(1.7rem, 3.6vw, 2.4rem); font-weight: 800; line-height: 1.06; letter-spacing: -0.03em; margin-top: 10px; }
@@ -488,6 +504,9 @@
      buyer photo, and the reviews as a list. Every one is somebody else's
      purchase of the same item from the same seller, so the heading says so,
      the real average shows with its bad stars, and critical reviews stay in. */
+  .rbadge .stars { color: #F4B619; font-size: 1.05rem; letter-spacing: 1px; }
+  .rbadge .stars em { color: var(--rule); font-style: normal; }
+  .rbadge u { color: var(--ink-70); text-underline-offset: 3px; }
   .rbadge { display: inline-flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 0.84rem; color: var(--ink-45); cursor: pointer; background: none; border: 0; font-family: inherit; padding: 0; }
   .pill { display: inline-flex; align-items: center; gap: 3px; background: #038D63; color: #fff; font-weight: 700; font-size: 0.82rem; border-radius: 12px; padding: 2px 9px; line-height: 1.5; }
   .pill.mid { background: #F4B619; }
@@ -564,7 +583,7 @@ fbq('track', 'PageView');
 <body>
 
 <div class="ticker">
-  <b>Free delivery anywhere in India</b><span class="dot">·</span>Cash on Delivery
+  <b>Free delivery</b><span class="dot">·</span>Cash on Delivery<span class="dot">·</span>7 day refund
 </div>
 
 <header class="top">
@@ -594,7 +613,7 @@ fbq('track', 'PageView');
 
   <section id="viewList">
     <div class="shophead">
-      <h1>Little things that <em>glow</em></h1>
+      <h1>Little things that <em>brighten</em> a home</h1>
       <span id="gridCount"></span>
     </div>
     <div class="chips">
@@ -611,17 +630,19 @@ fbq('track', 'PageView');
         <div class="rail" id="rail"></div>
         <div class="shotwrap">
           <div class="stage" id="stage"></div>
+          <span class="ptag" id="pTag" hidden></span>
           <p class="counter" id="shotCount" hidden></p>
         </div>
       </div>
       <div class="details">
-        <p class="eyebrow">Swaylo store</p>
+        <button class="rbadge" id="pRating" type="button" hidden></button>
+        <p class="hook" id="pHook" hidden></p>
         <h2 id="pName"></h2>
         <p class="cost" id="pPrice"></p>
-        <button class="rbadge" id="pRating" type="button" hidden></button>
         <p class="taxline">Inclusive of all taxes · free delivery</p>
         <p class="blurb" id="pBlurb"></p>
         <p class="kitnote" id="pKit" hidden></p>
+        <div class="perks" id="pPerks"></div>
         <div class="buybar">
           <div class="codline">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v4M18 10v4"/></svg>
@@ -754,7 +775,29 @@ fbq('track', 'PageView');
  */
 
 const API = 'https://whatsapp-bot-production-725a.up.railway.app';
-const SHOW = ['tulip_lamp', 'crystal_moon', 'crystal_deer', 'crystal_saturn', 'crystal_dolphin', 'astro_solar', 'star_projector', 'sunset_remote', 'sunset_lamp', 'rice_lights6', 'desk_lamp', 'chakra_tree', 'owl_sculpture'];
+const SHOW = ['artificial_plant_big', 'palm_4ft', 'artificial_shrubs', 'artificial_vines', 'roses2', 'tulip_lamp', 'crystal_moon', 'crystal_deer', 'crystal_saturn', 'crystal_dolphin', 'astro_solar', 'star_projector', 'sunset_remote', 'sunset_lamp', 'rice_lights6', 'desk_lamp', 'chakra_tree', 'owl_sculpture'];
+
+/* Shop copy, not product data: the tag on the photo, the one line benefit above
+   the name, and the three icons above the buttons. A product with no entry
+   gets no tag, no line, and the Cash on Delivery trio. */
+const TAGS = { artificial_plant_big: 'Best seller', palm_4ft: 'New · 4 feet tall' };
+const HOOKS = {
+  artificial_plant_big: 'A green corner that never needs water',
+  palm_4ft: 'A full size tree for your hall',
+  artificial_shrubs: 'Fresh green shelves with zero care',
+  artificial_vines: 'Turn a bare wall green in minutes',
+  roses2: 'Roses that stay in bloom forever',
+};
+const ICON = {
+  drop: '<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/><path d="M4 4l16 16"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  cash: '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v4M18 10v4"/>',
+  truck: '<path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>',
+  refund: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>',
+};
+const PLANT_PERKS = [['drop', 'No watering'], ['sun', 'Never fades'], ['cash', 'Cash on Delivery']];
+const perksFor = (p) => (/^(artificial_|palm_|roses)/.test(p.key) ? PLANT_PERKS
+  : [['cash', 'Cash on Delivery'], ['truck', 'Free delivery'], ['refund', '7 day refund']]);
 
 const $ = (s, r = document) => r.querySelector(s);
 const rupees = (n) => '₹' + Number(n || 0).toLocaleString('en-IN');
@@ -859,6 +902,12 @@ function openProduct(p, { push = true } = {}) {
   document.title = `${p.name} · Swaylo`;
   $('#pName').textContent = p.name;
   $('#pPrice').innerHTML = priceHtml(p.price, p.mrp);
+  $('#pTag').textContent = TAGS[p.key] || '';
+  $('#pTag').hidden = !TAGS[p.key];
+  $('#pHook').textContent = HOOKS[p.key] || '';
+  $('#pHook').hidden = !HOOKS[p.key];
+  $('#pPerks').innerHTML = perksFor(p).map(([icon, label]) =>
+    `<div><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[icon]}</svg></i>${label}</div>`).join('');
   $('#pBlurb').textContent = p.contents ? 'In the box: ' + p.contents.replace(/^1\s+/, '') : '';
   $('#pBlurb').hidden = !p.contents;
   // A kit that arrives in pieces has to say so before the order, not at the door.
@@ -935,7 +984,9 @@ async function drawReviews(key) {
   const pill = (n, text) => `<span class="pill ${n >= 4 ? '' : n >= 3 ? 'mid' : 'low'}">${text}★</span>`;
   const when = (d) => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
   const counts = `${r.ratings.toLocaleString('en-IN')} Ratings, ${r.reviews_count.toLocaleString('en-IN')} Reviews`;
-  badge.innerHTML = `${pill(r.average, r.average.toFixed(1))}<span>${counts}</span>`;
+  const full = Math.round(r.average);
+  badge.innerHTML = `<span class="stars" aria-hidden="true">${'★'.repeat(full)}<em>${'★'.repeat(5 - full)}</em></span><u>Rated ${r.average.toFixed(1)} by ${r.ratings.toLocaleString('en-IN')} buyers</u>`;
+  badge.setAttribute('aria-label', counts);
   badge.onclick = () => box.scrollIntoView({ behavior: 'smooth', block: 'start' });
   badge.hidden = false;
 

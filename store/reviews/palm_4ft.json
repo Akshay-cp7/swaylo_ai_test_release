@@ -1,0 +1,27 @@
+{
+ "source": "Ratings and photos from people who bought this palm from the same seller we order from.",
+ "average": 4.3,
+ "ratings": 923,
+ "reviews_count": 379,
+ "breakdown": {
+  "1": 63,
+  "2": 26,
+  "3": 96,
+  "4": 221,
+  "5": 517
+ },
+ "reviews": [
+  {
+   "name": "Suhasini",
+   "stars": 5,
+   "date": "2025-09-08",
+   "text": "Good product to decorate ur house, worth buying",
+   "photos": [
+    "r0_0.jpg",
+    "r0_1.jpg",
+    "r0_2.jpg",
+    "r0_3.jpg"
+   ]
+  }
+ ]
+}

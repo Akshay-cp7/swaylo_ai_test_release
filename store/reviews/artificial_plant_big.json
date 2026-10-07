@@ -1,0 +1,37 @@
+{
+ "source": "Ratings and photos from people who bought this palm from the same seller we order from. The star count covers every design in the seller's listing.",
+ "average": 4.2,
+ "ratings": 13108,
+ "reviews_count": 4692,
+ "breakdown": {
+  "1": 660,
+  "2": 364,
+  "3": 1429,
+  "4": 3258,
+  "5": 7397
+ },
+ "reviews": [
+  {
+   "name": "Sunita",
+   "stars": 5,
+   "date": "2026-03-15",
+   "text": "For the 1st time i hv purchased an artificial plant....I got 2 different color leaf dark n light green which is giving a real look , and overall it's looking Awsome... 🫰🫰😍😍",
+   "photos": [
+    "r0_0.jpg",
+    "r0_1.jpg",
+    "r0_2.jpg"
+   ]
+  },
+  {
+   "name": "Shwetha",
+   "stars": 5,
+   "date": "2026-05-01",
+   "text": "This is buetiful.. But some leaves dont fits the branch. Pot will not get with this leafs... It is good",
+   "photos": [
+    "r1_0.jpg",
+    "r1_1.jpg",
+    "r1_2.jpg"
+   ]
+  }
+ ]
+}

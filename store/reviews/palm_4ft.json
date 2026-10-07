@@ -1,5 +1,5 @@
 {
- "source": "Ratings and photos from people who bought this palm from the same seller we order from.",
+ "source": "Ratings and photos from people who bought this palm from the same seller we order from. Critical reviews are kept.",
  "average": 4.3,
  "ratings": 923,
  "reviews_count": 379,
@@ -17,10 +17,109 @@
    "date": "2025-09-08",
    "text": "Good product to decorate ur house, worth buying",
    "photos": [
-    "r0_0.jpg",
-    "r0_1.jpg",
-    "r0_2.jpg",
-    "r0_3.jpg"
+    "n00_0.jpg",
+    "n00_1.jpg",
+    "n00_2.jpg"
+   ]
+  },
+  {
+   "name": "Reena",
+   "stars": 5,
+   "date": "2025-09-12",
+   "text": "I have ropes it in a pot. Looking awesome just like real. U can purchase it.",
+   "photos": [
+    "n01_0.jpg",
+    "n01_1.jpg"
+   ]
+  },
+  {
+   "name": "Anshika",
+   "stars": 5,
+   "date": "2025-10-15",
+   "text": "Has a very beautiful 🤩 and very nice quality 😍",
+   "photos": [
+    "n02_0.jpg",
+    "n02_1.jpg"
+   ]
+  },
+  {
+   "name": "Abhishek",
+   "stars": 5,
+   "date": "2025-10-13",
+   "text": "Jo bhi dekte hai use hi pasand ata hai.superb product.",
+   "photos": [
+    "n03_0.jpg"
+   ]
+  },
+  {
+   "name": "Ombeer",
+   "stars": 4,
+   "date": "2025-11-27",
+   "text": "Average quality 👍 but the leaf 🌿 is broken.",
+   "photos": [
+    "n04_0.jpg",
+    "n04_1.jpg",
+    "n04_2.jpg"
+   ]
+  },
+  {
+   "name": "Manju",
+   "stars": 5,
+   "date": "2026-09-28",
+   "text": "so beautiful but the size is not that much big as expected",
+   "photos": []
+  },
+  {
+   "name": "Kamelia",
+   "stars": 4,
+   "date": "2026-08-09",
+   "text": "Ok ok but product was little damage",
+   "photos": [
+    "n06_0.jpg"
+   ]
+  },
+  {
+   "name": "Mohit",
+   "stars": 4,
+   "date": "2025-10-17",
+   "text": "Size thora chhota hai but achha hai",
+   "photos": [
+    "n07_0.jpg"
+   ]
+  },
+  {
+   "name": "Mohit",
+   "stars": 3,
+   "date": "2025-10-17",
+   "text": "Achha nahi aaya hai price ke according plant bilkul achha nahi hai khada bhi nahi ho pa raha hai pate bhi achhe nahi mai exchange ka kiya tha par bohut long time dikha raha tha es liye rakh liya hai",
+   "photos": [
+    "n08_0.jpg"
+   ]
+  },
+  {
+   "name": "A buyer",
+   "stars": 3,
+   "date": "2026-05-30",
+   "text": "According to prize not affortable leaves are very less Only ten leaves",
+   "photos": [
+    "n09_0.jpg"
+   ]
+  },
+  {
+   "name": "Megha",
+   "stars": 4,
+   "date": "2025-12-13",
+   "text": "Size was not correct it's actual size 3 feet",
+   "photos": []
+  },
+  {
+   "name": "Ronik",
+   "stars": 1,
+   "date": "2026-05-10",
+   "text": "Damage aaya hai or 7 days ho gye exchange bhi nahi ho raha hai",
+   "photos": [
+    "n11_0.jpg",
+    "n11_1.jpg"
    ]
   }
  ]

@@ -12,6 +12,8 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://swayloweb.com/store/">
 <meta property="og:image" content="https://swayloweb.com/launch_icon.png">
+<link rel="preconnect" href="https://whatsapp-bot-production-725a.up.railway.app" crossorigin>
+<link rel="preload" as="fetch" href="https://whatsapp-bot-production-725a.up.railway.app/store.json" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600..900;1,9..144,600..800&family=Schibsted+Grotesk:wght@400..700&display=swap" rel="stylesheet">
@@ -766,10 +768,18 @@ function priceHtml(price, mrp) {
 
 let products = [];
 let waNumber = '';
+const lazyPlate = (el) => { if (el && el.dataset.src) { el.style.backgroundImage = `url('${el.dataset.src}')`; delete el.dataset.src; } };
+// Cards load their photo only when they come near the screen, so a visitor who
+// lands straight on a product is not also downloading the whole shelf.
+const tileSeen = new IntersectionObserver((es) => {
+  for (const e of es) if (e.isIntersecting) { lazyPlate(e.target.querySelector('.plate:not(.alt)')); tileSeen.unobserve(e.target); }
+}, { rootMargin: '300px' });
 const askHref = (text) => 'https://wa.me/' + waNumber + '?text=' + encodeURIComponent(text);
 /* The listing photos only. Buyer photos (image keys with _real_ in them) are
    for the bot to send on request, and on this page they live in the reviews. */
-const photos = (p) => [p.image, ...(p.gallery || [])].filter((g) => g && !/_real_/.test(g)).map((g) => API + g);
+/* tulip_lamp_ad_a is left out: Meta serves ad C, so the photo a visitor sees
+   first has to be the one they clicked. */
+const photos = (p) => [p.image, ...(p.gallery || [])].filter((g) => g && !/_real_|_ad_a\b/.test(g)).map((g) => API + g);
 
 /* ?p=key gives each product its own link, on a static site. */
 const keyInUrl = () => new URLSearchParams(location.search).get('p');
@@ -815,8 +825,8 @@ async function boot() {
     tile.className = 'tile';
     tile.innerHTML = `
       <div class="shot">
-        <span class="plate" style="background-image:url('${a}')"></span>
-        ${b ? `<span class="plate alt" style="background-image:url('${b}')"></span>` : ''}
+        <span class="plate" data-src="${a}"></span>
+        ${b ? `<span class="plate alt" data-src="${b}"></span>` : ''}
       </div>
       <div class="meta">
         <h3></h3>
@@ -826,6 +836,9 @@ async function boot() {
       </div>`;
     tile.querySelector('h3').textContent = p.name;
     tile.onclick = () => openProduct(p);
+    // The hover photo only exists for a mouse, so it loads on the first hover.
+    tile.addEventListener('pointerenter', () => lazyPlate(tile.querySelector('.plate.alt')), { once: true });
+    tileSeen.observe(tile);
     grid.append(tile);
   }
   $('#listEmpty').hidden = products.length > 0;
@@ -860,12 +873,14 @@ function openProduct(p, { push = true } = {}) {
   const shots = photos(p);
   const stage = $('#stage'), rail = $('#rail'), counter = $('#shotCount');
   stage.innerHTML = '';
-  for (const url of shots) {
+  const rest = [];
+  shots.forEach((url, i) => {
     const slide = document.createElement('div');
     slide.className = 'slide';
-    slide.style.backgroundImage = `url('${url}')`;
+    if (i === 0) slide.style.backgroundImage = `url('${url}')`;
+    else rest.push([slide, url]);
     stage.append(slide);
-  }
+  });
   let showing = -1;
   const sync = () => {
     if (!stage.clientWidth) return;
@@ -883,11 +898,19 @@ function openProduct(p, { push = true } = {}) {
   shots.forEach((url, i) => {
     const b = document.createElement('button');
     b.type = 'button';
-    b.style.backgroundImage = `url('${url}')`;
+    if (i === 0) b.style.backgroundImage = `url('${url}')`;
+    else rest.push([b, url]);
     b.setAttribute('aria-label', `Photo ${i + 1} of ${shots.length}`);
     b.onclick = () => { stage.scrollTo({ left: i * stage.clientWidth, behavior: 'auto' }); sync(); };
     rail.append(b);
   });
+
+  // Photo 1 first; the other photos and thumbnails start once it has arrived.
+  const loadRest = () => rest.forEach(([el, url]) => { el.style.backgroundImage = `url('${url}')`; });
+  const first = new Image();
+  first.onload = first.onerror = loadRest;
+  first.src = shots[0];
+  setTimeout(loadRest, 4000);
 
   show('viewProduct');
   stage.scrollLeft = 0;
